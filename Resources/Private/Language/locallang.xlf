@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2017-12-04T11:15:31Z" product-name="rkw_survey">
+		<header/>
+		<body>
+
+			<!-- ############################## -->
+			<!-- MODELS  -->
+			<!-- ############################## -->
+			<trans-unit id="tx_rkw_survey_domain_model_survey">
+				<source>RKW Survey: Survey</source>
+				<target>RKW Survey: Umfrage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkw_survey_domain_model_survey.description">
+				<source>Description</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey">
+				<source>Survey</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.name">
+				<source>Name</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.starttext">
+				<source>Starttext</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.endtext">
+				<source>Endtext</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.question">
+				<source>Question</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.admin">
+				<source>Admin</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question">
+				<source>Question</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.question">
+				<source>Question</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.type">
+				<source>Type</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.answer1">
+				<source>Answer1</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.answer2">
+				<source>Answer2</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.answer3">
+				<source>Answer3</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.survey">
+				<source>Survey</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_surveyresult">
+				<source>Survey Result</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_surveyresult.finished">
+				<source>Finished</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_surveyresult.survey">
+				<source>Survey</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_surveyresult.question_result">
+				<source>Question Result</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresult">
+				<source>Question Result</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresult.answer_multiple">
+				<source>Answer Multiple</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresult.answer_free">
+				<source>Answer Free</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresult.survey_result">
+				<source>Survey Result</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresult.question">
+				<source>Question</source>
+			</trans-unit>
+
+
+
+			<!-- ############################## -->
+			<!-- CONTROLLER -->
+			<!-- ############################## -->
+
+			<!-- Controller/SurveyController.php -->
+			<trans-unit id="tx_rkwsurvey_controller_survey.alreadyAnswered">
+				<source>Oops! Something went wrong. This question has already been answered.</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_survey.tokenNotValid">
+                <source>Oops! A valid survey code is required to participate in this survey. Please take it from your invitation to the survey.</source>
+            </trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_survey.tokenExistAndFinished">
+                <source>Oops! This survey code has already been used. Thank you very much for your participation!</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_controller_survey.tokenNotExist">
+                <source>Oops! Unfortunately, we do not know this survey code. Please check the survey code for correctness and make sure that the correct survey was called. Of course our support is also available for you.</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_controller_survey.tokenSomethingWentWrong">
+                <source>Oops! During the execution something went wrong with the given survey code. Please contact our support.</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_controller_survey.contactSuccessful">
+                <source>Woohoo! Your request has been successfully sent. We will contact you shortly.</source>
+            </trans-unit>
+
+
+			<!-- Controller/BackendController.php -->
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.surveyUid">
+				<source>Survey Uid</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.surveyResultUid">
+				<source>Survey Result Uid</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.questionUid">
+				<source>Question Uid</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.question">
+				<source>Question</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.answerOption">
+				<source>Answer option</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.answer">
+				<source>Answer</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.freetext">
+				<source>Freetext field</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.scaleMax">
+				<source>Maximum: </source>
+			</trans-unit>
+
+
+
+			<!-- ############################## -->
+			<!-- VALIDATION -->
+			<!-- ############################## -->
+			<trans-unit id="questionResultValidator.not_filled">
+				<source>Please fill out the field.</source>
+			</trans-unit>
+			<trans-unit id="questionResultValidator.nothing_selected">
+				<source>You have to select minimum one option.</source>
+			</trans-unit>
+
+
+            <trans-unit id="contactFormValidator.not_filled">
+                <source>Please fill out the field %s.</source>
+            </trans-unit>
+
+
+            <!-- #################################### -->
+            <!-- form errors -->
+            <!-- #################################### -->
+
+            <!-- contactForm -->
+            <trans-unit id="form.error.contactForm.gender">
+                <source>Salutation</source>
+            </trans-unit>
+            <trans-unit id="form.error.contactForm.firstName">
+                <source>First name</source>
+            </trans-unit>
+            <trans-unit id="form.error.contactForm.lastName">
+                <source>Last name</source>
+            </trans-unit>
+            <trans-unit id="form.error.contactForm.company">
+                <source>Company</source>
+            </trans-unit>
+            <trans-unit id="form.error.contactForm.email">
+                <source>E-Mail</source>
+            </trans-unit>
+            <trans-unit id="form.error.contactForm.phone">
+                <source>Phone</source>
+            </trans-unit>
+
+
+			<!-- ############################## -->
+			<!-- VIEWHELPER -->
+			<!-- ############################## -->
+			<trans-unit id="viewHelper_mothArray.month1">
+				<source>January</source>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month2">
+				<source>February</source>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month3">
+				<source>March</source>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month4">
+				<source>April</source>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month5">
+				<source>May</source>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month6">
+				<source>June</source>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month7">
+				<source>July</source>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month8">
+				<source>August</source>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month9">
+				<source>September</source>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month10">
+				<source>October</source>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month11">
+				<source>November</source>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month12">
+				<source>December</source>
+			</trans-unit>
+
+
+
+			<!-- ############################## -->
+			<!-- MAIL TEMPLATES -->
+			<!-- ############################## -->
+
+            <!-- Subjects -->
+			<trans-unit id="rkwMailService.contactAdmin.subject">
+                <source>Contact request for a survey</source>
+            </trans-unit>
+            <trans-unit id="rkwMailService.newSurveyAdmin.subject">
+                <source>A new survey result was submitted</source>
+            </trans-unit>
+
+
+			<!-- Templates/Email/NewSurveyAdmin.html -->
+			<trans-unit id="templates_email_newSurveyAdmin.headline">
+				<source>Hello %s,</source>
+			</trans-unit>
+			<trans-unit id="templates_email_newSurveyAdmin.text1">
+				<source>a new result for the following survey has been submitted:</source>
+			</trans-unit>
+			<trans-unit id="templates_email_newSurveyAdmin.text2">
+				<source>You can see the results in the TYPO3-Backend.</source>
+			</trans-unit>
+
+
+            <!-- Templates/Email/ContactAdmin.html -->
+            <trans-unit id="templates_email_contactAdmin.headline">
+                <source>Hello %s,</source>
+            </trans-unit>
+            <trans-unit id="templates_email_contactAdmin.text1">
+                <source>A contact request was submitted for the survey "%s". Please get in touch with the contact person below. You can reply directly to this e-mail.</source>
+            </trans-unit>
+            <trans-unit id="templates_email_contactAdmin.text2">
+                <source>Contact</source>
+            </trans-unit>
+
+
+
+			<!-- ############################## -->
+			<!-- FRONTEND TEMPLATES -->
+			<!-- ############################## -->
+
+			<!-- Templates/Survey/Welcome.html -->
+			<trans-unit id="templates_survey_welcome.early">
+				<source>This survey is not started yet. It will start at %s at %s o'clock.</source>
+			</trans-unit>
+			<trans-unit id="templates_survey_welcome.late">
+				<source>Unfortunately this survey is over. Thanks for your interest.</source>
+			</trans-unit>
+			<trans-unit id="templates_survey_welcome.start">
+				<source>Start survey</source>
+			</trans-unit>
+
+
+			<!-- Templates/Survey/Result.html -->
+            <trans-unit id="templates_survey_result.contactHeadline">
+                <source>Do you find the topic exciting?</source>
+            </trans-unit>
+            <trans-unit id="templates_survey_result.contactText">
+                <source>Are you interested in more detailed information on the subject of the survey or do you have any questions? Leave us your contact details here and we will get back to you as soon as possible. Your contact data will of course be stored in the survey regardless of your answers. Participation in the survey always remains anonymous.</source>
+            </trans-unit>
+
+
+			<!-- Partials/Survey/Question.html -->
+			<trans-unit id="partials_survey_question_help">
+				<source>Help</source>
+			</trans-unit>
+            <trans-unit id="partials_survey_question_helpClose">
+                <source>Back to the question</source>
+            </trans-unit>
+			<trans-unit id="partials_survey_question_pleaseSelect">
+				<source>Please select an option.</source>
+			</trans-unit>
+			<trans-unit id="partials_survey_question_mulitSelect">
+				<source>Multiple items can be selected.</source>
+			</trans-unit>
+			<trans-unit id="partials_survey_question_singleSelect">
+				<source>Only one item can be selected.</source>
+			</trans-unit>
+
+
+			<!-- Partials/Survey/Footer.html -->
+			<trans-unit id="partials_survey_footer.question">
+				<source>Question</source>
+			</trans-unit>
+			<trans-unit id="partials_survey_footer.progress">
+                <source>Progress</source>
+            </trans-unit>
+			<trans-unit id="partials_survey_footer.finish">
+				<source>Finish</source>
+			</trans-unit>
+			<trans-unit id="partials_survey_footer.next">
+				<source>Next</source>
+			</trans-unit>
+
+
+            <!-- Partials/Survey/ContactForm.html -->
+            <trans-unit id="partials_survey_contactForm.gender">
+                <source>Gender</source>
+            </trans-unit>
+            <trans-unit id="partials_survey_contactForm.gender.I.0">
+                  <source>Mr.</source>
+              </trans-unit>
+              <trans-unit id="partials_survey_contactForm.gender.I.1">
+                  <source>Mrs.</source>
+              </trans-unit>
+              <trans-unit id="partials_survey_contactForm.gender.I.99">
+                  <source>-- Please select --</source>
+              </trans-unit>
+            <trans-unit id="partials_survey_contactForm.first_name">
+                  <source>First name</source>
+              </trans-unit>
+              <trans-unit id="partials_survey_contactForm.last_name">
+                  <source>Last name</source>
+              </trans-unit>
+              <trans-unit id="partials_survey_contactForm.email">
+                  <source>E-Mail</source>
+              </trans-unit>
+              <trans-unit id="partials_survey_contactForm.phone">
+                  <source>Phone</source>
+              </trans-unit>
+              <trans-unit id="partials_survey_contactForm.company">
+                  <source>Company</source>
+              </trans-unit>
+              <trans-unit id="partials_survey_contactForm.labelOptional">
+                  <source>(Optional)</source>
+              </trans-unit>
+              <trans-unit id="partials_survey_contactForm.button">
+                  <source>Send</source>
+              </trans-unit>
+
+
+			<!-- ############################## -->
+			<!-- BACKEND TEMPLATES -->
+			<!-- ############################## -->
+
+			<!-- Templates/Backend/List.html -->
+			<trans-unit id="templates_backend_list.header">
+				<source>Surveys</source>
+			</trans-unit>
+			<trans-unit id="templates_backend_list.surveysTotal">
+				<source>Surveys total</source>
+			</trans-unit>
+
+            <!-- Templates/Backend/Show.html -->
+            <trans-unit id="templates_backend_show.header">
+                <source>Results</source>
+            </trans-unit>
+
+            <!-- Templates/Backend/TokenList.html -->
+            <trans-unit id="templates_backend_tokenlist.backToDetailview">
+                <source>Back to detail view</source>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.tokenManagement">
+                <source>Token management</source>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.unusedTokens">
+                <source>Unused tokens</source>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.usedTokens">
+                <source>Used tokens</source>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.generate">
+                <source>Create tokens</source>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.delete">
+                <source>Delete token list</source>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.noTokens">
+                <source>No tokens created</source>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.at">
+                <source>At</source>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.clock">
+                <source>o'clock</source>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.notFinished">
+                <source>Not finished</source>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.usage">
+                <source>Usage</source>
+            </trans-unit>
+
+			<!-- Templates/Backend/Print.html -->
+			<trans-unit id="templates_backend_print.header">
+				<source>RKW Survey</source>
+			</trans-unit>
+			<trans-unit id="templates_backend_show.csv">
+				<source>CSV Export</source>
+			</trans-unit>
+			<trans-unit id="templates_backend_show.token">
+                <source>Access restriction</source>
+            </trans-unit>
+
+
+			<!-- Partials/Backend/Actions.html -->
+			<trans-unit id="partials_backend_actions.submit">
+				<source>Select</source>
+			</trans-unit>
+			<trans-unit id="partials_backend_actions.reset">
+				<source>Reset</source>
+			</trans-unit>
+			<trans-unit id="partials_backend_actions.labelStarttime">
+				<source>Starttime</source>
+			</trans-unit>
+            <trans-unit id="partials_backend_actions.labelSurvey">
+                <source>Survey</source>
+            </trans-unit>
+            <trans-unit id="partials_backend_actions.csv">
+                <source>CSV Export</source>
+            </trans-unit>
+            <trans-unit id="partials_backend_actions.token">
+                <source>Manage tokens</source>
+            </trans-unit>
+			<trans-unit id="partials_backend_actions.print">
+				<source>Print</source>
+			</trans-unit>
+            <trans-unit id="partials_backend_actions.filter">
+                <source>Filter</source>
+            </trans-unit>
+
+
+			<!-- Partials/Backend/Result.html -->
+			<trans-unit id="partials_backend_result.header">
+				<source>Results view</source>
+			</trans-unit>
+
+
+			<!-- Partials/Backend/Survey.html -->
+			<trans-unit id="partials_backend_survey.noEndDate">
+				<source>No end date</source>
+			</trans-unit>
+			<trans-unit id="partials_backend_survey.participants">
+				<source>Participants</source>
+			</trans-unit>
+			<trans-unit id="partials_backend_survey.finishedSurveys">
+				<source>Finished</source>
+			</trans-unit>
+			<trans-unit id="partials_backend_survey.dropouts">
+				<source>Dropouts/Incomplete</source>
+			</trans-unit>
+
+
+		</body>
+	</file>
+</xliff>

@@ -1,0 +1,29 @@
+<!-- for print -->
+<link rel="stylesheet" href="{f:uri.resource(path:'Styles/print.css')}" type="text/css" media="print"/>
+<!-- for print view -->
+<link rel="stylesheet" href="{f:uri.resource(path:'Styles/print.css')}" type="text/css"/>
+<title>{survey.name}</title>
+
+<div class="page-wrap">
+	<header class="page-header">
+		<div class="container">
+			<p class="header-logo">
+				<a href="./">
+					<!-- @toDo: DO NOT USE THE WEPSTRA LOGO HERE -->
+					<f:image width="195" height="35" src="fileadmin/templates/wepstra/images/logo-black.svg" />
+				</a>
+			</p>
+		</div>
+	</header>
+	<div class="content">
+		<h2><f:translate key='templates_backend_print.header' extensionName='RkwSurvey' /></h2>
+
+		<!-- survey details -->
+		<f:render partial="Backend/Survey" arguments="{_all}" />
+
+		<!-- result -->
+		<f:if condition="{surveyResultList}">
+			<f:render partial="Backend/Result" arguments="{_all}" />
+		</f:if>
+	</div>
+</div>

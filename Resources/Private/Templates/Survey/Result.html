@@ -1,0 +1,35 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:layout name="Default" />
+
+This Template is responsible for displaying a single view for a domain object
+
+If you modify this template, do not forget to change the overwrite settings
+in /Configuration/ExtensionBuilder/settings.yaml:
+  Resources:
+	Private:
+	  Templates:
+		Show.html: keep
+
+Otherwise your changes will be overwritten the next time you save the extension in the extension builder
+
+	<f:section name="main">
+        <div id="check-head">
+            <f:if condition="{settings.showSurveyNameIntroExtro}">
+                <h1 class="h2">{surveyResult.survey.name}</h1>
+            </f:if>
+            <f:format.html parseFuncTSPath="lib.parseFunc_RTE">{surveyResult.survey.endtext}</f:format.html>
+
+
+            <f:if condition="{settings.contact.show.contactForm}">
+                <h2><f:translate key="templates_survey_result.contactHeadline" /></h2>
+                <p>
+                    <f:translate key="templates_survey_result.contactText" />
+                </p>
+
+                <f:render partial="Survey/ContactForm" arguments="{_all}" />
+            </f:if>
+
+        </div>
+    </f:section>
+
+</html>

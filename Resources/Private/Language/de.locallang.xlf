@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2017-12-04T11:15:31Z" product-name="rkw_survey">
+		<header/>
+		<body>
+
+			<!-- ############################## -->
+			<!-- MODELS  -->
+			<!-- ############################## -->
+			<trans-unit id="tx_rkw_survey_domain_model_survey">
+				<source>RKW Survey: Survey</source>
+				<target>RKW Survey: Umfrage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.description">
+				<source>Description</source>
+				<target>Beschreibung</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.name">
+				<source>Name</source>
+				<target>Name</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.starttext">
+				<source>Starttext</source>
+				<target>Starttext</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.endtext">
+				<source>Endtext</source>
+				<target>Endtext</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.question">
+				<source>Question</source>
+				<target>Frage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.admin">
+				<source>Admin</source>
+				<target>Admin</target>
+			</trans-unit>
+
+
+
+			<trans-unit id="tx_rkwsurvey_domain_model_question">
+				<source>RKW Survey: Question</source>
+				<target>RKW Survey: Frage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.question">
+				<source>Question</source>
+				<target>Frage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.type">
+				<source>Type</source>
+				<target>Typ</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.answer1">
+				<source>Answer1</source>
+				<target>Antwort 1</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.answer2">
+				<source>Answer2</source>
+				<target>Antwort 2</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.answer3">
+				<source>Answer3</source>
+				<target>Antwort 3</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.survey">
+				<source>Survey</source>
+				<target>Umfrage</target>
+			</trans-unit>
+
+
+			<trans-unit id="tx_rkwsurvey_domain_model_surveyresult">
+				<source>RKW Survey: Survey Result</source>
+				<target>RKW Survey: Umfrageergebnis</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_surveyresult.finished">
+				<source>Finished</source>
+				<target>Abgeschlossen</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_surveyresult.survey">
+				<source>Survey</source>
+				<target>Umfrage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_surveyresult.question_result">
+				<source>Question Result</source>
+				<target>Antwort</target>
+			</trans-unit>
+
+
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresult">
+				<source>RKW Survey: Question Result</source>
+				<target>RKW Survey: Antwort</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresult.answer_multiple">
+				<source>Answer Multiple</source>
+				<target>Multiple choice Antwort</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresult.answer_free">
+				<source>Answer Free</source>
+				<target>Freitext Antwort</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresult.survey_result">
+				<source>Survey Result</source>
+				<target>Umfrageergebnis</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresult.question">
+				<source>Question</source>
+				<target>Frage</target>
+			</trans-unit>
+
+
+
+			<!-- ############################## -->
+			<!-- CONTROLLER -->
+			<!-- ############################## -->
+
+			<!-- Controller/SurveyController.php -->
+			<trans-unit id="tx_rkwsurvey_controller_survey.alreadyAnswered">
+				<source>Oops! Something went wrong. This question has already been answered.</source>
+				<target>Upps! Hier ist etwas schief gelaufen. Die Frage wurde scheinbar schon beantwortet.</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_survey.tokenNotValid">
+                <source>Oops! A valid survey code is required to participate in this survey. Please take it from your invitation to the survey.</source>
+                <target>Upps! Es ist ein gültiger Umfragecode notwendig, um an dieser Umfrage teilnehmen zu können. Entnehmen Sie diesen bitte Ihrer Einladung zur Umfrage.</target>
+            </trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_survey.tokenExistAndFinished">
+                <source>Oops! This survey code has already been used. Thank you very much for your participation!</source>
+                <target>Upps! Diese Umfragecode wurde bereits verwendet. Vielen Dank für Ihre Teilnahme!</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_controller_survey.tokenNotExist">
+                <source>Oops! Unfortunately, we do not know this survey code. Please check the survey code for correctness and make sure that the correct survey was called. Of course our support is also available for you.</source>
+                <target>Upps! Dieser Umfragecode ist uns leider nicht bekannt. Bitte überprüfen Sie den Umfragecode auf Richtigkeit und stellen Sie sicher, dass die richtige Umfrage aufgerufen wurde. Gerne steht Ihnen natürlich auch unser Support zur Verfügung.</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_controller_survey.tokenSomethingWentWrong">
+                <source>Oops! During the execution something went wrong with the given survey code. Please contact our support.</source>
+                <target>Upps! Während der Ausführung ist mit dem übergebenen Umfragecode wohl etwas schief gelaufen. Bitte wenden Sie sich an unseren Support.</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_controller_survey.contactSuccessful">
+                <source>Woohoo! Your request has been successfully sent. We will contact you shortly.</source>
+                <target>Woohoo! Ihre Anfrage wurde erfolgreich versendet. Wir melden uns in Kürze bei Ihnen.</target>
+            </trans-unit>
+
+
+			<!-- Controller/BackendController.php -->
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.surveyUid">
+				<source>Survey Uid</source>
+				<target>Umfrage Uid</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.surveyResultUid">
+				<source>Survey Result Uid</source>
+				<target>Umfrage Ergebnis Uid</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.questionUid">
+				<source>Question Uid</source>
+				<target>Frage Uid</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.question">
+				<source>Question</source>
+				<target>Frage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.answerOption">
+				<source>Answer option</source>
+				<target>Antwortoption</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.answer">
+				<source>Answer</source>
+				<target>Antwort</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.freetext">
+				<source>Freetext field</source>
+				<target>Freitextfeld</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.scaleMax">
+				<source>Maximum: </source>
+				<target>Maximalwert: </target>
+			</trans-unit>
+
+
+			<!-- ############################## -->
+			<!-- VALIDATION -->
+			<!-- ############################## -->
+			<trans-unit id="questionResultValidator.not_filled">
+				<source>Please fill out the field.</source>
+				<target>Bitte machen Sie eine Angabe.</target>
+			</trans-unit>
+			<trans-unit id="questionResultValidator.nothing_selected">
+				<source>You have to select minimum one option.</source>
+				<target>Bitte wählen Sie mindestens eine Option aus.</target>
+			</trans-unit>
+			<trans-unit id="contactFormValidator.not_filled">
+                <source>Please fill out the field %s.</source>
+                <target>Da fehlt noch was. Bitte füllen Sie das Feld '%s' aus.</target>
+            </trans-unit>
+            <trans-unit id="contactFormValidator.privacy">
+                <source>The protection of your data is important to us. Therefore we ask you to agree to the storage of your personal data.</source>
+                <target>Der Schutz Ihrer Daten ist uns wichtig. Daher bitten wir Sie, der Speicherung Ihrer persönlichen Daten zuzustimmen.</target>
+            </trans-unit>
+
+
+
+            <!-- #################################### -->
+            <!-- form errors -->
+            <!-- #################################### -->
+
+            <!-- contactForm -->
+            <trans-unit id="form.error.contactForm.gender">
+                <source>Salutation</source>
+                <target>Anrede</target>
+            </trans-unit>
+            <trans-unit id="form.error.contactForm.firstName">
+                <source>First name</source>
+                <target>Vorname</target>
+            </trans-unit>
+            <trans-unit id="form.error.contactForm.lastName">
+                <source>Last name</source>
+                <target>Nachname</target>
+            </trans-unit>
+            <trans-unit id="form.error.contactForm.company">
+                <source>Company</source>
+                <target>Firma</target>
+            </trans-unit>
+            <trans-unit id="form.error.contactForm.email">
+                <source>E-Mail</source>
+                <target>E-Mail</target>
+            </trans-unit>
+            <trans-unit id="form.error.contactForm.phone">
+                <source>Phone</source>
+                <target>Telefon</target>
+            </trans-unit>
+
+
+
+
+			<!-- ############################## -->
+			<!-- VIEWHELPER -->
+			<!-- ############################## -->
+			<trans-unit id="viewHelper_mothArray.month1">
+				<source>January</source>
+				<target>Januar</target>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month2">
+				<source>February</source>
+				<target>Februar</target>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month3">
+				<source>March</source>
+				<target>März</target>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month4">
+				<source>April</source>
+				<target>April</target>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month5">
+				<source>May</source>
+				<target>Mai</target>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month6">
+				<source>June</source>
+				<target>Juni</target>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month7">
+				<source>July</source>
+				<target>Juli</target>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month8">
+				<source>August</source>
+				<target>August</target>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month9">
+				<source>September</source>
+				<target>September</target>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month10">
+				<source>October</source>
+				<target>Oktober</target>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month11">
+				<source>November</source>
+				<target>November</target>
+			</trans-unit>
+			<trans-unit id="viewHelper_mothArray.month12">
+				<source>December</source>
+				<target>Dezember</target>
+			</trans-unit>
+
+
+
+			<!-- ############################## -->
+			<!-- MAIL TEMPLATES -->
+			<!-- ############################## -->
+
+            <!-- Subjects -->
+            <trans-unit id="rkwMailService.contactAdmin.subject">
+                <source>Contact request for a survey</source>
+                <target>Kontaktanfrage zu einer Umfrage</target>
+            </trans-unit>
+			<trans-unit id="rkwMailService.newSurveyAdmin.subject">
+				<source>A new survey result was submitted</source>
+				<target>Jemand hat an einer Umfrage teilgenommen</target>
+			</trans-unit>
+
+			<!-- Templates/Email/NewSurveyAdmin.html -->
+			<trans-unit id="templates_email_newSurveyAdmin.headline">
+				<source>Hello %s,</source>
+				<target>Hallo %s,</target>
+			</trans-unit>
+			<trans-unit id="templates_email_newSurveyAdmin.text1">
+				<source>a new result for the following survey has been submitted:</source>
+				<target>für die folgende Umfrage wurde ein neues Ergebnis übermittelt:</target>
+			</trans-unit>
+			<trans-unit id="templates_email_newSurveyAdmin.text2">
+				<source>You can see the results in the TYPO3-Backend.</source>
+				<target>Sie können die Ergebnisse im TYPO3-Backend einsehen.</target>
+			</trans-unit>
+
+
+            <!-- Templates/Email/ContactAdmin.html -->
+            <trans-unit id="templates_email_contactAdmin.headline">
+                <source>Hello %s,</source>
+                <target>Hallo %s,</target>
+            </trans-unit>
+            <trans-unit id="templates_email_contactAdmin.text1">
+                <source>A contact request was submitted for the for the survey "%s". Please get in touch with the contact person below. You can reply directly to this e-mail.</source>
+                <target>für die Umfrage "%s" wurde eine Kontaktanfrage übermittelt. Bitte treten Sie mit untenstehendem Ansprechpartner in Verbindung. Sie können direkt auf diese E-Mail antworten.</target>
+            </trans-unit>
+            <trans-unit id="templates_email_contactAdmin.text2">
+                <source>Contact</source>
+                <target>Kontakt</target>
+            </trans-unit>
+
+
+			<!-- ############################## -->
+			<!-- FRONTEND TEMPLATES -->
+			<!-- ############################## -->
+
+			<!-- Templates/Survey/Welcome.html -->
+			<trans-unit id="templates_survey_welcome.early">
+				<source>This survey is not started yet. It will start at %s at %s o'clock.</source>
+				<target>Diese Umfrage hat noch nicht begonnen. Sie beginnt am %s um %s Uhr.</target>
+			</trans-unit>
+			<trans-unit id="templates_survey_welcome.late">
+				<source>Unfortunately this survey is over. Thanks for your interest.</source>
+				<target>Diese Umfrage ist leider bereits beendet. Danke für Ihr Interesse.</target>
+			</trans-unit>
+			<trans-unit id="templates_survey_welcome.start">
+				<source>Start survey</source>
+				<target>Umfrage starten</target>
+			</trans-unit>
+            <trans-unit id="templates_survey_welcome.token">
+                <source>Please enter survey code here.</source>
+                <target>Bitte geben Sie den Umfragecode hier ein.</target>
+            </trans-unit>
+
+
+			<!-- Templates/Survey/Result.html -->
+            <trans-unit id="templates_survey_result.contactHeadline">
+                <source>Do you find the topic exciting?</source>
+                <target>Sie finden das Thema spannend?</target>
+            </trans-unit>
+            <trans-unit id="templates_survey_result.contactText">
+                <source>Are you interested in more detailed information on the subject of the survey or do you have any questions? Leave us your contact details here and we will get back to you as soon as possible. Your contact data will of course be stored in the survey regardless of your answers. Participation in the survey always remains anonymous.</source>
+                <target>Sie interessieren sich für nähere Informationen zum Thema der Umfrage oder haben Rückfragen dazu? Hinterlassen Sie uns hier Ihre Kontaktdaten und wir setzen uns umgehend mit Ihnen in Verbindung. Ihre Kontaktdaten werden selbstverständlich unabhängig von Ihren Antworten in der Umfrage gespeichert. Die Teilnahme an der Umfrage bleibt stets anonym.</target>
+            </trans-unit>
+
+
+            <!-- Partials/Survey/Question.html -->
+            <trans-unit id="partials_survey_question_help">
+                <source>Help</source>
+                <target>Hilfe</target>
+            </trans-unit>
+            <trans-unit id="partials_survey_question_helpClose">
+                <source>Back to the question</source>
+                <target>Zurück zur Frage</target>
+            </trans-unit>
+            <trans-unit id="partials_survey_question_pleaseSelect">
+                <source>Please select an option.</source>
+                <target>Bitte auswählen.</target>
+            </trans-unit>
+            <trans-unit id="partials_survey_question_mulitSelect">
+                <source>Multiple items can be selected.</source>
+                <target>Mehrfachauswahl möglich.</target>
+            </trans-unit>
+            <trans-unit id="partials_survey_question_singleSelect">
+                <source>Only one item can be selected.</source>
+                <target>Nur eine Option kann gewählt werden.</target>
+            </trans-unit>
+
+
+			<!-- Partials/Survey/Footer.html -->
+			<trans-unit id="partials_survey_footer.question">
+				<source>Question</source>
+				<target>Frage</target>
+			</trans-unit>
+			<trans-unit id="partials_survey_footer.progress">
+                <source>Progress</source>
+                <target>Fortschritt</target>
+            </trans-unit>
+			<trans-unit id="partials_survey_footer.finish">
+				<source>Finish</source>
+				<target>Abschließen</target>
+			</trans-unit>
+			<trans-unit id="partials_survey_footer.next">
+				<source>Next</source>
+				<target>Weiter</target>
+			</trans-unit>
+
+
+			<!-- Partials/Survey/ContactForm.html -->
+			<trans-unit id="partials_survey_contactForm.gender">
+				<source>Gender</source>
+				<target>Anrede</target>
+			</trans-unit>
+			<trans-unit id="partials_survey_contactForm.gender.I.0">
+                <source>Mr.</source>
+                <target>Herr</target>
+            </trans-unit>
+            <trans-unit id="partials_survey_contactForm.gender.I.1">
+                <source>Mrs.</source>
+                <target>Frau</target>
+            </trans-unit>
+            <trans-unit id="partials_survey_contactForm.gender.I.99">
+                <source>-- Please select --</source>
+                <target>-- Bitte wählen --</target>
+            </trans-unit>
+			<trans-unit id="partials_survey_contactForm.first_name">
+                <source>First name</source>
+                <target>Vorname</target>
+            </trans-unit>
+            <trans-unit id="partials_survey_contactForm.last_name">
+                <source>Last name</source>
+                <target>Nachname</target>
+            </trans-unit>
+            <trans-unit id="partials_survey_contactForm.email">
+                <source>E-Mail</source>
+                <target>E-Mail</target>
+            </trans-unit>
+            <trans-unit id="partials_survey_contactForm.phone">
+                <source>Phone</source>
+                <target>Telefon</target>
+            </trans-unit>
+            <trans-unit id="partials_survey_contactForm.company">
+                <source>Company</source>
+                <target>Firma</target>
+            </trans-unit>
+            <trans-unit id="partials_survey_contactForm.labelOptional">
+                <source>(Optional)</source>
+                <target>(Optional)</target>
+            </trans-unit>
+            <trans-unit id="partials_survey_contactForm.button">
+                <source>Send</source>
+                <target>Jetzt absenden</target>
+            </trans-unit>
+
+
+			<!-- ############################## -->
+			<!-- BACKEND TEMPLATES -->
+			<!-- ############################## -->
+
+			<!-- Templates/Backend/List.html -->
+			<trans-unit id="templates_backend_list.header">
+				<source>Surveys</source>
+				<target>Umfragen</target>
+			</trans-unit>
+			<trans-unit id="templates_backend_list.surveysTotal">
+				<source>Surveys total</source>
+				<target>Umfragen insgesamt</target>
+			</trans-unit>
+
+            <!-- Templates/Backend/Show.html -->
+            <trans-unit id="templates_backend_show.header">
+                <source>Results</source>
+                <target>Auswertung</target>
+            </trans-unit>
+
+            <!-- Templates/Backend/TokenList.html -->
+            <trans-unit id="templates_backend_tokenlist.backToDetailview">
+                <source>Back to detail view</source>
+                <target>Zurück zur Detailansicht</target>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.tokenManagement">
+                <source>Token management</source>
+                <target>Tokenverwaltung</target>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.unusedTokens">
+                <source>Unused tokens</source>
+                <target>Verfügbare Tokens</target>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.usedTokens">
+                <source>Used tokens</source>
+                <target>Verwendete Tokens</target>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.generate">
+                <source>Create tokens</source>
+                <target>Tokens erstellen</target>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.csv">
+                <source>CSV Export</source>
+                <target>CSV Export</target>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.delete">
+                <source>Delete token list</source>
+                <target>Alle Tokens löschen (ACHTUNG: Alle Tokens verlieren ihre Gültigkeit!)</target>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.noTokens">
+                <source>No tokens created</source>
+                <target>Keine Tokens generiert.</target>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.at">
+                <source>at</source>
+                <target>am</target>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.clock">
+                <source>o'clock</source>
+                <target>Uhr</target>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.notFinished">
+                <source>Not finished</source>
+                <target>Umfrage nicht abgeschlossen</target>
+            </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.usage">
+                <source>Usage</source>
+                <target>Verwendung</target>
+            </trans-unit>
+
+			<!-- Templates/Backend/Print.html -->
+			<trans-unit id="templates_backend_print.header">
+				<source>RKW Survey</source>
+				<target>RKW Survey - Umfragen-Details</target>
+			</trans-unit>
+
+			<!-- Partials/Backend/Actions.html -->
+			<trans-unit id="partials_backend_actions.submit">
+				<source>Select</source>
+				<target>Auswählen</target>
+			</trans-unit>
+			<trans-unit id="partials_backend_actions.reset">
+				<source>Reset</source>
+				<target>Zurücksetzen</target>
+			</trans-unit>
+			<trans-unit id="partials_backend_actions.labelStarttime">
+				<source>Starttime</source>
+				<target>Startzeitpunkt</target>
+			</trans-unit>
+            <trans-unit id="partials_backend_actions.labelSurvey">
+                <source>Survey</source>
+                <target>Umfrage</target>
+            </trans-unit>
+            <trans-unit id="partials_backend_actions.csv">
+                <source>CSV Export</source>
+                <target>CSV Export</target>
+            </trans-unit>
+            <trans-unit id="partials_backend_actions.token">
+                <source>Manage tokens</source>
+                <target>Tokens verwalten</target>
+            </trans-unit>
+			<trans-unit id="partials_backend_actions.print">
+				<source>Print</source>
+				<target>Drucken</target>
+			</trans-unit>
+            <trans-unit id="partials_backend_actions.filter">
+                <source>Filter</source>
+                <target>Filtern</target>
+            </trans-unit>
+
+			<!-- Partials/Backend/Result.html -->
+			<trans-unit id="partials_backend_result.header">
+				<source>Results view</source>
+				<target>Auswertung</target>
+			</trans-unit>
+
+			<!-- Partials/Backend/Survey.html -->
+			<trans-unit id="partials_backend_survey.noEndDate">
+				<source>No end date</source>
+				<target>Kein Enddatum festgelegt</target>
+			</trans-unit>
+			<trans-unit id="partials_backend_survey.participants">
+				<source>Participants</source>
+				<target>Teilnehmer</target>
+			</trans-unit>
+			<trans-unit id="partials_backend_survey.finishedSurveys">
+				<source>Finished</source>
+				<target>Abgeschlossen</target>
+			</trans-unit>
+			<trans-unit id="partials_backend_survey.dropouts">
+				<source>Dropouts/Incomplete</source>
+				<target>Abbrüche/Unvollständig</target>
+			</trans-unit>
+
+
+
+		</body>
+	</file>
+</xliff>

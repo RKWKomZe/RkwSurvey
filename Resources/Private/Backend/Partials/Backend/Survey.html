@@ -1,0 +1,54 @@
+{namespace rkw=RKW\RkwSurvey\ViewHelpers}
+
+<table>
+    <tr>
+        <th colspan="2">
+			<f:if condition="{starttime}">
+				<f:then>
+					<f:format.date format="d.m.Y">{starttime}</f:format.date>
+				</f:then>
+				<f:else>
+					<f:if condition="{survey.starttime}">
+						<f:format.date format="d.m.Y">{survey.starttime}</f:format.date>
+					</f:if>
+				</f:else>
+			</f:if>
+            <f:if condition="{survey.starttime} && {survey.endtime}">
+                -
+            </f:if>
+            <f:if condition="{survey.endtime}">
+                <f:then>
+                    <f:format.date format="d.m.Y">{survey.endtime}</f:format.date>
+                </f:then>
+                <f:else>
+                    <f:translate key='partials_backend_survey.noEndDate' extensionName='RkwSurvey' />
+                </f:else>
+            </f:if>
+
+        </th>
+    </tr>
+	<tr>
+		<th>
+			<f:translate key='partials_backend_survey.participants' extensionName='RkwSurvey' />:
+        </th>
+        <td>
+			<f:count>{surveyResultList}</f:count>
+		</td>
+	</tr>
+	<tr>
+		<th>
+			<f:translate key='partials_backend_survey.finishedSurveys' extensionName='RkwSurvey' />:
+        </th>
+        <td>
+			<f:count>{surveyResultListFinished}</f:count> (<rkw:calcPercentage percentage='<f:count>{surveyResultListFinished}</f:count>' total='<f:count>{surveyResultList}</f:count>' />)
+		</td>
+	</tr>
+	<tr>
+		<th>
+			<f:translate key='partials_backend_survey.dropouts' extensionName='RkwSurvey' />:
+        </th>
+        <td>
+			<f:count>{surveyResultListUnfinished}</f:count>
+		</td>
+	</tr>
+</table>

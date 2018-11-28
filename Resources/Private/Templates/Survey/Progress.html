@@ -1,0 +1,47 @@
+{namespace rkw=RKW\RkwSurvey\ViewHelpers}
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:layout name="Default" />
+
+This template displays a NEW form for the current domain object.
+
+If you modify this template, do not forget to change the overwrite settings
+in /Configuration/ExtensionBuilder/settings.yaml:
+  Resources:
+    Private:
+      Templates:
+        New.html: keep
+
+Otherwise your changes will be overwritten the next time you save the extension in the extension builder
+
+	<f:section name="main">
+
+		<f:if condition="{settings.showSurveyNameProgess}">
+            <h1 class="h2">{surveyResult.survey.name}</h1>
+        </f:if>
+
+        <f:if condition="{errorMessage}">
+            <div class="typo3-messages" role="alert">
+                <div class="message-error typo3-message">
+                    {errorMessage}
+                </div>
+            </div>
+        </f:if>
+
+        <!-- Use 'arguments="{surveyResult: surveyResult, extensionSuffix: extensionSuffix}"' for separate SignalSlot -->
+		<f:form action="progress" name="newQuestionResult" id="check-head" object="{newQuestionResult}" arguments="{surveyResult: surveyResult}" noCacheHash="true" class="careercheck__form" section="check-head">
+			<f:form.hidden name="surveyResult" property="surveyResult" value="{surveyResult}" />
+            <f:form.hidden name="tokenInput" value="{tokenInput}" />
+
+			<!-- question -->
+			<f:for each="{surveyResult.survey.question}" as="question" iteration="iter">
+				<f:if condition="{iter.index} == <f:count>{surveyResult.questionResult}</f:count>">
+					<f:form.hidden name="question" property="question" value="{question}" />
+					<f:render partial="Survey/Question" arguments="{_all}" />
+				</f:if>
+			</f:for>
+
+			<!-- footer -->
+			<f:render partial="Survey/Footer" arguments="{_all}" />
+		</f:form>
+	</f:section>
+</html>

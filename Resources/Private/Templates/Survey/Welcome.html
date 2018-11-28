@@ -1,0 +1,76 @@
+{namespace rkw=RKW\RkwSurvey\ViewHelpers}
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:layout name="Default" />
+
+This Template is responsible for displaying a single view for a domain object
+
+If you modify this template, do not forget to change the overwrite settings
+in /Configuration/ExtensionBuilder/settings.yaml:
+  Resources:
+	Private:
+	  Templates:
+		Show.html: keep
+
+Otherwise your changes will be overwritten the next time you save the extension in the extension builder
+
+<f:section name="main">
+
+    <f:if condition="{survey}">
+
+        <f:if condition="{settings.showSurveyNameIntroExtro}">
+            <h1 class="h2">{survey.name}</h1>
+        </f:if>
+
+        <f:flashMessages renderMode="div" />
+
+        <f:if condition="<rkw:checkSurveyDate survey='{survey}' />">
+            <f:then>
+                <div class="typo3-messages" role="alert">
+                    <div class="message-error typo3-message">
+                        <!-- too late / early -->
+                        <f:if condition="<rkw:checkSurveyDate survey='{survey}' /> == 'early'">
+                            <f:then>
+                                <f:translate key="templates_survey_welcome.early" extensionName="RkwSurvey" arguments="{0: '<f:format.date format=\'d.m.Y\' date=\'{survey.starttime}\'/>', 1: '<f:format.date format=\'h:m\' date=\'{survey.starttime}\'/>'}" />
+                            </f:then>
+                            <f:else>
+                                <f:translate key="templates_survey_welcome.late" extensionName="RkwSurvey" />
+                            </f:else>
+                        </f:if>
+                    </div>
+                </div>
+            </f:then>
+            <f:else>
+
+                <f:format.html parseFuncTSPath="lib.parseFunc_RTE">{survey.starttext}</f:format.html>
+
+                <!-- here we go! -->
+                <div class="careercheck">
+
+                    <!-- Use 'arguments="{survey: survey, surveyResult: surveyResult, extensionSuffix: extensionSuffix}"' for separate SignalSlot -->
+                    <f:form action="start" arguments="{survey: survey, surveyResult: surveyResult}" noCacheHash="true" section="check-head" class="form-fields">
+                        <f:if condition="{survey.accessRestricted}">
+                            <f:if condition="{tokenInput}">
+                                <f:then>
+                                    <f:form.hidden name="tokenInput" value="{tokenInput}" />
+                                </f:then>
+                                <f:else>
+                                    <div class="v320-1-of-2">
+                                        <div class="v320-1">
+                                            <f:form.textfield name="tokenInput" type="text" placeholder="<f:translate key='templates_survey_welcome.token' extensionName='RkwSurvey' />" />
+                                        </div>
+                                    </div>
+
+                                </f:else>
+                            </f:if>
+
+                        </f:if>
+                        <f:form.button class="button button--xl"><f:translate key="templates_survey_welcome.start" extensionName="RkwSurvey" /></f:form.button>
+                    </f:form>
+                </div>
+            </f:else>
+        </f:if>
+
+    </f:if>
+
+</f:section>
+</html>

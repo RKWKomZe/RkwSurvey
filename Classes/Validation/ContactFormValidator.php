@@ -1,0 +1,102 @@
+<?php
+
+namespace RKW\RkwSurvey\Validation;
+
+use \RKW\RkwBasics\Helper\Common;
+use \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
+
+/**
+ * Class ContactFormValidator
+ *
+ * @author Maximilian Fäßler <maximilian@faesslerweb.de>
+ * @author Steffen Kroggel <developer@steffenkroggel.de>
+ * @copyright Rkw Kompetenzzentrum
+ * @package RKW_RkwSurvey
+ * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
+ */
+class ContactFormValidator extends \TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator
+{
+    /**
+     * validation
+     * Is called directly in controller and not via PhpDocs. So it's looks not like always
+     *
+     * @var array $contactForm
+     * @return boolean|string
+     * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
+     */
+    public function isValid($contactForm)
+    {
+        $isValid = true;
+        $settings = $this->getSettings();
+
+        foreach ($settings['contact']['required'] as $key => $optionalField) {
+
+            // do only check, if it's a) not an optional field and b) the field is shown in fe
+            if (
+                !$optionalField
+                && $settings['contact']['show'][$key]
+            ) {
+                if (
+                    ($key == 'gender' && $contactForm[$key] == 99)
+                    || ($key != 'gender' && !$contactForm[$key])
+                ) {
+                    $this->result->forProperty($key)->addError(
+                        new \TYPO3\CMS\Extbase\Error\Error(
+                            \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
+                                'contactFormValidator.not_filled',
+                                'rkw_survey'
+                            ), 1541170766
+                        )
+                    );
+                    $isValid = false;
+                }
+            }
+        }
+
+        // Check privacy
+        if (!$contactForm['privacy']) {
+            $this->result->addError(
+                new \TYPO3\CMS\Extbase\Error\Error(
+                    \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
+                        'contactFormValidator.privacy',
+                        'rkw_survey'
+                    ), 1541170767
+                )
+            );
+            $isValid = false;
+        }
+
+        return $isValid;
+        //===
+    }
+
+
+    /**
+     * Returns TYPO3 settings
+     *
+     * @param string $which Which type of settings will be loaded
+     * @return array
+     * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
+     */
+    protected function getSettings($which = ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS)
+    {
+
+        return Common::getTyposcriptConfiguration('Rkwsurvey', $which);
+        //===
+    }
+}
+

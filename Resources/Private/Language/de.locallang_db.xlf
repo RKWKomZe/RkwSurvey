@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2017-12-04T11:15:31Z" product-name="rkw_survey">
+		<header/>
+		<body>
+
+            <!-- ############################## -->
+			<!-- MODELS -->
+			<!-- ############################## -->
+			<trans-unit id="tx_rkwsurvey_domain_model_survey">
+				<source>RKW Survey: Survey</source>
+				<target>RKW Survey: Umfrage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.description">
+				<source>Description</source>
+				<target>Beschreibung</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.name">
+				<source>Name</source>
+				<target>Name</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.starttext">
+				<source>Starttext</source>
+				<target>Einleitungstext</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.endtext">
+				<source>Endtext</source>
+				<target>Abschlusstext</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.question">
+				<source>Question</source>
+				<target>Frage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.admin">
+				<source>Admin (receives e-mail when a survey has been completed)</source>
+				<target>Admin (erhält E-Mail, wenn eine Umfrage abgeschlossen wurde)</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.token">
+                <source>Token</source>
+                <target>Tokenliste (Kann im Backend Module "RKW Survey" verwaltet werden)</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_survey.access_restricted">
+                <source>Access Restricted</source>
+                <target>Zugriffsbeschränkt (Nutzer benötigen Token zur Teilnahme)</target>
+            </trans-unit>
+
+
+			<trans-unit id="tx_rkwsurvey_domain_model_question">
+				<source>Question</source>
+				<target>Frage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.question">
+				<source>Question</source>
+				<target>Frage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.hint">
+				<source>Hint / Help</source>
+				<target>Hinweis / Hilfestellung</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.required">
+				<source>Required</source>
+				<target>Frage muss beantwortet werden (Pflichtangabe)</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.answer_option">
+				<source>Answer options (each separated by a pipe: "Item 1|Item2")</source>
+				<target>Liste möglicher Antworten (Jeweils getrennt durch eine Pipe: "Item 1|Item2")</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.survey">
+				<source>Survey</source>
+				<target>Umfrage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.type">
+				<source>Type</source>
+				<target>Typ (Art der Antwort)</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.type.multiple">
+				<source>Multiple choice</source>
+				<target>Multiple Choice</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.type.scale">
+				<source>Scale</source>
+				<target>Skala (von / bis)</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.type.single">
+				<source>Single answer</source>
+				<target>Einfache Auswahl</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.type.free_text">
+				<source>Free text</source>
+				<target>Freitext</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.text_consent">
+				<source>Label "from"</source>
+				<target>Beschriftung "von" (z.B. "sehr wichtig", "sehr gute Nachfrage", "trifft zu")</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.text_rejection">
+				<source>Label "to"</source>
+				<target>Beschriftung "bis" (z.B. "überhaupt nicht wichtig", "sehr schlechte Nachfrage", "trifft nicht zu")</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.scale_from_points">
+				<source>Scale from points</source>
+				<target>Skala: Minimale Punktzahl</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.scale_to_points">
+				<source>Scale to points</source>
+				<target>Skala: Anzahl der Items</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.do_action">
+                <source>Define action</source>
+                <target>Aktion definieren (Folgefragen nach Definition überspringen)</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_question.do_action_if">
+                <source>Action on value</source>
+                <target>Aktion durchführen, wenn Antwort folgenden Wert enthält (geben Sie hier den Wert "1" ein, wenn bei Antwortmöglichkeit 1 etwas geschehen soll)</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_question.do_action_jump">
+                <source>Action on value</source>
+                <target>Die bei diesem Wert zu überspringenden Fragen</target>
+            </trans-unit>
+
+
+			<trans-unit id="tx_rkwsurvey_domain_model_answeroption.answer">
+				<source>Answer</source>
+				<target>Antwort</target>
+			</trans-unit>
+
+
+			<trans-unit id="tx_rkwsurvey_domain_model_surveyresult">
+				<source>Survey Result</source>
+				<target>Umfrageergebnis</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_surveyresult.finished">
+				<source>Finished</source>
+				<target>Abgeschlossen</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_surveyresult.survey">
+				<source>Survey</source>
+				<target>Umfrage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_surveyresult.question_result">
+				<source>Question Result</source>
+				<target>Antwort</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_surveyresult.token">
+                <source>Token</source>
+                <target>Token</target>
+            </trans-unit>
+
+
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresult">
+				<source>Question Result</source>
+				<target>Antwort</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresult.answer_multiple">
+				<source>Answer Multiple</source>
+				<target>Multiple choice Antwort</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresult.answer_free">
+				<source>Answer Free</source>
+				<target>Freitext Antwort</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresult.survey_result">
+				<source>Survey Result</source>
+				<target>Umfrageergebnis</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresult.question">
+				<source>Question</source>
+				<target>Frage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresult.skipped">
+                <source>Question was skipped automatically</source>
+                <target>Frage wurde automatisch übersprungen</target>
+            </trans-unit>
+
+
+            <trans-unit id="tx_rkwsurvey_domain_model_token">
+                <source>Token</source>
+                <target>Token</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_token.name">
+                <source>Token</source>
+                <target>Token</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_token.used">
+                <source>Used</source>
+                <target>Benutzt</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_token.cruser_id">
+                <source>CreateUserID</source>
+                <target>ID des Erstellers</target>
+            </trans-unit>
+
+
+
+			<trans-unit id="flexform.more.newsletter_options">
+				<source>Survey option</source>
+				<target>Umfrage Anmeldeoptionen</target>
+			</trans-unit>
+			<trans-unit id="flexform.more.newsletter">
+				<source>Choose divisions</source>
+				<target>Zur Verfügung stehende Umfragen</target>
+			</trans-unit>
+
+
+            <!-- ############################## -->
+			<!-- FLEXFORM -->
+			<!-- ############################## -->
+			<trans-unit id="flexform.survey.survey_options">
+				<source>Options</source>
+				<target>Optionen</target>
+			</trans-unit>
+			<trans-unit id="flexform.survey.survey">
+				<source>Show Survey</source>
+				<target>Zeige Umfrage</target>
+			</trans-unit>
+
+			<trans-unit id="flexform.survey.contact_options">
+                <source>Contact options</source>
+                <target>Kontaktoptionen: Definieren</target>
+            </trans-unit>
+			<trans-unit id="flexform.survey.contact.show_contact_form">
+                <source>Show contact form</source>
+                <target>Zeige Kontaktformular im Anschluss einer Umfrage</target>
+            </trans-unit>
+            <trans-unit id="flexform.survey.contact.email_address">
+                <source>Email Address(es)</source>
+                <target>Ausgefülltes Kontaktformular an folgende E-Mail Adresse(n) schicken (mehrere E-Mail Adressen sind mit Komma zu trennen)</target>
+            </trans-unit>
+
+            <trans-unit id="flexform.survey.contact.show_gender">
+                <source>Show field: gender</source>
+                <target>Feld anzeigen: Anrede</target>
+            </trans-unit>
+            <trans-unit id="flexform.survey.contact.show_first_name">
+                <source>Show field:  first name</source>
+                <target>Feld anzeigen: Vorname</target>
+            </trans-unit>
+            <trans-unit id="flexform.survey.contact.show_last_name">
+                <source>Show field:  last name</source>
+                <target>Feld anzeigen: Nachname</target>
+            </trans-unit>
+            <trans-unit id="flexform.survey.contact.show_company">
+                <source>Show field: company</source>
+                <target>Feld anzeigen: Firma</target>
+            </trans-unit>
+            <trans-unit id="flexform.survey.contact.show_phone">
+                <source>Show field: phone</source>
+                <target>Feld anzeigen: Telefon</target>
+            </trans-unit>
+
+            <trans-unit id="flexform.survey.contact_requiredfields">
+                <source>Required fields options</source>
+                <target>Kontaktoptionen: Pflichtfelder</target>
+            </trans-unit>
+            <trans-unit id="flexform.survey.contact.required_gender">
+                <source>Is optional: Gender</source>
+                <target>Ist optional: Anrede</target>
+            </trans-unit>
+            <trans-unit id="flexform.survey.contact.required_first_name">
+                <source>Is optional: First name</source>
+                <target>Ist optional: Vorname</target>
+            </trans-unit>
+            <trans-unit id="flexform.survey.contact.required_last_name">
+                <source>Is optional: Last name</source>
+                <target>Ist optional: Nachname</target>
+            </trans-unit>
+            <trans-unit id="flexform.survey.contact.required_company">
+                <source>Is optional: Company</source>
+                <target>Ist optional: Firma</target>
+            </trans-unit>
+            <trans-unit id="flexform.survey.contact.required_phone">
+                <source>Is optional: Phone</source>
+                <target>Ist optional: Telefon</target>
+            </trans-unit>
+
+		</body>
+	</file>
+</xliff>
