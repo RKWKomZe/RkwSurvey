@@ -10,12 +10,6 @@
     },
     "authors": [
         {
-            "name": "Steffen Kroggel",
-            "email": "developer@steffenkroggel.de",
-            "homepage": "http://www.steffenkroggel.de",
-            "role": "Developer"
-        },
-        {
             "name": "Maximilian Fäßler",
             "email": "maximilian@faesslerweb.de",
             "homepage": "https://www.faesslerweb.de",
