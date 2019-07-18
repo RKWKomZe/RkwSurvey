@@ -35,14 +35,14 @@
             <ROOT>
                 <TCEforms>
                     <sheetTitle>
-                        LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.contact_options
+                        LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.show
                     </sheetTitle>
                 </TCEforms>
                 <type>array</type>
                 <el>
                     <settings.contact.show.contactForm>
                         <label>
-                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.contact.show_contact_form
+                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.show.contactForm
                         </label>
                         <config>
                             <type>check</type>
@@ -50,7 +50,7 @@
                     </settings.contact.show.contactForm>
                     <settings.contact.show.gender>
                         <label>
-                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.contact.show_gender
+                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.show.gender
                         </label>
                         <config>
                             <type>check</type>
@@ -59,7 +59,7 @@
                     </settings.contact.show.gender>
                     <settings.contact.show.firstName>
                         <label>
-                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.contact.show_first_name
+                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.show.firstName
                         </label>
                         <config>
                             <type>check</type>
@@ -68,7 +68,7 @@
                     </settings.contact.show.firstName>
                     <settings.contact.show.lastName>
                         <label>
-                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.contact.show_last_name
+                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.show.lastName
                         </label>
                         <config>
                             <type>check</type>
@@ -77,7 +77,7 @@
                     </settings.contact.show.lastName>
                     <settings.contact.show.company>
                         <label>
-                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.contact.show_company
+                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.show.company
                         </label>
                         <config>
                             <type>check</type>
@@ -86,7 +86,7 @@
                     </settings.contact.show.company>
                     <settings.contact.show.phone>
                         <label>
-                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.contact.show_phone
+                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.show.phone
                         </label>
                         <config>
                             <type>check</type>
@@ -97,18 +97,53 @@
 
             </ROOT>
         </contactoptions>
+
+        <contacttext>
+            <ROOT>
+                <TCEforms>
+                    <sheetTitle>
+                        LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.text
+                    </sheetTitle>
+                </TCEforms>
+                <type>array</type>
+                <el>
+                    <settings.contact.text.headline>
+                        <label>
+                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.text.headline
+                        </label>
+                        <config>
+                            <type>text</type>
+                            <cols>24</cols>
+                            <rows>3</rows>
+                        </config>
+                    </settings.contact.text.headline>
+                    <settings.contact.text.description>
+                        <label>
+                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.text.description
+                        </label>
+                        <config>
+                            <type>text</type>
+                            <cols>24</cols>
+                            <rows>3</rows>
+                        </config>
+                    </settings.contact.text.description>
+                </el>
+
+            </ROOT>
+        </contacttext>
+
         <contactrequiredfields>
             <ROOT>
                 <TCEforms>
                     <sheetTitle>
-                        LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.contact_requiredfields
+                        LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.required
                     </sheetTitle>
                 </TCEforms>
                 <type>array</type>
                 <el>
                     <settings.contact.required.gender>
                         <label>
-                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.contact.required_gender
+                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.required.gender
                         </label>
                         <config>
                             <type>check</type>
@@ -116,7 +151,7 @@
                     </settings.contact.required.gender>
                     <settings.contact.required.firstName>
                         <label>
-                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.contact.required_first_name
+                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.required.firstName
                         </label>
                         <config>
                             <type>check</type>
@@ -124,7 +159,7 @@
                     </settings.contact.required.firstName>
                     <settings.contact.required.lastName>
                         <label>
-                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.contact.required_last_name
+                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.required.lastName
                         </label>
                         <config>
                             <type>check</type>
@@ -132,7 +167,7 @@
                     </settings.contact.required.lastName>
                     <settings.contact.required.company>
                         <label>
-                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.contact.required_company
+                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.required.company
                         </label>
                         <config>
                             <type>check</type>
@@ -140,7 +175,7 @@
                     </settings.contact.required.company>
                     <settings.contact.required.phone>
                         <label>
-                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.contact.required_phone
+                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.required.phone
                         </label>
                         <config>
                             <type>check</type>
