@@ -214,61 +214,71 @@
 				<target>Zeige Umfrage</target>
 			</trans-unit>
 
-			<trans-unit id="flexform.survey.contact_options">
-                <source>Contact options</source>
-                <target>Kontaktoptionen: Definieren</target>
+			<trans-unit id="flexform.survey.show">
+                <source>Contact: Set options</source>
+                <target>Kontaktaufnahme: Optionen festlegen</target>
             </trans-unit>
-			<trans-unit id="flexform.survey.contact.show_contact_form">
+			<trans-unit id="flexform.survey.show.contactForm">
                 <source>Show contact form</source>
                 <target>Zeige Kontaktformular im Anschluss einer Umfrage</target>
             </trans-unit>
-            <trans-unit id="flexform.survey.contact.email_address">
-                <source>Email Address(es)</source>
-                <target>Ausgefülltes Kontaktformular an folgende E-Mail Adresse(n) schicken (mehrere E-Mail Adressen sind mit Komma zu trennen)</target>
-            </trans-unit>
-
-            <trans-unit id="flexform.survey.contact.show_gender">
+            <trans-unit id="flexform.survey.show.gender">
                 <source>Show field: gender</source>
                 <target>Feld anzeigen: Anrede</target>
             </trans-unit>
-            <trans-unit id="flexform.survey.contact.show_first_name">
-                <source>Show field:  first name</source>
+            <trans-unit id="flexform.survey.show.firstName">
+                <source>Show field: first name</source>
                 <target>Feld anzeigen: Vorname</target>
             </trans-unit>
-            <trans-unit id="flexform.survey.contact.show_last_name">
-                <source>Show field:  last name</source>
+            <trans-unit id="flexform.survey.show.lastName">
+                <source>Show field: last name</source>
                 <target>Feld anzeigen: Nachname</target>
             </trans-unit>
-            <trans-unit id="flexform.survey.contact.show_company">
+            <trans-unit id="flexform.survey.show.company">
                 <source>Show field: company</source>
                 <target>Feld anzeigen: Firma</target>
             </trans-unit>
-            <trans-unit id="flexform.survey.contact.show_phone">
+            <trans-unit id="flexform.survey.show.phone">
                 <source>Show field: phone</source>
                 <target>Feld anzeigen: Telefon</target>
             </trans-unit>
 
-            <trans-unit id="flexform.survey.contact_requiredfields">
-                <source>Required fields options</source>
-                <target>Kontaktoptionen: Pflichtfelder</target>
+
+            <trans-unit id="flexform.survey.text">
+                <source>Contact: Defining texts</source>
+                <target>Kontaktaufnahme: Texte festlegen</target>
             </trans-unit>
-            <trans-unit id="flexform.survey.contact.required_gender">
+            <trans-unit id="flexform.survey.text.headline">
+                <source>Headline</source>
+                <target>Überschrift</target>
+            </trans-unit>
+            <trans-unit id="flexform.survey.text.description">
+                <source>Teaser text</source>
+                <target>Einleitungstext</target>
+            </trans-unit>
+
+
+            <trans-unit id="flexform.survey.required">
+                <source>Contact: Required fields</source>
+                <target>Kontaktaufnahme: Pflichtfelder</target>
+            </trans-unit>
+            <trans-unit id="flexform.survey.required.gender">
                 <source>Is optional: Gender</source>
                 <target>Ist optional: Anrede</target>
             </trans-unit>
-            <trans-unit id="flexform.survey.contact.required_first_name">
+            <trans-unit id="flexform.survey.required.firstName">
                 <source>Is optional: First name</source>
                 <target>Ist optional: Vorname</target>
             </trans-unit>
-            <trans-unit id="flexform.survey.contact.required_last_name">
+            <trans-unit id="flexform.survey.required.lastName">
                 <source>Is optional: Last name</source>
                 <target>Ist optional: Nachname</target>
             </trans-unit>
-            <trans-unit id="flexform.survey.contact.required_company">
+            <trans-unit id="flexform.survey.required.company">
                 <source>Is optional: Company</source>
                 <target>Ist optional: Firma</target>
             </trans-unit>
-            <trans-unit id="flexform.survey.contact.required_phone">
+            <trans-unit id="flexform.survey.required.phone">
                 <source>Is optional: Phone</source>
                 <target>Ist optional: Telefon</target>
             </trans-unit>
