@@ -43,18 +43,32 @@ class ContactFormValidator extends \TYPO3\CMS\Extbase\Validation\Validator\Abstr
         $isValid = true;
         $settings = $this->getSettings();
 
-        foreach ($settings['contact']['required'] as $key => $optionalField) {
+        foreach ($contactForm as $field => $value) {
 
-            // do only check, if it's a) not an optional field and b) the field is shown in fe
+            if ($field == 'privacy') {
+                continue;
+            }
+
+            // do only check, if field is a not required field or not shown in FE
             if (
-                !$optionalField
-                && $settings['contact']['show'][$key]
+                (
+                    ($settings['contact']['required'][$field])
+                    && ($settings['contact']['show'][$field])
+                )
+                || ($field == 'email')
             ) {
+
                 if (
-                    ($key == 'gender' && $contactForm[$key] == 99)
-                    || ($key != 'gender' && !$contactForm[$key])
+                    (
+                        ($field == 'gender')
+                        && ($value == 99)
+                    )
+                    || (
+                        ($field != 'gender')
+                        && (empty($value))
+                    )
                 ) {
-                    $this->result->forProperty($key)->addError(
+                    $this->result->forProperty($field)->addError(
                         new \TYPO3\CMS\Extbase\Error\Error(
                             \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
                                 'contactFormValidator.not_filled',
