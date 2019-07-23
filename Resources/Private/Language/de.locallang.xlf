@@ -124,7 +124,7 @@
             </trans-unit>
 			<trans-unit id="tx_rkwsurvey_controller_survey.tokenExistAndFinished">
                 <source>Oops! This survey code has already been used. Thank you very much for your participation!</source>
-                <target>Upps! Diese Umfragecode wurde bereits verwendet. Vielen Dank für Ihre Teilnahme!</target>
+                <target>Upps! Dieser Umfragecode wurde bereits verwendet. Vielen Dank für Ihre Teilnahme!</target>
             </trans-unit>
             <trans-unit id="tx_rkwsurvey_controller_survey.tokenNotExist">
                 <source>Oops! Unfortunately, we do not know this survey code. Please check the survey code for correctness and make sure that the correct survey was called. Of course our support is also available for you.</source>

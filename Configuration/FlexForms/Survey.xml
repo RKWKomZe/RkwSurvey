@@ -84,6 +84,16 @@
                             <default>1</default>
                         </config>
                     </settings.contact.show.company>
+                    <!--
+                    <settings.contact.show.email>
+                        <label>
+                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.show.email
+                        </label>
+                        <config>
+                            <type>check</type>
+                            <default>1</default>
+                        </config>
+                    </settings.contact.show.email> -->
                     <settings.contact.show.phone>
                         <label>
                             LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.show.phone
@@ -97,40 +107,6 @@
 
             </ROOT>
         </contactoptions>
-
-        <contacttext>
-            <ROOT>
-                <TCEforms>
-                    <sheetTitle>
-                        LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.text
-                    </sheetTitle>
-                </TCEforms>
-                <type>array</type>
-                <el>
-                    <settings.contact.text.headline>
-                        <label>
-                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.text.headline
-                        </label>
-                        <config>
-                            <type>text</type>
-                            <cols>24</cols>
-                            <rows>3</rows>
-                        </config>
-                    </settings.contact.text.headline>
-                    <settings.contact.text.description>
-                        <label>
-                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.text.description
-                        </label>
-                        <config>
-                            <type>text</type>
-                            <cols>24</cols>
-                            <rows>3</rows>
-                        </config>
-                    </settings.contact.text.description>
-                </el>
-
-            </ROOT>
-        </contacttext>
 
         <contactrequiredfields>
             <ROOT>
@@ -173,6 +149,17 @@
                             <type>check</type>
                         </config>
                     </settings.contact.required.company>
+                    <!--
+                    <settings.contact.required.email>
+                        <label>
+                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.required.email
+                        </label>
+                        <config>
+                            <type>check</type>
+                            <default>1</default>
+                        </config>
+                    </settings.contact.required.email>
+                    -->
                     <settings.contact.required.phone>
                         <label>
                             LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.required.phone
@@ -185,5 +172,40 @@
 
             </ROOT>
         </contactrequiredfields>
+
+
+        <contacttext>
+            <ROOT>
+                <TCEforms>
+                    <sheetTitle>
+                        LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.text
+                    </sheetTitle>
+                </TCEforms>
+                <type>array</type>
+                <el>
+                    <settings.contact.text.headline>
+                        <label>
+                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.text.headline
+                        </label>
+                        <config>
+                            <type>text</type>
+                            <cols>24</cols>
+                            <rows>3</rows>
+                        </config>
+                    </settings.contact.text.headline>
+                    <settings.contact.text.description>
+                        <label>
+                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.text.description
+                        </label>
+                        <config>
+                            <type>text</type>
+                            <cols>24</cols>
+                            <rows>3</rows>
+                        </config>
+                    </settings.contact.text.description>
+                </el>
+
+            </ROOT>
+        </contacttext>
     </sheets>
 </T3DataStructure>

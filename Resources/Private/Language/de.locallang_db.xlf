@@ -238,6 +238,10 @@
                 <source>Show field: company</source>
                 <target>Feld anzeigen: Firma</target>
             </trans-unit>
+            <trans-unit id="flexform.survey.show.email">
+                <source>Show field: E-Mail</source>
+                <target>Feld anzeigen: E-Mail</target>
+            </trans-unit>
             <trans-unit id="flexform.survey.show.phone">
                 <source>Show field: phone</source>
                 <target>Feld anzeigen: Telefon</target>
@@ -263,24 +267,28 @@
                 <target>Kontaktaufnahme: Pflichtfelder</target>
             </trans-unit>
             <trans-unit id="flexform.survey.required.gender">
-                <source>Is optional: Gender</source>
-                <target>Ist optional: Anrede</target>
+                <source>Required field: Gender</source>
+                <target>Pflichtfeld: Anrede</target>
             </trans-unit>
             <trans-unit id="flexform.survey.required.firstName">
-                <source>Is optional: First name</source>
-                <target>Ist optional: Vorname</target>
+                <source>Required field: First name</source>
+                <target>Pflichtfeld: Vorname</target>
             </trans-unit>
             <trans-unit id="flexform.survey.required.lastName">
-                <source>Is optional: Last name</source>
-                <target>Ist optional: Nachname</target>
+                <source>Required field: Last name</source>
+                <target>Pflichtfeld: Nachname</target>
             </trans-unit>
             <trans-unit id="flexform.survey.required.company">
-                <source>Is optional: Company</source>
-                <target>Ist optional: Firma</target>
+                <source>Required field: Company</source>
+                <target>Pflichtfeld: Firma</target>
+            </trans-unit>
+            <trans-unit id="flexform.survey.required.email">
+                <source>Required field: E-Mail</source>
+                <target>Pflichtfeld: E-Mail</target>
             </trans-unit>
             <trans-unit id="flexform.survey.required.phone">
-                <source>Is optional: Phone</source>
-                <target>Ist optional: Telefon</target>
+                <source>Required field: Phone</source>
+                <target>Pflichtfeld: Telefon</target>
             </trans-unit>
 
 		</body>

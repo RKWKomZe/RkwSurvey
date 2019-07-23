@@ -181,6 +181,9 @@
             <trans-unit id="flexform.survey.contact.show_company">
                 <source>Show field: company</source>
             </trans-unit>
+            <trans-unit id="flexform.survey.show.email">
+                <source>Show field: E-Mail</source>
+            </trans-unit>
             <trans-unit id="flexform.survey.contact.show_phone">
                 <source>Show field: phone</source>
             </trans-unit>
@@ -189,19 +192,22 @@
                 <source>Required fields options</source>
             </trans-unit>
             <trans-unit id="flexform.survey.contact.required_gender">
-                <source>Is optional: Gender</source>
+                <source>Required field: Gender</source>
             </trans-unit>
             <trans-unit id="flexform.survey.contact.required_first_name">
-                <source>Is optional: First name</source>
+                <source>Required field: First name</source>
             </trans-unit>
             <trans-unit id="flexform.survey.contact.required_last_name">
-                <source>Is optional: Last name</source>
+                <source>Required field: Last name</source>
             </trans-unit>
             <trans-unit id="flexform.survey.contact.required_company">
-                <source>Is optional: Company</source>
+                <source>Required field: Company</source>
+            </trans-unit>
+            <trans-unit id="flexform.survey.required.email">
+                <source>Required field: E-Mail</source>
             </trans-unit>
             <trans-unit id="flexform.survey.contact.required_phone">
-                <source>Is optional: Phone</source>
+                <source>Required field: Phone</source>
             </trans-unit>
 
 		</body>
