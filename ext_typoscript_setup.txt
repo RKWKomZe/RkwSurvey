@@ -1,0 +1,24 @@
+config.tx_extbase.persistence {
+
+	classes {
+
+        RKW\RkwRegistration\Domain\Model\BackendUser {
+            subclasses {
+                Tx_RkwSurvey_BackendUser = RKW\RkwSurvey\Domain\Model\BackendUser
+            }
+        }
+
+		RKW\RkwSurvey\Domain\Model\BackendUser {
+			mapping {
+
+				# tablename
+				tableName = be_users
+
+				# if we set an value, we filter by it
+				# if do not set anything, all records are found
+				recordType =
+
+			}
+		}
+	}
+}
