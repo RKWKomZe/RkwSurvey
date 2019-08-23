@@ -249,7 +249,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         if (count($surveyResult->getQuestionResult()) === count($surveyResult->getSurvey()->getQuestion())) {
 
             // final create and show endtext
-            $this->forward('create', null, null, array('surveyResult' => $surveyResult, 'extensionSuffix' => $extensionSuffix, 'tokenInput' => $tokenInput));
+            $this->forward('create', null, null, array('surveyResult' => $surveyResult, 'tokenInput' => $tokenInput));
             //===
         }
 
@@ -260,12 +260,30 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
 
 
     /**
+     * action result
+     *
+     * @param \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult
+     * @param string $tokenInput
+     * @return void
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     */
+    public function newContactAction(SurveyResult $surveyResult, $tokenInput)
+    {
+        // check access restriction
+        $this->checkAccessRestriction($surveyResult, $tokenInput);
+
+        $this->view->assign('surveyResult', $surveyResult);
+        $this->view->assign('tokenInput', $tokenInput);
+    }
+
+
+
+
+    /**
      * action createContact
      *
      * @param \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult
      * @param array $contactForm
-     * @param int $privacy
-     * @param string $extensionSuffix
      * @param string $tokenInput
      * @validate $contactForm \RKW\RkwSurvey\Validation\ContactFormValidator
      * @return void
@@ -276,7 +294,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      * @throws \TYPO3\CMS\Fluid\View\Exception\InvalidTemplateResourceException
      */
-    public function createContactAction(SurveyResult $surveyResult, $contactForm, $privacy = 0, $extensionSuffix = null, $tokenInput = null)
+    public function createContactAction(SurveyResult $surveyResult, $contactForm, $tokenInput = null)
     {
 
         // check access restriction
@@ -295,7 +313,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         );
 
         // final create and show final text
-        $this->forward('result', null, null, array('surveyResult' => $surveyResult, 'tokenInput' => $tokenInput));
+        $this->forward('newContact', null, null, array('surveyResult' => $surveyResult, 'tokenInput' => $tokenInput));
         //===
 
     }
@@ -305,7 +323,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * action create
      *
      * @param \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult
-     * @param string $extensionSuffix
      * @param string $tokenInput
      * @return void
      * @throws \Exception
@@ -316,7 +333,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotException
      * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotReturnException
      *      */
-    public function createAction(SurveyResult $surveyResult, $extensionSuffix = null, $tokenInput = null)
+    public function createAction(SurveyResult $surveyResult, $tokenInput = null)
     {
         // check access restriction
         $this->checkAccessRestriction($surveyResult, $tokenInput);
@@ -331,8 +348,8 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
             $this->rkwMailService->newSurveyAdmin($surveyResult->getSurvey()->getAdmin(), $surveyResult);
 
             // Signal for e.g. E-Mails
-            $this->getSignalSlotDispatcher()->dispatch(__CLASS__, self::SIGNAL_AFTER_CREATING_SURVEY . ucfirst($extensionSuffix), array($surveyResult));
-            $this->getLogger()->log(\TYPO3\CMS\Core\Log\LogLevel::INFO, sprintf('New survey completed (surveyUid=%s, surveyResultUid=%s, extensionSuffix=%s).', $surveyResult->getSurvey()->getUid(), $surveyResult->getUid(), $extensionSuffix));
+            $this->getSignalSlotDispatcher()->dispatch(__CLASS__, self::SIGNAL_AFTER_CREATING_SURVEY, array($surveyResult));
+            $this->getLogger()->log(\TYPO3\CMS\Core\Log\LogLevel::INFO, sprintf('New survey completed (surveyUid=%s, surveyResultUid=%s).', $surveyResult->getSurvey()->getUid(), $surveyResult->getUid()));
         }
         $this->redirect('result', null, null, array('surveyResult' => $surveyResult, 'tokenInput' => $tokenInput));
         //===
@@ -406,17 +423,18 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                 $this->forward('welcome', null, null, array('survey' => $survey));
                 //===
 
-                // 2. exist & not finished: The $surveyResult is already set, let him run
+            // exist & not finished: The $surveyResult is already set, let him run
             } else {
-                if (!$surveyResult->_isNew()) {
 
-                    // 4. is new & token exist -> set token and go ahead!
-                } else {
-                    if ($surveyResult->_isNew() && $survey->getToken()->contains($token)) {
+                // is new & token exists -> set token and go ahead!
+                if ($surveyResult->_isNew()) {
+
+                    if ($survey->getToken()->contains($token)) {
 
                         $surveyResult->setToken($token);
 
                     } else {
+
                         // something went wrong
                         $this->addFlashMessage(
                             \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenSomethingWentWrong', $this->extensionName),

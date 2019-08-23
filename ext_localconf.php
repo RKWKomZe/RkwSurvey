@@ -9,11 +9,11 @@ call_user_func(
 			'RKW.RkwSurvey',
 			'Survey',
 			[
-				'Survey' => 'welcome, start, progress, createContact, create, result'
+				'Survey' => 'welcome, start, progress, newContact, createContact, create, result'
 			],
 			// non-cacheable actions
 			[
-				'Survey' => 'welcome, start, progress, createContact, create, result'
+				'Survey' => 'welcome, start, progress, newContact, createContact, create, result'
 			]
 		);
 

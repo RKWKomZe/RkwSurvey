@@ -274,12 +274,19 @@
 
 
 			<!-- Templates/Survey/Result.html -->
-            <trans-unit id="templates_survey_result.contactHeadline">
+            <trans-unit id="templates_survey_result.createContact">
+                <source>Contact us / Request a callback</source>
+            </trans-unit>
+
+
+			<!-- Templates/Survey/NewContact.html -->
+            <trans-unit id="templates_survey_newContact.contactHeadline">
                 <source>Do you find the topic exciting?</source>
             </trans-unit>
-            <trans-unit id="templates_survey_result.contactText">
+            <trans-unit id="templates_survey_newContact.contactText">
                 <source>Are you interested in more detailed information on the subject of the survey or do you have any questions? Leave us your contact details here and we will get back to you as soon as possible. Your contact data will of course be stored in the survey regardless of your answers. Participation in the survey always remains anonymous.</source>
             </trans-unit>
+
 
 
 			<!-- Partials/Survey/Question.html -->
