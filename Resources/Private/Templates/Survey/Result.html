@@ -19,28 +19,10 @@ Otherwise your changes will be overwritten the next time you save the extension 
             </f:if>
             <f:format.html parseFuncTSPath="lib.parseFunc_RTE">{surveyResult.survey.endtext}</f:format.html>
 
-
             <f:if condition="{settings.contact.show.contactForm}">
-
-                <f:if condition="{settings.contact.text.headline}">
-                    <f:then>
-                        <h2>{settings.contact.text.headline}</h2>
-                    </f:then>
-                    <f:else>
-                        <h2><f:translate key="templates_survey_result.contactHeadline" /></h2>
-                    </f:else>
-                </f:if>
-
-                <f:if condition="{settings.contact.text.description}">
-                    <f:then>
-                        <p>{settings.contact.text.description}</p>
-                    </f:then>
-                    <f:else>
-                        <p><f:translate key="templates_survey_result.contactText" /></p>
-                    </f:else>
-                </f:if>
-
-                <f:render partial="Survey/ContactForm" arguments="{_all}" />
+                <f:link.action class="button" action="newContact" controller="Survey" arguments="{surveyResult:surveyResult, tokenInput:tokenInput}">
+                   <f:translate key="templates_survey_result.createContact" />
+                </f:link.action>
             </f:if>
 
         </div>

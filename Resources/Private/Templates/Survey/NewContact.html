@@ -16,14 +16,32 @@ Otherwise your changes will be overwritten the next time you save the extension 
 <f:section name="main">
 
     <div id="check-head">
-        <h1 class="h2">{surveyResult.survey.name}</h1>
-        <p>
-            <f:translate key="templates_survey_newContact.text" />
-        </p>
 
+        <f:if condition="{settings.contact.show.contactForm}">
 
-        <f:render partial="Survey/ContactForm" arguments="{_all}" />
+            <f:if condition="{settings.contact.text.headline}">
+                <f:then>
+                    <h2>{settings.contact.text.headline}</h2>
+                </f:then>
+                <f:else>
+                    <h2><f:translate key="templates_survey_newContact.contactHeadline" /></h2>
+                </f:else>
+            </f:if>
 
+            <f:if condition="{settings.contact.text.description}">
+                <f:then>
+                    <p>{settings.contact.text.description}</p>
+                </f:then>
+                <f:else>
+                    <p><f:translate key="templates_survey_newContact.contactText" /></p>
+                </f:else>
+            </f:if>
+
+            <f:render partial="FlashMessages"  arguments="{_all}" />
+            <f:render partial="FormErrors" arguments="{object:contactForm}" />
+
+            <f:render partial="Survey/ContactForm" arguments="{_all}" />
+        </f:if>
     </div>
 </f:section>
 
