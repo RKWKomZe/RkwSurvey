@@ -30,8 +30,12 @@ call_user_func(
 
 		}
 
+
 		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($extKey, 'Configuration/TypoScript', 'RKW Survey');
 
+        //=================================================================
+        // Add tables
+        //=================================================================
 		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr('tx_rkwsurvey_domain_model_survey', 'EXT:rkw_survey/Resources/Private/Language/locallang_csh_tx_rkwsurvey_domain_model_survey.xlf');
 		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_rkwsurvey_domain_model_survey');
 
