@@ -46,8 +46,8 @@
 
 
 			<trans-unit id="tx_rkwsurvey_domain_model_question">
-				<source>Question</source>
-				<target>Frage</target>
+				<source>RKW Survey: Question</source>
+				<target>RKW Survey: Frage</target>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.question">
 				<source>Question</source>
@@ -120,14 +120,14 @@
 
 
 			<trans-unit id="tx_rkwsurvey_domain_model_answeroption.answer">
-				<source>Answer</source>
-				<target>Antwort</target>
+				<source>RKW Survey: Answer option</source>
+				<target>RKW Survey: Antwortmöglichkeit</target>
 			</trans-unit>
 
 
 			<trans-unit id="tx_rkwsurvey_domain_model_surveyresult">
-				<source>Survey Result</source>
-				<target>Umfrageergebnis</target>
+				<source>RKW Survey: Survey Result</source>
+				<target>RKW Survey: Umfrageergebnis</target>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_surveyresult.finished">
 				<source>Finished</source>
@@ -148,8 +148,8 @@
 
 
 			<trans-unit id="tx_rkwsurvey_domain_model_questionresult">
-				<source>Question Result</source>
-				<target>Antwort</target>
+				<source>RKW Survey: Question Result</source>
+				<target>RKW Survey: Antwort</target>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_questionresult.answer_multiple">
 				<source>Answer Multiple</source>
@@ -174,8 +174,8 @@
 
 
             <trans-unit id="tx_rkwsurvey_domain_model_token">
-                <source>Token</source>
-                <target>Token</target>
+                <source>RKW Survey: Token</source>
+                <target>RKW Survey: Token</target>
             </trans-unit>
             <trans-unit id="tx_rkwsurvey_domain_model_token.name">
                 <source>Token</source>
