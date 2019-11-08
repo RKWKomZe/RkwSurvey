@@ -21,7 +21,7 @@ Otherwise your changes will be overwritten the next time you save the extension 
             <h1 class="h2">{survey.name}</h1>
         </f:if>
 
-        <f:flashMessages renderMode="div" />
+        <f:render partial="FlashMessages" arguments="{_all}" />
 
         <f:if condition="<rkw:checkSurveyDate survey='{survey}' />">
             <f:then>

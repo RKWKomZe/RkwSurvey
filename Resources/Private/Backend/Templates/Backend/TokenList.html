@@ -12,7 +12,7 @@ in /Configuration/ExtensionBuilder/settings.yaml:
 Otherwise your changes will be overwritten the next time you save the extension in the extension builder
 
 <f:section name="content">
-	<f:flashMessages />
+    <f:render partial="FlashMessages" arguments="{_all}" />
 
     <f:link.action action="show" arguments="{survey: survey.uid}">
         <f:translate key="templates_backend_tokenlist.backToDetailview" extensionName="RkwSurvey" />
