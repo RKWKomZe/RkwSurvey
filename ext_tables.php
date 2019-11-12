@@ -5,6 +5,9 @@ call_user_func(
 	function($extKey)
 	{
 
+        //=================================================================
+        // Register Plugins
+        //=================================================================
 		\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
 			'RKW.RkwSurvey',
 			'Survey',
@@ -27,22 +30,36 @@ call_user_func(
 					'labels' => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/locallang_backend.xlf',
 				]
 			);
-
 		}
 
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($extKey, 'Configuration/TypoScript', 'RKW Survey');
+        //=================================================================
+        // Add tables
+        //=================================================================
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages(
+            'tx_rkwsurvey_domain_model_survey'
+        );
 
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr('tx_rkwsurvey_domain_model_survey', 'EXT:rkw_survey/Resources/Private/Language/locallang_csh_tx_rkwsurvey_domain_model_survey.xlf');
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_rkwsurvey_domain_model_survey');
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages(
+            'tx_rkwsurvey_domain_model_question'
+        );
 
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr('tx_rkwsurvey_domain_model_question', 'EXT:rkw_survey/Resources/Private/Language/locallang_csh_tx_rkwsurvey_domain_model_question.xlf');
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_rkwsurvey_domain_model_question');
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages(
+            'tx_rkwsurvey_domain_model_surveyresult'
+        );
 
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr('tx_rkwsurvey_domain_model_surveyresult', 'EXT:rkw_survey/Resources/Private/Language/locallang_csh_tx_rkwsurvey_domain_model_surveyresult.xlf');
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_rkwsurvey_domain_model_surveyresult');
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages(
+            'tx_rkwsurvey_domain_model_questionresult'
+        );
 
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr('tx_rkwsurvey_domain_model_questionresult', 'EXT:rkw_survey/Resources/Private/Language/locallang_csh_tx_rkwsurvey_domain_model_questionresult.xlf');
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_rkwsurvey_domain_model_questionresult');
+
+        //=================================================================
+        // Add TypoScript
+        //=================================================================
+		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
+		    $extKey,
+            'Configuration/TypoScript',
+            'RKW Survey'
+        );
 
 		//=================================================================
 		// Add Flexform
@@ -52,7 +69,10 @@ call_user_func(
 		$pluginSignature = $extensionName . '_' . $pluginName;
 		$GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist'][$pluginSignature] = 'layout,select_key,pages';
 		$GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$pluginSignature] = 'pi_flexform';
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue($pluginSignature, 'FILE:EXT:' . $extKey . '/Configuration/FlexForms/Survey.xml');
+		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
+		    $pluginSignature,
+            'FILE:EXT:' . $extKey . '/Configuration/FlexForms/Survey.xml'
+        );
 	},
 	$_EXTKEY
 );
