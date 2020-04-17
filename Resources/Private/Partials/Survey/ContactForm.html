@@ -64,11 +64,14 @@
         <div class="v320-1">
             <label class="form-label" for="email">
                 <f:translate key="partials_survey_contactForm.email" />
-                <f:if condition="{settings.contact.required.email}">
-                    <f:else>
-                        <span class="optional">&nbsp;<f:translate key="partials_survey_contactForm.labelOptional" /></span>
-                    </f:else>
-                </f:if>
+                <f:comment>
+                    <!-- Do not check: ALWAYS MANDATORY! -->
+                    <f:if condition="{settings.contact.required.email}">
+                        <f:else>
+                            <span class="optional">&nbsp;<f:translate key="partials_survey_contactForm.labelOptional" /></span>
+                        </f:else>
+                    </f:if>
+                </f:comment>
             </label>
             <f:form.textfield id="email" property="email" value="{contactForm.email}" additionalAttributes="{autocomplete:'email'}" type="email"/>
         </div>
