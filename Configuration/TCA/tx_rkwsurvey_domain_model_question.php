@@ -157,12 +157,10 @@ return [
 				'rows' => 15,
 			],
 			'displayCond' => [
-				'AND' => [
-					'OR' => [
-						'FIELD:type:=:1',
-						'FIELD:type:=:2',
-					]
-				],
+                'OR' => [
+                    'FIELD:type:=:1',
+                    'FIELD:type:=:2',
+                ]
 			],
 		],
         'do_action' => [
@@ -173,13 +171,11 @@ return [
                 'default' => 0,
             ],
             'displayCond' => [
-                'AND' => [
-                    'OR' => [
-                        'FIELD:type:=:1',
-                        'FIELD:type:=:2',
-                        'FIELD:type:=:3',
-                    ]
-                ],
+                'OR' => [
+                    'FIELD:type:=:1',
+                    'FIELD:type:=:2',
+                    'FIELD:type:=:3',
+                ]
             ],
         ],
         'do_action_if' => [
@@ -190,11 +186,7 @@ return [
                 'size' => 2,
                 'eval' => 'trim, int'
             ],
-            'displayCond' => [
-                'AND' => [
-                    'FIELD:do_action:=:1',
-                ],
-            ],
+            'displayCond' => 'FIELD:do_action:=:1',
         ],
         'do_action_jump' => [
             'exclude' => false,
@@ -205,14 +197,8 @@ return [
                 'eval' => 'trim, int',
                 'default' => 1,
             ],
-            'displayCond' => [
-                'AND' => [
-                    'FIELD:do_action:=:1',
-                ],
-            ],
+            'displayCond' => 'FIELD:do_action:=:1',
         ],
-
-
 		'text_consent' => [
 			'exclude' => false,
 			'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.text_consent',
@@ -253,11 +239,7 @@ return [
                     [10,10],
                 ],
 			],
-			'displayCond' => [
-				'AND' => [
-					'FIELD:type:=:3',
-				],
-			],
+			'displayCond' => 'FIELD:type:=:3',
 		],
 		'survey' => [
 			'config' => [
