@@ -5,15 +5,6 @@ call_user_func(
 	function($extKey)
 	{
 
-        //=================================================================
-        // Register Plugins
-        //=================================================================
-		\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
-			'RKW.RkwSurvey',
-			'Survey',
-			'RKW Survey: Umfrage'
-		);
-
 		if (TYPO3_MODE === 'BE') {
 
 			\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
@@ -52,27 +43,6 @@ call_user_func(
         );
 
 
-        //=================================================================
-        // Add TypoScript
-        //=================================================================
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
-		    $extKey,
-            'Configuration/TypoScript',
-            'RKW Survey'
-        );
-
-		//=================================================================
-		// Add Flexform
-		//=================================================================
-		$extensionName = strtolower(\TYPO3\CMS\Core\Utility\GeneralUtility::underscoredToUpperCamelCase($extKey));
-		$pluginName = strtolower('Survey');
-		$pluginSignature = $extensionName . '_' . $pluginName;
-		$GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist'][$pluginSignature] = 'layout,select_key,pages';
-		$GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$pluginSignature] = 'pi_flexform';
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
-		    $pluginSignature,
-            'FILE:EXT:' . $extKey . '/Configuration/FlexForms/Survey.xml'
-        );
 	},
 	$_EXTKEY
 );

@@ -105,13 +105,17 @@ return [
 	    */
         'crdate' => [
             'exclude' => true,
-            'l10n_mode' => 'mergeIfNotBlank',
+            //'l10n_mode' => 'mergeIfNotBlank',
             'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.crdate',
             'config' => [
                 'type' => 'input',
+                'renderType' => 'inputDateTime',
                 'size' => 13,
                 'eval' => 'datetime',
                 'default' => 0,
+                'behaviour' => [
+                    'allowLanguageSynchronization' => true
+                ]
             ]
         ],
 		'finished' => [

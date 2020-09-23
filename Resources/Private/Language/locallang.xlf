@@ -104,7 +104,7 @@
                 <source>Oops! During the execution something went wrong with the given survey code. Please contact our support.</source>
             </trans-unit>
             <trans-unit id="tx_rkwsurvey_controller_survey.contactSuccessful">
-                <source>Woohoo! Your request has been successfully sent. We will contact you shortly.</source>
+                <source>Wohoo! Your request has been successfully sent. We will contact you shortly.</source>
             </trans-unit>
 
 

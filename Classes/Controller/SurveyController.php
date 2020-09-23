@@ -5,7 +5,7 @@ namespace RKW\RkwSurvey\Controller;
 use \RKW\RkwSurvey\Domain\Model\Survey;
 use \RKW\RkwSurvey\Domain\Model\SurveyResult;
 use \RKW\RkwSurvey\Domain\Model\QuestionResult;
-use \RKW\RkwSurvey\Helper\SurveyProgress;
+use \RKW\RkwSurvey\Utility\SurveyProgressUtility;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /*
@@ -240,7 +240,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                 }
 
                 $surveyResult->addQuestionResult($newQuestionResult);
-                SurveyProgress::handleJumpAction($surveyResult, $newQuestionResult);
+                SurveyProgressUtility::handleJumpAction($surveyResult, $newQuestionResult);
                 $this->surveyResultRepository->update($surveyResult);
             }
         }
