@@ -1,8 +1,17 @@
-{namespace rkw=RKW\RkwSurvey\ViewHelpers}
-<f:for each="<rkw:explode string='{question.answerOption}' />" as="answerOption" iteration="iterAnswer">
-    <label class="radio radio--hidden answer">
-        <f:form.radio name="answer" property="answer" value="{iterAnswer.cycle}" class="no-jcf" />
-        {answerOption}
-        <span class="check-indicator careercheck-icon-ok-circled"></span>
-    </label>
-</f:for>
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:rkw="http://typo3.org/ns/RKW/RkwSurvey/ViewHelpers"
+    data-namespace-typo3-fluid="true">
+
+    <f:for each="<rkw:explode string='{question.answerOption}' />" as="answerOption" iteration="iterAnswer">
+        <label class="radio radio--hidden answer">
+            <f:form.radio
+                class="no-jcf"
+                name="answer"
+                property="answer"
+                value="{iterAnswer.cycle}"
+            />
+            {answerOption}
+            <span class="check-indicator careercheck-icon-ok-circled"></span>
+        </label>
+    </f:for>
+</html>

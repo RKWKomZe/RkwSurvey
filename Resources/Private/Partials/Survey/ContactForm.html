@@ -1,107 +1,117 @@
-{namespace rkwRegistration=RKW\RkwRegistration\ViewHelpers}
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:rkwRegistration="http://typo3.org/ns/RKW/RkwRegistration/ViewHelpers"
+    data-namespace-typo3-fluid="true">
 
-<f:form class="form-fields" action="createContact" object="contactForm" name="contactForm" arguments="{surveyResult: surveyResult}">
-    <f:form.hidden name="tokenInput" id="tokenInput" value="{tokenInput}" />
+    <f:form
+        class="form-fields"
+        action="createContact"
+        object="contactForm"
+        name="contactForm"
+        arguments="{surveyResult: surveyResult}"
+    >
+        <f:form.hidden name="tokenInput" id="tokenInput" value="{tokenInput}" />
 
-    <div class="v320-1-of-2">
+        <div class="v320-1-of-2">
 
-        <f:if condition="{settings.contact.show.gender}">
+            <f:if condition="{settings.contact.show.gender}">
+                <div class="v320-1">
+                    <label class="form-label" for="gender">
+                        <f:translate key="partials_survey_contactForm.gender" />
+                        <f:if condition="{settings.contact.required.gender}">
+                            <f:else>
+                                <span class="optional">&nbsp;<f:translate key="partials_survey_contactForm.labelOptional" /></span>
+                            </f:else>
+                        </f:if>
+                    </label>
+                    <f:form.select id="gender" property="gender" value="{contactForm.gender}" options="{99: '{f:translate(key:\"partials_survey_contactForm.gender.I.99\")}', 0: '{f:translate(key:\"partials_survey_contactForm.gender.I.0\")}', 1: '{f:translate(key:\"partials_survey_contactForm.gender.I.1\")}'}" optionValueField="uid" optionLabelField="name" />
+                </div>
+            </f:if>
+
+            <f:if condition="{settings.contact.show.firstName}">
+                <div class="v320-1">
+                    <label class="form-label" for="firstName">
+                        <f:translate key="partials_survey_contactForm.first_name" />
+                        <f:if condition="{settings.contact.required.firstName}">
+                            <f:else>
+                                <span class="optional">&nbsp;<f:translate key="partials_survey_contactForm.labelOptional" /></span>
+                            </f:else>
+                        </f:if>
+                    </label>
+                    <f:form.textfield id="firstName" property="firstName" value="{contactForm.firstName}" additionalAttributes="{autocomplete:'fname'}" />
+                </div>
+            </f:if>
+
+            <f:if condition="{settings.contact.show.lastName}">
+                <div class="v320-1">
+                    <label class="form-label" for="lastName">
+                        <f:translate key="partials_survey_contactForm.last_name" />
+                        <f:if condition="{settings.contact.required.lastName}">
+                            <f:else>
+                                <span class="optional">&nbsp;<f:translate key="partials_survey_contactForm.labelOptional" /></span>
+                            </f:else>
+                        </f:if>
+                    </label>
+                    <f:form.textfield id="lastName" property="lastName" value="{contactForm.lastName}" additionalAttributes="{autocomplete:'lname'}" />
+                </div>
+            </f:if>
+
+            <f:if condition="{settings.contact.show.company}">
+                <div class="v320-1">
+                    <label class="form-label" for="company">
+                        <f:translate key="partials_survey_contactForm.company" />
+                        <f:if condition="{settings.contact.required.company}">
+                            <f:else>
+                                <span class="optional">&nbsp;<f:translate key="partials_survey_contactForm.labelOptional" /></span>
+                            </f:else>
+                        </f:if>
+                    </label>
+                    <f:form.textfield id="company" property="company" value="{contactForm.company}" />
+                </div>
+            </f:if>
+
             <div class="v320-1">
-                <label class="form-label" for="gender">
-                    <f:translate key="partials_survey_contactForm.gender" />
-                    <f:if condition="{settings.contact.required.gender}">
-                        <f:else>
-                            <span class="optional">&nbsp;<f:translate key="partials_survey_contactForm.labelOptional" /></span>
-                        </f:else>
-                    </f:if>
+                <label class="form-label" for="email">
+                    <f:translate key="partials_survey_contactForm.email" />
+                    <f:comment>
+                        <!-- Do not check: ALWAYS MANDATORY! -->
+                        <f:if condition="{settings.contact.required.email}">
+                            <f:else>
+                                <span class="optional">&nbsp;<f:translate key="partials_survey_contactForm.labelOptional" /></span>
+                            </f:else>
+                        </f:if>
+                    </f:comment>
                 </label>
-                <f:form.select id="gender" property="gender" value="{contactForm.gender}" options="{99: '{f:translate(key:\"partials_survey_contactForm.gender.I.99\")}', 0: '{f:translate(key:\"partials_survey_contactForm.gender.I.0\")}', 1: '{f:translate(key:\"partials_survey_contactForm.gender.I.1\")}'}" optionValueField="uid" optionLabelField="name" />
+                <f:form.textfield id="email" property="email" value="{contactForm.email}" additionalAttributes="{autocomplete:'email'}" type="email"/>
             </div>
-        </f:if>
-        
-        <f:if condition="{settings.contact.show.firstName}">
-            <div class="v320-1">
-                <label class="form-label" for="firstName">
-                    <f:translate key="partials_survey_contactForm.first_name" />
-                    <f:if condition="{settings.contact.required.firstName}">
-                        <f:else>
-                            <span class="optional">&nbsp;<f:translate key="partials_survey_contactForm.labelOptional" /></span>
-                        </f:else>
-                    </f:if>
+
+            <f:if condition="{settings.contact.show.phone}">
+                <div class="v320-1">
+                    <label class="form-label" for="phone">
+                        <f:translate key="partials_survey_contactForm.phone" />
+                        <f:if condition="{settings.contact.required.phone}">
+                            <f:else>
+                                <span class="optional">&nbsp;<f:translate key="partials_survey_contactForm.labelOptional" /></span>
+                            </f:else>
+                        </f:if>
+                    </label>
+                    <f:form.textfield id="phone" property="phone" value="{contactForm.phone}" additionalAttributes="{autocomplete:'fname'}" />
+                </div>
+            </f:if>
+
+
+            <span class="checkbox">
+                <label>
+                    <f:form.checkbox property="privacy" value="1" />
+                    <rkwRegistration:privacyText textVersion="survey" />
                 </label>
-                <f:form.textfield id="firstName" property="firstName" value="{contactForm.firstName}" additionalAttributes="{autocomplete:'fname'}" />
-            </div>
-        </f:if>
-        
-        <f:if condition="{settings.contact.show.lastName}">
-            <div class="v320-1">
-                <label class="form-label" for="lastName">
-                    <f:translate key="partials_survey_contactForm.last_name" />
-                    <f:if condition="{settings.contact.required.lastName}">
-                        <f:else>
-                            <span class="optional">&nbsp;<f:translate key="partials_survey_contactForm.labelOptional" /></span>
-                        </f:else>
-                    </f:if>
-                </label>
-                <f:form.textfield id="lastName" property="lastName" value="{contactForm.lastName}" additionalAttributes="{autocomplete:'lname'}" />
-            </div>
-        </f:if>
-
-        <f:if condition="{settings.contact.show.company}">
-            <div class="v320-1">
-                <label class="form-label" for="company">
-                    <f:translate key="partials_survey_contactForm.company" />
-                    <f:if condition="{settings.contact.required.company}">
-                        <f:else>
-                            <span class="optional">&nbsp;<f:translate key="partials_survey_contactForm.labelOptional" /></span>
-                        </f:else>
-                    </f:if>
-                </label>
-                <f:form.textfield id="company" property="company" value="{contactForm.company}" />
-            </div>
-        </f:if>
-
-        <div class="v320-1">
-            <label class="form-label" for="email">
-                <f:translate key="partials_survey_contactForm.email" />
-                <f:comment>
-                    <!-- Do not check: ALWAYS MANDATORY! -->
-                    <f:if condition="{settings.contact.required.email}">
-                        <f:else>
-                            <span class="optional">&nbsp;<f:translate key="partials_survey_contactForm.labelOptional" /></span>
-                        </f:else>
-                    </f:if>
-                </f:comment>
-            </label>
-            <f:form.textfield id="email" property="email" value="{contactForm.email}" additionalAttributes="{autocomplete:'email'}" type="email"/>
-        </div>
-
-        <f:if condition="{settings.contact.show.phone}">
-            <div class="v320-1">
-                <label class="form-label" for="phone">
-                    <f:translate key="partials_survey_contactForm.phone" />
-                    <f:if condition="{settings.contact.required.phone}">
-                        <f:else>
-                            <span class="optional">&nbsp;<f:translate key="partials_survey_contactForm.labelOptional" /></span>
-                        </f:else>
-                    </f:if>
-                </label>
-                <f:form.textfield id="phone" property="phone" value="{contactForm.phone}" additionalAttributes="{autocomplete:'fname'}" />
-            </div>
-        </f:if>
-
-        
-        <span class="checkbox">
-            <label>
-                <f:form.checkbox property="privacy" value="1" />
-                <rkwRegistration:privacyText textVersion="survey" />
-            </label>
-        </span>
-
-        <button type="submit" class="button" name="final">
-            <span>
-                <f:translate key="partials_survey_contactForm.button" />
             </span>
-        </button>
-    </div>
-</f:form>
+
+            <button type="submit" class="button" name="final">
+                <span>
+                    <f:translate key="partials_survey_contactForm.button" />
+                </span>
+            </button>
+        </div>
+    </f:form>
+
+</html>

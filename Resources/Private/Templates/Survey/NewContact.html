@@ -1,48 +1,50 @@
-<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
-{namespace rkwRegistration=RKW\RkwRegistration\ViewHelpers}
-<f:layout name="Default" />
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:rkwRegistration="http://typo3.org/ns/RKW/RkwRegistration/ViewHelpers"
+    data-namespace-typo3-fluid="true">
 
-This Template is responsible for displaying a single view for a domain object
+    <f:layout name="Default" />
 
-If you modify this template, do not forget to change the overwrite settings
-in /Configuration/ExtensionBuilder/settings.yaml:
-  Resources:
-	Private:
-	  Templates:
-		Show.html: keep
+    This Template is responsible for displaying a single view for a domain object
 
-Otherwise your changes will be overwritten the next time you save the extension in the extension builder
+    If you modify this template, do not forget to change the overwrite settings
+    in /Configuration/ExtensionBuilder/settings.yaml:
+      Resources:
+        Private:
+          Templates:
+            Show.html: keep
 
-<f:section name="main">
+    Otherwise your changes will be overwritten the next time you save the extension in the extension builder
 
-    <div id="check-head">
+    <f:section name="main">
 
-        <f:if condition="{settings.contact.show.contactForm}">
+        <div id="check-head">
 
-            <f:if condition="{settings.contact.text.headline}">
-                <f:then>
-                    <h2>{settings.contact.text.headline}</h2>
-                </f:then>
-                <f:else>
-                    <h2><f:translate key="templates_survey_newContact.contactHeadline" /></h2>
-                </f:else>
+            <f:if condition="{settings.contact.show.contactForm}">
+
+                <f:if condition="{settings.contact.text.headline}">
+                    <f:then>
+                        <h2>{settings.contact.text.headline}</h2>
+                    </f:then>
+                    <f:else>
+                        <h2><f:translate key="templates_survey_newContact.contactHeadline" /></h2>
+                    </f:else>
+                </f:if>
+
+                <f:if condition="{settings.contact.text.description}">
+                    <f:then>
+                        <p>{settings.contact.text.description}</p>
+                    </f:then>
+                    <f:else>
+                        <p><f:translate key="templates_survey_newContact.contactText" /></p>
+                    </f:else>
+                </f:if>
+
+                <f:render partial="FlashMessages"  arguments="{_all}" />
+                <f:render partial="FormErrors" arguments="{object:contactForm}" />
+
+                <f:render partial="Survey/ContactForm" arguments="{_all}" />
             </f:if>
+        </div>
+    </f:section>
 
-            <f:if condition="{settings.contact.text.description}">
-                <f:then>
-                    <p>{settings.contact.text.description}</p>
-                </f:then>
-                <f:else>
-                    <p><f:translate key="templates_survey_newContact.contactText" /></p>
-                </f:else>
-            </f:if>
-
-            <f:render partial="FlashMessages"  arguments="{_all}" />
-            <f:render partial="FormErrors" arguments="{object:contactForm}" />
-
-            <f:render partial="Survey/ContactForm" arguments="{_all}" />
-        </f:if>
-    </div>
-</f:section>
-
-</html>
+    </html>

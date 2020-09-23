@@ -1,48 +1,52 @@
-<div class="question-overlay">
-	<div class="question-overlay__inner">
-		<span class="close close-trigger careercheck-icon-cancel-circled"></span>
-		<h2><f:translate key="partials_survey_question_help" extensionName="RkwSurvey" /></h2>
-		<p>{question.hint}</p>
-		<a class="button close-trigger"><f:translate key="partials_survey_question_helpClose" extensionName="RkwSurvey" /></a>
-	</div>
-	<div class="bg"></div>
-</div>
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    data-namespace-typo3-fluid="true">
 
-<div class="question">
-	<h2>{question.question}</h2>
-	<f:if condition="{question.hint}">
-		<span class="more-info careercheck-icon-info-circled"></span>
-	</f:if>
-</div>
-
-
-<!-- multiple choice (checkboxes) -->
-<f:if condition="{question.type} == 1">
-    <p class="info"><f:translate key="partials_survey_question_pleaseSelect" extensionName="RkwSurvey" />&nbsp;<f:translate key="partials_survey_question_mulitSelect" extensionName="RkwSurvey" /></p>
-    <div class="answer-container radio-group radio-group--multiple">
-        <f:render partial="Survey/QuestionType/MultipleChoice" arguments="{_all}" />
+    <div class="question-overlay">
+        <div class="question-overlay__inner">
+            <span class="close close-trigger careercheck-icon-cancel-circled"></span>
+            <h2><f:translate key="partials_survey_question_help" extensionName="RkwSurvey" /></h2>
+            <p>{question.hint}</p>
+            <a class="button close-trigger"><f:translate key="partials_survey_question_helpClose" extensionName="RkwSurvey" /></a>
+        </div>
+        <div class="bg"></div>
     </div>
-</f:if>
 
-<!-- single choice (radio) -->
-<f:if condition="{question.type} == 2">
-    <p class="info"><f:translate key="partials_survey_question_pleaseSelect" extensionName="RkwSurvey" />&nbsp;<f:translate key="partials_survey_question_singleSelect" extensionName="RkwSurvey" /></p>
-    <div class="answer-container radio-group radio-group--single">
-        <f:render partial="Survey/QuestionType/SingleChoice" arguments="{_all}" />
+    <div class="question">
+        <h2>{question.question}</h2>
+        <f:if condition="{question.hint}">
+            <span class="more-info careercheck-icon-info-circled"></span>
+        </f:if>
     </div>
-</f:if>
 
-<!-- free text -->
-<f:if condition="{question.type} == 0">
-    <div class="answer-container">
-        <f:render partial="Survey/QuestionType/FreeText" arguments="{_all}" />
-    </div>
-</f:if>
 
-<!-- scale (radio) -->
-<f:if condition="{question.type} == 3">
-    <div class="answer-container scale-group">
-    <f:render partial="Survey/QuestionType/Scale" arguments="{_all}" />
-    </div>
-</f:if>
+    <!-- multiple choice (checkboxes) -->
+    <f:if condition="{question.type} == 1">
+        <p class="info"><f:translate key="partials_survey_question_pleaseSelect" extensionName="RkwSurvey" />&nbsp;<f:translate key="partials_survey_question_mulitSelect" extensionName="RkwSurvey" /></p>
+        <div class="answer-container radio-group radio-group--multiple">
+            <f:render partial="Survey/QuestionType/MultipleChoice" arguments="{_all}" />
+        </div>
+    </f:if>
+
+    <!-- single choice (radio) -->
+    <f:if condition="{question.type} == 2">
+        <p class="info"><f:translate key="partials_survey_question_pleaseSelect" extensionName="RkwSurvey" />&nbsp;<f:translate key="partials_survey_question_singleSelect" extensionName="RkwSurvey" /></p>
+        <div class="answer-container radio-group radio-group--single">
+            <f:render partial="Survey/QuestionType/SingleChoice" arguments="{_all}" />
+        </div>
+    </f:if>
+
+    <!-- free text -->
+    <f:if condition="{question.type} == 0">
+        <div class="answer-container">
+            <f:render partial="Survey/QuestionType/FreeText" arguments="{_all}" />
+        </div>
+    </f:if>
+
+    <!-- scale (radio) -->
+    <f:if condition="{question.type} == 3">
+        <div class="answer-container scale-group">
+        <f:render partial="Survey/QuestionType/Scale" arguments="{_all}" />
+        </div>
+    </f:if>
+</html>
 
