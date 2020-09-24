@@ -1,52 +1,62 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
     data-namespace-typo3-fluid="true">
 
-    <div class="question-overlay">
-        <div class="question-overlay__inner">
-            <span class="close close-trigger careercheck-icon-cancel-circled"></span>
-            <h2><f:translate key="partials_survey_question_help" extensionName="RkwSurvey" /></h2>
-            <p>{question.hint}</p>
-            <a class="button close-trigger"><f:translate key="partials_survey_question_helpClose" extensionName="RkwSurvey" /></a>
-        </div>
-        <div class="bg"></div>
+    <div class="flex">
+        <!-- @toDo: Remove empty h2. Just ja temporary html/css fix for development -->
+        <h2></h2>
+        <h2 class="h2 align-center">{question.question}</h2>
+        <f:comment>
+            <!-- @toDo: the tooltip function is currently not part of the 2020 design -->
+            <f:if condition="{question.hint}">
+                <span class="more-info careercheck-icon-info-circled"></span>
+            </f:if>
+        </f:comment>
     </div>
 
-    <div class="question">
-        <h2>{question.question}</h2>
-        <f:if condition="{question.hint}">
-            <span class="more-info careercheck-icon-info-circled"></span>
-        </f:if>
-    </div>
+    <div class="careercheck__questions mt-1">
 
-
-    <!-- multiple choice (checkboxes) -->
-    <f:if condition="{question.type} == 1">
-        <p class="info"><f:translate key="partials_survey_question_pleaseSelect" extensionName="RkwSurvey" />&nbsp;<f:translate key="partials_survey_question_mulitSelect" extensionName="RkwSurvey" /></p>
-        <div class="answer-container radio-group radio-group--multiple">
+        <f:comment><!-- multiple choice (checkboxes) --></f:comment>
+        <f:if condition="{question.type} == 1">
+            <p><f:translate key="partials_survey_question_pleaseSelect" extensionName="RkwSurvey" />&nbsp;<f:translate key="partials_survey_question_mulitSelect" extensionName="RkwSurvey" /></p>
             <f:render partial="Survey/QuestionType/MultipleChoice" arguments="{_all}" />
-        </div>
-    </f:if>
+        </f:if>
 
-    <!-- single choice (radio) -->
-    <f:if condition="{question.type} == 2">
-        <p class="info"><f:translate key="partials_survey_question_pleaseSelect" extensionName="RkwSurvey" />&nbsp;<f:translate key="partials_survey_question_singleSelect" extensionName="RkwSurvey" /></p>
-        <div class="answer-container radio-group radio-group--single">
+        <f:comment><!-- single choice (radio) --></f:comment>
+        <f:if condition="{question.type} == 2">
+            <p><f:translate key="partials_survey_question_pleaseSelect" extensionName="RkwSurvey" />&nbsp;<f:translate key="partials_survey_question_singleSelect" extensionName="RkwSurvey" /></p>
             <f:render partial="Survey/QuestionType/SingleChoice" arguments="{_all}" />
+        </f:if>
+
+        <f:comment><!-- free text --></f:comment>
+        <f:if condition="{question.type} == 0">
+            <div class="answer-container">
+                <f:render partial="Survey/QuestionType/FreeText" arguments="{_all}" />
+            </div>
+        </f:if>
+
+        <f:comment><!-- scale (radio) --></f:comment>
+        <f:if condition="{question.type} == 3">
+            <div class="answer-container scale-group">
+                <f:render partial="Survey/QuestionType/Scale" arguments="{_all}" />
+            </div>
+        </f:if>
+
+    </div>
+
+    <f:if condition="{question.hint}">
+        <div class="tip-box mt-2">
+            <div class="tip-box__header">
+                <span class="tip-box__icon"></span>
+                <p class="tip-box__headline text-uppercase career-small-headline">
+                    <f:translate key="partials_survey_question_tip" extensionName="RkwSurvey" />
+                </p>
+            </div>
+            <div class="tip-box__content">
+                <p class="tip-box__text">{question.hint}</p>
+            </div>
         </div>
     </f:if>
 
-    <!-- free text -->
-    <f:if condition="{question.type} == 0">
-        <div class="answer-container">
-            <f:render partial="Survey/QuestionType/FreeText" arguments="{_all}" />
-        </div>
-    </f:if>
 
-    <!-- scale (radio) -->
-    <f:if condition="{question.type} == 3">
-        <div class="answer-container scale-group">
-        <f:render partial="Survey/QuestionType/Scale" arguments="{_all}" />
-        </div>
-    </f:if>
 </html>
 

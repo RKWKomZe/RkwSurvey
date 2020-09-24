@@ -3,16 +3,19 @@
     data-namespace-typo3-fluid="true">
 
     <f:for each="<rkw:explode string='{question.answerOption}' />" as="answerOption" iteration="iterAnswer">
-        <label class="radio radio--hidden answer">
+        <div class="form__field form__field--career">
             <f:form.checkbox
-                class="no-jcf"
+                id="answer{iterAnswer.cycle}"
+                class="radio"
                 name="answer.{iterAnswer.cycle}"
                 property="answer.{iterAnswer.cycle}"
                 value="1"
             />
-            {answerOption}
-            <span class="check-indicator careercheck-icon-ok-circled"></span>
-        </label>
+            <label class="radio-label radio-label--career answer" for="answer{iterAnswer.cycle}">
+                {answerOption}
+                <span class="check-indicator careercheck-icon-ok-circled"></span>
+            </label>
+        </div>
     </f:for>
 
 </html>

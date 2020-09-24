@@ -75,3 +75,7 @@ module.tx_rkwsurvey_web_rkwsurveyevaluation {
 }
 
 module.tx_rkwsurvey_web_rkwsurveyevaluation.persistence < plugin.tx_rkwsurvey_survey.persistence
+
+
+// @toDO: REMOVE! JUST FOR DEVELOPMENT! Comes later with the standard template
+page.includeCSS.txRkwSurvey = EXT:rkw_survey/Resources/Public/Css/careercheck.css

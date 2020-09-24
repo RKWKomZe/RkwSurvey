@@ -296,6 +296,9 @@
             <trans-unit id="partials_survey_question_helpClose">
                 <source>Back to the question</source>
             </trans-unit>
+            <trans-unit id="partials_survey_question_tip">
+                <source>RKW Tip</source>
+            </trans-unit>
 			<trans-unit id="partials_survey_question_pleaseSelect">
 				<source>Please select an option.</source>
 			</trans-unit>
@@ -352,6 +355,9 @@
               </trans-unit>
               <trans-unit id="partials_survey_contactForm.labelOptional">
                   <source>(Optional)</source>
+              </trans-unit>
+              <trans-unit id="partials_survey_contactForm.labelRequired">
+                  <source>(Required)</source>
               </trans-unit>
               <trans-unit id="partials_survey_contactForm.button">
                   <source>Send</source>

@@ -22,7 +22,7 @@
             <f:format.html parseFuncTSPath="lib.parseFunc_RTE">{surveyResult.survey.endtext}</f:format.html>
 
             <f:if condition="{settings.contact.show.contactForm}">
-                <f:link.action class="button" action="newContact" controller="Survey" arguments="{surveyResult:surveyResult, tokenInput:tokenInput}">
+                <f:link.action class="button button--submit" action="newContact" controller="Survey" arguments="{surveyResult:surveyResult, tokenInput:tokenInput}">
                    <f:translate key="templates_survey_result.createContact" />
                 </f:link.action>
             </f:if>

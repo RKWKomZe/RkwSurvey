@@ -378,6 +378,10 @@
                 <source>Back to the question</source>
                 <target>Zurück zur Frage</target>
             </trans-unit>
+            <trans-unit id="partials_survey_question_tip">
+                <source>RKW Tip</source>
+                <target>RKW Tipp</target>
+            </trans-unit>
             <trans-unit id="partials_survey_question_pleaseSelect">
                 <source>Please select an option.</source>
                 <target>Bitte auswählen.</target>
@@ -451,6 +455,10 @@
             <trans-unit id="partials_survey_contactForm.labelOptional">
                 <source>(Optional)</source>
                 <target>(Optional)</target>
+            </trans-unit>
+            <trans-unit id="partials_survey_contactForm.labelRequired">
+                <source>(Required)</source>
+                <target>(Pflichtfeld)</target>
             </trans-unit>
             <trans-unit id="partials_survey_contactForm.button">
                 <source>Send</source>

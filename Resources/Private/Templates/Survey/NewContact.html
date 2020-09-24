@@ -20,26 +20,32 @@
         <div id="check-head">
 
             <f:if condition="{settings.contact.show.contactForm}">
+                <div class="flex">
+                    <f:if condition="{settings.contact.text.headline}">
+                        <f:then>
+                            <h2 class="h2">{settings.contact.text.headline}</h2>
+                        </f:then>
+                        <f:else>
+                            <h2 class="h2"><f:translate key="templates_survey_newContact.contactHeadline" /></h2>
+                        </f:else>
+                    </f:if>
+                </div>
 
-                <f:if condition="{settings.contact.text.headline}">
-                    <f:then>
-                        <h2>{settings.contact.text.headline}</h2>
-                    </f:then>
-                    <f:else>
-                        <h2><f:translate key="templates_survey_newContact.contactHeadline" /></h2>
-                    </f:else>
-                </f:if>
+                <div class="career-description flex space-between">
+                    <div class="description-text flex-basis-12">
+                        <f:if condition="{settings.contact.text.description}">
+                            <f:then>
+                                <p>{settings.contact.text.description}</p>
+                            </f:then>
+                            <f:else>
+                                <p><f:translate key="templates_survey_newContact.contactText" /></p>
+                            </f:else>
+                        </f:if>
+                    </div>
+                </div>
 
-                <f:if condition="{settings.contact.text.description}">
-                    <f:then>
-                        <p>{settings.contact.text.description}</p>
-                    </f:then>
-                    <f:else>
-                        <p><f:translate key="templates_survey_newContact.contactText" /></p>
-                    </f:else>
-                </f:if>
 
-                <f:render partial="FlashMessages"  arguments="{_all}" />
+                <f:render partial="FlashMessages" arguments="{_all}" />
                 <f:render partial="FormErrors" arguments="{object:contactForm}" />
 
                 <f:render partial="Survey/ContactForm" arguments="{_all}" />
