@@ -271,6 +271,12 @@
 			<trans-unit id="templates_survey_welcome.start">
 				<source>Start survey</source>
 			</trans-unit>
+            <trans-unit id="templates_survey_welcome.token">
+                <source>Your personal survey code</source>
+            </trans-unit>
+            <trans-unit id="templates_survey_welcome.required">
+                <source>(Required)</source>
+            </trans-unit>
 
 
 			<!-- Templates/Survey/Result.html -->

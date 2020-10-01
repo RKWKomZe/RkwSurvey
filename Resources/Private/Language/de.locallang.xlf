@@ -346,9 +346,14 @@
 				<target>Umfrage starten</target>
 			</trans-unit>
             <trans-unit id="templates_survey_welcome.token">
-                <source>Please enter survey code here.</source>
-                <target>Bitte geben Sie den Umfragecode hier ein.</target>
+                <source>Your personal survey code</source>
+                <target>Ihr persönlicher Umfragecode</target>
             </trans-unit>
+            <trans-unit id="templates_survey_welcome.required">
+                <source>(Required)</source>
+                <target>(Pflichtfeld)</target>
+            </trans-unit>
+
 
 
 			<!-- Templates/Survey/Result.html -->

@@ -4,24 +4,10 @@
 
     <f:layout name="Default" />
 
-    This template displays a NEW form for the current domain object.
-
-    If you modify this template, do not forget to change the overwrite settings
-    in /Configuration/ExtensionBuilder/settings.yaml:
-      Resources:
-        Private:
-          Templates:
-            New.html: keep
-
-    Otherwise your changes will be overwritten the next time you save the extension in the extension builder
-
 	<f:section name="main">
 
 		<f:if condition="{settings.showSurveyNameProgess}">
-            <div class="contentbox__career-header flex career-info">
-                <h2 class="h2 h2--small flex-basis-9 h2--infoflag-space">{surveyResult.survey.name}</h2>
-            </div>
-
+            <h2 class="h2">{surveyResult.survey.name}</h2>
         </f:if>
 
         <f:if condition="{errorMessage}">
@@ -34,9 +20,9 @@
             </div>
         </f:if>
 
-        <div class="contentbox contentbox--gray careercheck">
+        <div class="contentbox contentbox--gray contentbox--career careercheck" id="tx-rkwsurvey-head">
             <!-- Use 'arguments="{surveyResult: surveyResult, extensionSuffix: extensionSuffix}"' for separate SignalSlot -->
-            <f:form action="progress" name="newQuestionResult" id="check-head" object="{newQuestionResult}" arguments="{surveyResult: surveyResult}" noCacheHash="true" class="careercheck__form" section="check-head">
+            <f:form action="progress" name="newQuestionResult" id="check-head" object="{newQuestionResult}" arguments="{surveyResult: surveyResult}" noCacheHash="true" class="careercheck__form" section="tx-rkwsurvey-head">
                 <f:form.hidden name="surveyResult" property="surveyResult" value="{surveyResult}" />
                 <f:form.hidden name="tokenInput" value="{tokenInput}" />
 

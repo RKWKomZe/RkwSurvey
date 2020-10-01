@@ -2,8 +2,11 @@
     xmlns:rkwRegistration="http://typo3.org/ns/RKW/RkwRegistration/ViewHelpers"
     data-namespace-typo3-fluid="true">
 
+
+    <f:render partial="FlashMessages" arguments="{_all}" />
+    <f:render partial="FormErrors" arguments="{object:contactForm}" />
+
     <f:form
-        class="form-fields"
         action="createContact"
         object="contactForm"
         name="contactForm"
@@ -12,11 +15,11 @@
 
         <f:form.hidden name="tokenInput" id="tokenInput" value="{tokenInput}" />
 
-        <div class="flex-container">
+        <div class="flex-container mt-2">
             <div class="form flex flex-basis-8 full-width-medium space-between">
 
                 <f:if condition="{settings.contact.show.gender}">
-                    <div class="form__field width50">
+                    <div class="form__field width25 break-after">
                         <label class="form-label" for="gender">
                             <f:translate key="partials_survey_contactForm.gender" />
                             <f:if condition="{settings.contact.required.gender}">

@@ -2,65 +2,28 @@
     xmlns:rkw="http://typo3.org/ns/RKW/RkwSurvey/ViewHelpers"
     data-namespace-typo3-fluid="true">
 
-    <div class="button-footer flex space-between flex-basis-12 mt-2">
-        <f:comment><!-- to satisfy the foreseen html structure --></f:comment>
-        <div></div>
-        <f:comment>
-            <!-- the class "pagination" produce not wanted top-bottom margin  -->
-            <div class="pagination"></div>
-        </f:comment>
+    <div class="button-footer flex space-between align-center flex-basis-12 mt-2">
+        <div class="dummy">&nbsp;</div>
 
-        <div>
+        <div class="steps">
             <span>
                 <f:translate key='partials_survey_footer.progress' extensionName='RkwSurvey' />:
                 <rkw:calcPercentage percentage='<rkw:pageCount questionResultList="{surveyResult.questionResult}" start="0" />' total='<f:count>{surveyResult.survey.question}</f:count>' />
+
+                 <f:comment>
+                    <!-- old "Frage 1/4" pagination -->
+                    <f:translate key='partials_survey_footer.question' extensionName='RkwSurvey' /> <rkw:pageCount questionResultList='{surveyResult.questionResult}' /> / <f:count>{surveyResult.survey.question}</f:count>
+                </f:comment>
             </span>
         </div>
-        <f:comment><!-- button --></f:comment>
+
         <f:if condition="<f:count>{surveyResult.survey.question}</f:count> == <rkw:pageCount questionResultList='{surveyResult.questionResult}' />">
             <f:then>
-                <f:form.submit class="btn btn--primary btn--small" value="<f:translate key='partials_survey_footer.finish' extensionName='RkwSurvey' />" />
+                <f:form.submit class="btn btn--primary" value="<f:translate key='partials_survey_footer.finish' extensionName='RkwSurvey' />" />
             </f:then>
             <f:else>
-                <f:form.submit class="btn btn--primary btn--small" value="<f:translate key='partials_survey_footer.next' extensionName='RkwSurvey' />" />
+                <f:form.submit class="btn btn--primary" value="<f:translate key='partials_survey_footer.next' extensionName='RkwSurvey' />" />
             </f:else>
         </f:if>
     </div>
-
-    <f:comment>
-        <div class="careercheck-footer careercheck-footer--pagination">
-
-            <!-- to satisfy the foreseen html structure -->
-            <div>&nbsp;</div>
-
-            <!-- pager - only shown is there is more than one page -->
-            <f:if condition="<f:count>{surveyResult.survey.question}</f:count> > 1">
-                <div class="pagination">
-                    <span>
-                        <f:translate key='partials_survey_footer.progress' extensionName='RkwSurvey' />:
-                        <rkw:calcPercentage percentage='<rkw:pageCount questionResultList="{surveyResult.questionResult}" start="0" />' total='<f:count>{surveyResult.survey.question}</f:count>' />
-                        <f:comment>
-                            <!-- old "Frage 1/4" pagination -->
-                            <f:translate key='partials_survey_footer.question' extensionName='RkwSurvey' />
-                            <span class="active"><rkw:pageCount questionResultList='{surveyResult.questionResult}' /></span>
-                            /
-                            <span class="pages"><f:count>{surveyResult.survey.question}</f:count></span>
-                        </f:comment>
-                    </span>
-                </div>
-            </f:if>
-
-            <!-- button -->
-            <f:if condition="<f:count>{surveyResult.survey.question}</f:count> == <rkw:pageCount questionResultList='{surveyResult.questionResult}' />">
-                <f:then>
-                    <f:form.submit class="button button--submit" value="<f:translate key='partials_survey_footer.finish' extensionName='RkwSurvey' />" />
-                </f:then>
-                <f:else>
-                    <f:form.submit class="button button--submit" value="<f:translate key='partials_survey_footer.next' extensionName='RkwSurvey' />" />
-                </f:else>
-            </f:if>
-
-        </div>
-    </f:comment>
-
 </html>

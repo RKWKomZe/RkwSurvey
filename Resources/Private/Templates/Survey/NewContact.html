@@ -4,53 +4,31 @@
 
     <f:layout name="Default" />
 
-    This Template is responsible for displaying a single view for a domain object
-
-    If you modify this template, do not forget to change the overwrite settings
-    in /Configuration/ExtensionBuilder/settings.yaml:
-      Resources:
-        Private:
-          Templates:
-            Show.html: keep
-
-    Otherwise your changes will be overwritten the next time you save the extension in the extension builder
-
     <f:section name="main">
 
-        <div id="check-head">
 
-            <f:if condition="{settings.contact.show.contactForm}">
-                <div class="flex">
-                    <f:if condition="{settings.contact.text.headline}">
-                        <f:then>
-                            <h2 class="h2">{settings.contact.text.headline}</h2>
-                        </f:then>
-                        <f:else>
-                            <h2 class="h2"><f:translate key="templates_survey_newContact.contactHeadline" /></h2>
-                        </f:else>
-                    </f:if>
-                </div>
-
-                <div class="career-description flex space-between">
-                    <div class="description-text flex-basis-12">
-                        <f:if condition="{settings.contact.text.description}">
-                            <f:then>
-                                <p>{settings.contact.text.description}</p>
-                            </f:then>
-                            <f:else>
-                                <p><f:translate key="templates_survey_newContact.contactText" /></p>
-                            </f:else>
-                        </f:if>
-                    </div>
-                </div>
-
-
-                <f:render partial="FlashMessages" arguments="{_all}" />
-                <f:render partial="FormErrors" arguments="{object:contactForm}" />
-
-                <f:render partial="Survey/ContactForm" arguments="{_all}" />
+        <f:if condition="{settings.contact.show.contactForm}">
+            <f:if condition="{settings.contact.text.headline}">
+                <f:then>
+                    <h2 id="tx-rkwsurvey-head" class="h2">{settings.contact.text.headline}</h2>
+                </f:then>
+                <f:else>
+                    <h2 id="tx-rkwsurvey-head" class="h2"><f:translate key="templates_survey_newContact.contactHeadline" /></h2>
+                </f:else>
             </f:if>
-        </div>
+
+
+            <f:if condition="{settings.contact.text.description}">
+                <f:then>
+                    <p>{settings.contact.text.description}</p>
+                </f:then>
+                <f:else>
+                    <p><f:translate key="templates_survey_newContact.contactText" /></p>
+                </f:else>
+            </f:if>
+
+            <f:render partial="Survey/ContactForm" arguments="{_all}" />
+        </f:if>
     </f:section>
 
     </html>

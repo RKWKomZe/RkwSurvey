@@ -1,0 +1,19 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:rkw="http://typo3.org/ns/RKW/RkwSurvey/ViewHelpers"
+    data-namespace-typo3-fluid="true">
+
+    <f:if condition="{question.hint}">
+        <div class="tip-box mt-2">
+            <div class="tip-box__header">
+                <span class="tip-box__icon"></span>
+                <p class="tip-box__headline text-uppercase career-small-headline">
+                    <f:translate key="partials_survey_question_tip" extensionName="RkwSurvey" />
+                </p>
+            </div>
+            <div class="tip-box__content">
+                <p class="tip-box__text">{question.hint}</p>
+            </div>
+        </div>
+    </f:if>
+
+</html>
