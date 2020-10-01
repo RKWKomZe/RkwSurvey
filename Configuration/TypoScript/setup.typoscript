@@ -24,21 +24,6 @@ config.tx_extbase.persistence {
 
 			}
 		}
-
-        #===============================================
-        # Optional dependency for rkw_events!
-        RKW\RkwSurvey\Domain\Model\Survey {
-            subclasses {
-                Tx_RkwEvents_Survey = RKW\RkwEvents\Domain\Model\Survey
-            }
-        }
-
-        RKW\RkwEvents\Domain\Model\Survey {
-            mapping {
-                tableName = tx_rkwsurvey_domain_model_survey
-                recordType =
-            }
-        }
 	}
 }
 
@@ -67,10 +52,6 @@ plugin.tx_rkwsurvey_survey {
         showSurveyNameProgess = {$plugin.tx_rkwsurvey_survey.settings.showSurveyNameProgess}
     }
 }
-
-page.includeJSFooter.txRkwSurvey = EXT:rkw_survey/Resources/Public/Scripts/Survey.js
-# page.includeCSS.txRkwQuickcheck = EXT:rkw_survey/Resources/Public/Styles/Survey.css
-
 
 
 # Module configuration

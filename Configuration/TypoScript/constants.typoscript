@@ -15,7 +15,7 @@ plugin.tx_rkwsurvey_survey {
     settings {
 
         # cat=plugin.tx_rkwsurvey_survey/file; type=string; label=Show survey name on intro and extro
-        showSurveyNameProgessIntroExtro = 0
+        showSurveyNameIntroExtro = 0
 
         # cat=plugin.tx_rkwsurvey_survey/file; type=string; label=Show survey name on progress
         showSurveyNameProgess = 0

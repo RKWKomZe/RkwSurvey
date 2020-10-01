@@ -17,7 +17,6 @@ return [
 			'starttime' => 'starttime',
 			'endtime' => 'endtime',
 		],
-		'requestUpdate' => 'type, do_action',
 		'searchFields' => 'required,question,hint,type,text_consent,text_rejection,scale_to_points,answer_option,survey,do_action,do_action_if,do_action_jump',
 		'iconfile' => 'EXT:rkw_survey/Resources/Public/Icons/tx_rkwsurvey_domain_model_question.gif'
 	],
@@ -83,27 +82,35 @@ return [
 		],
 		'starttime' => [
 			'exclude' => false,
-			'l10n_mode' => 'mergeIfNotBlank',
+			//'l10n_mode' => 'mergeIfNotBlank',
 			'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.starttime',
 			'config' => [
 				'type' => 'input',
+                'renderType' => 'inputDateTime',
 				'size' => 13,
 				'eval' => 'datetime',
 				'default' => 0,
+                'behaviour' => [
+                    'allowLanguageSynchronization' => true
+                ]
 			]
 		],
 		'endtime' => [
 			'exclude' => false,
-			'l10n_mode' => 'mergeIfNotBlank',
+			//'l10n_mode' => 'mergeIfNotBlank',
 			'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.endtime',
 			'config' => [
 				'type' => 'input',
+                'renderType' => 'inputDateTime',
 				'size' => 13,
 				'eval' => 'datetime',
 				'default' => 0,
 				'range' => [
 					'upper' => mktime(0, 0, 0, 1, 1, 2038)
-				]
+				],
+                'behaviour' => [
+                    'allowLanguageSynchronization' => true
+                ]
 			],
 		],
 		'required' => [
@@ -146,7 +153,8 @@ return [
 
 				],
 				'default' => 0
-			]
+			],
+            'onChange' => 'reload'
 		],
 		'answer_option' => [
 			'exclude' => false,
@@ -177,6 +185,7 @@ return [
                     'FIELD:type:=:3',
                 ]
             ],
+            'onChange' => 'reload'
         ],
         'do_action_if' => [
             'exclude' => false,

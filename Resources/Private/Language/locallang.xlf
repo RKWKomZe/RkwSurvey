@@ -104,7 +104,7 @@
                 <source>Oops! During the execution something went wrong with the given survey code. Please contact our support.</source>
             </trans-unit>
             <trans-unit id="tx_rkwsurvey_controller_survey.contactSuccessful">
-                <source>Woohoo! Your request has been successfully sent. We will contact you shortly.</source>
+                <source>Wohoo! Your request has been successfully sent. We will contact you shortly.</source>
             </trans-unit>
 
 
@@ -271,6 +271,12 @@
 			<trans-unit id="templates_survey_welcome.start">
 				<source>Start survey</source>
 			</trans-unit>
+            <trans-unit id="templates_survey_welcome.token">
+                <source>Your personal survey code</source>
+            </trans-unit>
+            <trans-unit id="templates_survey_welcome.required">
+                <source>(Required)</source>
+            </trans-unit>
 
 
 			<!-- Templates/Survey/Result.html -->
@@ -295,6 +301,9 @@
 			</trans-unit>
             <trans-unit id="partials_survey_question_helpClose">
                 <source>Back to the question</source>
+            </trans-unit>
+            <trans-unit id="partials_survey_question_tip">
+                <source>RKW Tip</source>
             </trans-unit>
 			<trans-unit id="partials_survey_question_pleaseSelect">
 				<source>Please select an option.</source>
@@ -352,6 +361,9 @@
               </trans-unit>
               <trans-unit id="partials_survey_contactForm.labelOptional">
                   <source>(Optional)</source>
+              </trans-unit>
+              <trans-unit id="partials_survey_contactForm.labelRequired">
+                  <source>(Required)</source>
               </trans-unit>
               <trans-unit id="partials_survey_contactForm.button">
                   <source>Send</source>
