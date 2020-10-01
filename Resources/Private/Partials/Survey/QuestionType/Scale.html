@@ -1,23 +1,28 @@
-{namespace rkw=RKW\RkwSurvey\ViewHelpers}
-<label for="tx-rkwsurvey-left-label" class="scale-main-label">{question.textConsent}</label>
-<f:for each="<rkw:loop number='{question.scaleToPoints}' />" as="element" iteration="iterScale">
-    <label>
-        <f:if condition="{iterScale.isFirst}">
-            <f:then>
-                <f:form.radio id="tx-rkwsurvey-left-label" name="answer" property="answer" value="{iterScale.cycle}"/>
-            </f:then>
-            <f:else>
-                <f:if condition="{iterScale.isLast}">
-                    <f:then>
-                        <f:form.radio id="tx-rkwsurvey-right-label" name="answer" property="answer" value="{iterScale.cycle}"/>
-                    </f:then>
-                    <f:else>
-                        <f:form.radio name="answer" property="answer" value="{iterScale.cycle}"/>
-                    </f:else>
-                </f:if>
-            </f:else>
-        </f:if>
-        <span class="scale-item-label">{iterScale.cycle}</span>
-    </label>
-</f:for>
-<label for="tx-rkwsurvey-right-label" class="scale-main-label">{question.textRejection}</label>
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:rkw="http://typo3.org/ns/RKW/RkwSurvey/ViewHelpers"
+    data-namespace-typo3-fluid="true">
+
+
+    <div class="scale-group">
+        <div class="scale-group__item scale-group__item--label">
+            {question.textConsent}
+        </div>
+
+        <f:for each="<rkw:loop number='{question.scaleToPoints}' />" as="element" iteration="iterScale">
+            <div class="form__field scale-group__item">
+                <f:form.radio
+                    id="tx-rkwsurvey-radio-{iterScale.cycle}"
+                    class="radio"
+                    name="answer"
+                    property="answer"
+                    value="{iterScale.cycle}"
+                />
+                <label for="tx-rkwsurvey-radio-{iterScale.cycle}" class="radio-label"><span>{iterScale.cycle}</span></label>
+            </div>
+        </f:for>
+
+        <div class="scale-group__item scale-group__item--label">
+            {question.textRejection}
+        </div>
+    </div>
+</html>

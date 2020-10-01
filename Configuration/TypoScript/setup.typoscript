@@ -68,10 +68,6 @@ plugin.tx_rkwsurvey_survey {
     }
 }
 
-page.includeJSFooter.txRkwSurvey = EXT:rkw_survey/Resources/Public/Scripts/Survey.js
-# page.includeCSS.txRkwQuickcheck = EXT:rkw_survey/Resources/Public/Styles/Survey.css
-
-
 
 # Module configuration
 module.tx_rkwsurvey_web_rkwsurveyevaluation {

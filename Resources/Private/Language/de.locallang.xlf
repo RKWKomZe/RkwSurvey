@@ -135,8 +135,8 @@
                 <target>Upps! Während der Ausführung ist mit dem übergebenen Umfragecode wohl etwas schief gelaufen. Bitte wenden Sie sich an unseren Support.</target>
             </trans-unit>
             <trans-unit id="tx_rkwsurvey_controller_survey.contactSuccessful">
-                <source>Woohoo! Your request has been successfully sent. We will contact you shortly.</source>
-                <target>Woohoo! Ihre Anfrage wurde erfolgreich versendet. Wir melden uns in Kürze bei Ihnen.</target>
+                <source>Wohoo! Your request has been successfully sent. We will contact you shortly.</source>
+                <target>Wohoo! Ihre Anfrage wurde erfolgreich versendet. Wir melden uns in Kürze bei Ihnen.</target>
             </trans-unit>
 
 
@@ -346,9 +346,14 @@
 				<target>Umfrage starten</target>
 			</trans-unit>
             <trans-unit id="templates_survey_welcome.token">
-                <source>Please enter survey code here.</source>
-                <target>Bitte geben Sie den Umfragecode hier ein.</target>
+                <source>Your personal survey code</source>
+                <target>Ihr persönlicher Umfragecode</target>
             </trans-unit>
+            <trans-unit id="templates_survey_welcome.required">
+                <source>(Required)</source>
+                <target>(Pflichtfeld)</target>
+            </trans-unit>
+
 
 
 			<!-- Templates/Survey/Result.html -->
@@ -377,6 +382,10 @@
             <trans-unit id="partials_survey_question_helpClose">
                 <source>Back to the question</source>
                 <target>Zurück zur Frage</target>
+            </trans-unit>
+            <trans-unit id="partials_survey_question_tip">
+                <source>RKW Tip</source>
+                <target>RKW Tipp</target>
             </trans-unit>
             <trans-unit id="partials_survey_question_pleaseSelect">
                 <source>Please select an option.</source>
@@ -451,6 +460,10 @@
             <trans-unit id="partials_survey_contactForm.labelOptional">
                 <source>(Optional)</source>
                 <target>(Optional)</target>
+            </trans-unit>
+            <trans-unit id="partials_survey_contactForm.labelRequired">
+                <source>(Required)</source>
+                <target>(Pflichtfeld)</target>
             </trans-unit>
             <trans-unit id="partials_survey_contactForm.button">
                 <source>Send</source>

@@ -77,27 +77,35 @@ return [
 		],
 		'starttime' => [
 			'exclude' => false,
-			'l10n_mode' => 'mergeIfNotBlank',
+			//'l10n_mode' => 'mergeIfNotBlank',
 			'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.starttime',
 			'config' => [
 				'type' => 'input',
+                'renderType' => 'inputDateTime',
 				'size' => 13,
 				'eval' => 'datetime, required',
 				'default' => 0,
+                'behaviour' => [
+                    'allowLanguageSynchronization' => true
+                ]
 			]
 		],
 		'endtime' => [
 			'exclude' => false,
-			'l10n_mode' => 'mergeIfNotBlank',
+			//'l10n_mode' => 'mergeIfNotBlank',
 			'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.endtime',
 			'config' => [
 				'type' => 'input',
+                'renderType' => 'inputDateTime',
 				'size' => 13,
 				'eval' => 'datetime',
 				'default' => 0,
 				'range' => [
 					'upper' => mktime(0, 0, 0, 1, 1, 2038)
-				]
+				],
+                'behaviour' => [
+                    'allowLanguageSynchronization' => true
+                ]
 			],
 		],
 		'name' => [
@@ -116,9 +124,9 @@ return [
                 'type' => 'text',
                 'cols' => 40,
                 'rows' => 15,
-                'eval' => 'trim, required'
+                'eval' => 'trim, required',
+                'enableRichtext' => true,
             ],
-            'defaultExtras' => 'richtext[]:rte_transform[flag=rte_enabled|mode=ts_css]',
 		],
 		'endtext' => [
 			'exclude' => false,
@@ -127,9 +135,9 @@ return [
                 'type' => 'text',
                 'cols' => 40,
                 'rows' => 15,
-                'eval' => 'trim, required'
+                'eval' => 'trim, required',
+                'enableRichtext' => true,
             ],
-            'defaultExtras' => 'richtext[]:rte_transform[flag=rte_enabled|mode=ts_css]',
 		],
 		'question' => [
 			'exclude' => false,
