@@ -19,6 +19,9 @@ plugin.tx_rkwsurvey_survey {
 
         # cat=plugin.tx_rkwsurvey_survey/file; type=string; label=Show survey name on progress
         showSurveyNameProgess = 0
+
+        # cat=plugin.tx_rkwsurvey//a; type=boolean; label=Include CSS?
+        includeCss = 0
     }
 }
 

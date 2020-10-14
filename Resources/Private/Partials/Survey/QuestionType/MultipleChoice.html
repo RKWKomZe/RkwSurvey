@@ -4,7 +4,7 @@
 
     <f:for each="<rkw:explode string='{question.answerOption}' />" as="answerOption" iteration="iterAnswer">
 
-        <div class="form__field form__field--career">
+        <div class="form__field form__field--webcheck">
             <f:form.checkbox
                 id="answer{iterAnswer.cycle}"
                 class="checkbox"
@@ -12,7 +12,7 @@
                 property="answer.{iterAnswer.cycle}"
                 value="1"
             />
-            <label class="checkbox-label checkbox-label--career answer" for="answer{iterAnswer.cycle}">
+            <label class="checkbox-label checkbox-label--webcheck answer" for="answer{iterAnswer.cycle}">
                 {answerOption}
             </label>
         </div>
