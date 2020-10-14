@@ -5,17 +5,17 @@
         <h2 class="h2 align-center">{question.question}</h2>
     </div>
 
-    <div class="careercheck__questions mt-1">
+    <div class="webcheck__questions mt-1">
 
         <f:comment><!-- multiple choice (checkboxes) --></f:comment>
         <f:if condition="{question.type} == 1">
-            <p class="careercheck__hint"><f:translate key="partials_survey_question_pleaseSelect" extensionName="RkwSurvey" />&nbsp;<f:translate key="partials_survey_question_mulitSelect" extensionName="RkwSurvey" /></p>
+            <p class="webcheck__hint"><f:translate key="partials_survey_question_pleaseSelect" extensionName="RkwSurvey" />&nbsp;<f:translate key="partials_survey_question_mulitSelect" extensionName="RkwSurvey" /></p>
             <f:render partial="Survey/QuestionType/MultipleChoice" arguments="{_all}" />
         </f:if>
 
         <f:comment><!-- single choice (radio) --></f:comment>
         <f:if condition="{question.type} == 2">
-            <p class="careercheck__hint"><f:translate key="partials_survey_question_pleaseSelect" extensionName="RkwSurvey" />&nbsp;<f:translate key="partials_survey_question_singleSelect" extensionName="RkwSurvey" /></p>
+            <p class="webcheck__hint"><f:translate key="partials_survey_question_pleaseSelect" extensionName="RkwSurvey" />&nbsp;<f:translate key="partials_survey_question_singleSelect" extensionName="RkwSurvey" /></p>
             <f:render partial="Survey/QuestionType/SingleChoice" arguments="{_all}" />
         </f:if>
 
