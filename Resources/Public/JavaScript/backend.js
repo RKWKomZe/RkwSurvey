@@ -10,14 +10,18 @@ requirejs(['jquery', 'twbs/bootstrap-datetimepicker'], function ($) {
 	$(function () {
 		$('#datepicker-starttime').datetimepicker(
 			{
-				format:'YYYY-MM-DD',
+				format:'YYYY-MM-DD HH:mm',
 				minDate: $('#datepicker-min-date').val(),
 				maxDate: Date.now(),
 
 				// Fix by MF: Define icons here, otherwise no icons are shown in datepicker popup
 				icons: {
 					next: 'fa fa-chevron-circle-right',
-					previous: 'fa fa-chevron-circle-left'
+					previous: 'fa fa-chevron-circle-left',
+                    time: "fa fa-clock-o",
+                    date: "fa fa-calendar",
+                    up: "fa fa-arrow-up",
+                    down: "fa fa-arrow-down"
 				}
 			}
 		);
