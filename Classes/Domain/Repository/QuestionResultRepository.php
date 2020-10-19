@@ -76,8 +76,7 @@ class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 
         // use given time, or just the survey's starttime
         if ($startDate) {
-            // Comment: +1day is a little workaround. Maybe because of 0:00 H:i the timestamp is always a day behind the given string-date
-            $constraints[] = $query->greaterThanOrEqual('surveyResult.crdate', strtotime($startDate . '+ 1day'));
+            $constraints[] = $query->greaterThanOrEqual('surveyResult.crdate', strtotime($startDate));
         } else {
             $constraints[] = $query->greaterThanOrEqual('surveyResult.crdate', $survey->getStarttime());
         }

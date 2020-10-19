@@ -14,6 +14,7 @@ namespace RKW\RkwSurvey\Domain\Repository;
  *
  * The TYPO3 project - inspiring people to share!
  */
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * SurveyResults
@@ -31,7 +32,6 @@ class SurveyResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      * findBySurveyAndFinished
      *
      * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
-     * @param integer $finished
      * @param string $startDate
      * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface|array
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
@@ -47,11 +47,11 @@ class SurveyResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 
         // use given time, or just the survey's starttime
         if ($startDate) {
-            // Comment: +1day is a little workaround. Maybe because of 0:00 H:i the timestamp is always a day behind the given string-date
-            $constraints[] = $query->greaterThanOrEqual('crdate', strtotime($startDate . '+ 1day'));
+            $constraints[] = $query->greaterThan('crdate', strtotime($startDate));
         } else {
             $constraints[] = $query->greaterThanOrEqual('crdate', $survey->getStarttime());
         }
+
         // always make a cut at survey's endtime!
         if ($survey->getEndtime()) {
             $constraints[] = $query->lessThanOrEqual('crdate', $survey->getEndtime());
@@ -85,8 +85,7 @@ class SurveyResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 
         // use given time, or just the survey's starttime
         if ($startDate) {
-            // Comment: +1day is a little workaround. Maybe because of 0:00 H:i the timestamp is always a day behind the given string-date
-            $constraints[] = $query->greaterThanOrEqual('crdate', strtotime($startDate . '+ 1day'));
+            $constraints[] = $query->greaterThanOrEqual('crdate', strtotime($startDate));
         } else {
             $constraints[] = $query->greaterThanOrEqual('crdate', $survey->getStarttime());
         }
