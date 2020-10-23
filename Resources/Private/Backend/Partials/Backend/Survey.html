@@ -5,11 +5,11 @@
         <th colspan="2">
 			<f:if condition="{starttime}">
 				<f:then>
-					<f:format.date format="d.m.Y">{starttime}</f:format.date>
+					<f:format.date format="d.m.Y H:i">{starttime}</f:format.date>h
 				</f:then>
 				<f:else>
 					<f:if condition="{survey.starttime}">
-						<f:format.date format="d.m.Y">{survey.starttime}</f:format.date>
+						<f:format.date format="d.m.Y H:i">{survey.starttime}</f:format.date>h
 					</f:if>
 				</f:else>
 			</f:if>
@@ -18,10 +18,10 @@
             </f:if>
             <f:if condition="{survey.endtime}">
                 <f:then>
-                    <f:format.date format="d.m.Y">{survey.endtime}</f:format.date>
+                    <f:format.date format="d.m.Y H:i">{survey.endtime}</f:format.date>h
                 </f:then>
                 <f:else>
-                    <f:translate key='partials_backend_survey.noEndDate' extensionName='RkwSurvey' />
+					- <f:translate key='partials_backend_survey.noEndDate' extensionName='RkwSurvey' />
                 </f:else>
             </f:if>
 
