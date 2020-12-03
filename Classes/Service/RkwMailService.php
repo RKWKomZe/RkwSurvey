@@ -56,7 +56,7 @@ class RkwMailService implements \TYPO3\CMS\Core\SingletonInterface
             $mailService = GeneralUtility::makeInstance('RKW\\RkwMailer\\Service\\MailService');
 
             /** @var \RKW\RkwSurvey\Domain\Model\BackendUser $backendUser */
-            foreach ($backendUserList as $backendUser) {
+            foreach ($backendUserList->toArray() as $backendUser) {
                 $mailService->setTo($backendUser, array(
                     'marker'  => array(
                         'surveyResult' => $surveyResult,
