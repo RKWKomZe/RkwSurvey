@@ -33,6 +33,13 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $question = '';
 
     /**
+     * answerOption
+     *
+     * @var string
+     */
+    protected $shortName = '';
+
+    /**
      * hint
      *
      * @var string
@@ -80,6 +87,13 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @var integer
      */
     protected $scaleToPoints = 0;
+
+    /**
+     * benchmark
+     *
+     * @var integer
+     */
+    protected $benchmark = 0;
 
     /**
      * answerOption
@@ -135,6 +149,27 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function setQuestion($question)
     {
         $this->question = $question;
+    }
+
+    /**
+     * Returns the shortName
+     *
+     * @return string $shortName
+     */
+    public function getShortName()
+    {
+        return $this->shortName;
+    }
+
+    /**
+     * Sets the shortName
+     *
+     * @param string $shortName
+     * @return void
+     */
+    public function setShortName($shortName)
+    {
+        $this->shortName = $shortName;
     }
 
     /**
@@ -292,6 +327,27 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function setScaleToPoints($scaleToPoints)
     {
         $this->scaleToPoints = $scaleToPoints;
+    }
+
+    /**
+     * Returns the benchmark
+     *
+     * @return int $benchmark
+     */
+    public function getBenchmark()
+    {
+        return $this->benchmark;
+    }
+
+    /**
+     * Sets the benchmark
+     *
+     * @param int $benchmark
+     * @return void
+     */
+    public function setBenchmark($benchmark)
+    {
+        $this->benchmark = $benchmark;
     }
 
     /**

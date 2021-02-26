@@ -1,6 +1,36 @@
-<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+<html
+    xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:rkwSurvey="http://typo3.org/ns/RKW/RkwSurvey/ViewHelpers"
     data-namespace-typo3-fluid="true">
 
+
     <f:render section="main" />
+
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <script>
+
+        var options = {
+            chart: {
+                type: 'radar'
+            },
+            series: [
+                {
+                    name: "Ihr Wert",
+                    data: <f:format.raw><rkwSurvey:passArrayToJS data="{chart.values.individual}" /></f:format.raw>,
+                },
+                {
+                    name: "GEM",
+                    data: <f:format.raw><rkwSurvey:passArrayToJS data="{chart.values.benchmark}" /></f:format.raw>,
+                }
+            ],
+            labels: <f:format.raw><rkwSurvey:passArrayToJS data="{chart.labels}" /></f:format.raw>
+        }
+
+        var chart = new ApexCharts(document.querySelector("#chart"), options);
+
+        chart.render();
+
+    </script>
 
 </html>

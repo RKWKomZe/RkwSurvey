@@ -17,17 +17,17 @@ return [
 			'starttime' => 'starttime',
 			'endtime' => 'endtime',
 		],
-		'searchFields' => 'required,question,hint,type,text_consent,text_rejection,scale_to_points,answer_option,survey,do_action,do_action_if,do_action_jump',
+		'searchFields' => 'required,question,hint,short_name,type,text_consent,text_rejection,scale_to_points,benchmark,answer_option,survey,do_action,do_action_if,do_action_jump',
 		'iconfile' => 'EXT:rkw_survey/Resources/Public/Icons/tx_rkwsurvey_domain_model_question.gif'
 	],
 	'interface' => [
-		// 'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, required, question, type, hint, text_consent, text_rejection, scale_from_points, scale_to_points, answer_option, survey',
-        'showRecordFieldList' => 'hidden, required, question, type, hint, text_consent, text_rejection, scale_from_points, scale_to_points, answer_option, do_action, do_action_if, do_action_jump, survey',
+		// 'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, required, question, type, short_name, hint, text_consent, text_rejection, scale_from_points, scale_to_points, benchmark, answer_option, survey',
+        'showRecordFieldList' => 'hidden, required, question, type, short_name, hint, text_consent, text_rejection, scale_from_points, scale_to_points, benchmark, answer_option, do_action, do_action_if, do_action_jump, survey',
 
     ],
 	'types' => [
-        // '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, required, question, hint, type, text_consent, text_rejection, scale_from_points, scale_to_points, answer_option, survey, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
-		'1' => ['showitem' => 'hidden, required, question, hint, type, text_consent, text_rejection, scale_from_points, scale_to_points, answer_option, do_action, do_action_if, do_action_jump, survey, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
+        // '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, required, question, hint, short_name, type, text_consent, text_rejection, scale_from_points, scale_to_points, benchmark, answer_option, survey, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
+		'1' => ['showitem' => 'hidden, required, question, hint, short_name, type, text_consent, text_rejection, scale_from_points, scale_to_points, benchmark, answer_option, do_action, do_action_if, do_action_jump, survey, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
     ],
 	'columns' => [
 	    /*
@@ -130,6 +130,15 @@ return [
 				'eval' => 'trim, required'
 			],
 		],
+        'short_name' => [
+            'exclude' => false,
+            'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.short_name',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim, required'
+            ],
+        ],
 		'hint' => [
 			'exclude' => false,
 			'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.hint',
@@ -150,12 +159,21 @@ return [
 					['LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.type.multiple', 1],
 					['LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.type.single', 2],
 					['LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.type.scale', 3],
-
+					['LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.type.benchmark', 4],
 				],
 				'default' => 0
 			],
             'onChange' => 'reload'
 		],
+        'benchmark' => [
+            'exclude' => false,
+            'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.benchmark',
+            'config' => [
+                'type' => 'input',
+                'size' => 10,
+                'eval' => 'trim'
+            ],
+        ],
 		'answer_option' => [
 			'exclude' => false,
 			'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.answer_option',

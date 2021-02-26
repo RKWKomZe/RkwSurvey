@@ -256,6 +256,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         $this->view->assign('surveyResult', $surveyResult);
         $this->view->assign('extensionSuffix', $extensionSuffix);
         $this->view->assign('tokenInput', $tokenInput);
+//        $this->view->assign('chart', $this->prepareChart($surveyResult));
     }
 
 
@@ -275,9 +276,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         $this->view->assign('surveyResult', $surveyResult);
         $this->view->assign('tokenInput', $tokenInput);
     }
-
-
-
 
     /**
      * action createContact
@@ -371,6 +369,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
 
         $this->view->assign('surveyResult', $surveyResult);
         $this->view->assign('tokenInput', $tokenInput);
+        $this->view->assign('chart', $this->prepareChart($surveyResult));
     }
 
 
@@ -536,5 +535,43 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
 
         return $this->logger;
         //===
+    }
+
+    /**
+     * @param SurveyResult $surveyResult
+     * @return array
+     */
+    protected function prepareChart(SurveyResult $surveyResult): array
+    {
+        $benchmarkValues = [];
+        $questionShortNames = [];
+        foreach ($surveyResult->getSurvey()->getQuestion() as $question) {
+            $benchmarkValues[] = $question->getBenchmark();
+            $questionShortNames[] = $question->getShortName();
+        }
+
+        $individualValues = [];
+        foreach ($surveyResult->getQuestionResult() as $result) {
+            //  cast anwser to int, if question is of type benchmark
+
+            $individualValues[] = (int)$result->getAnswer();
+        }
+
+        //  mit 0 auffüllen, wenn bisher weniger Antworten als Labels Fragen zur Verfügung stehen
+        if (($fill = count($surveyResult->getSurvey()->getQuestion()) - count($individualValues)) > 0) {
+            for ($i = 1; $i === $fill; $i++) {
+                $individualValues[] = 0;
+            }
+        }
+
+        $radar = [
+            'labels' => $questionShortNames,
+            'values' => [
+                'benchmark'  => $benchmarkValues,
+                'individual' => $individualValues
+            ]
+        ];
+
+        return $radar;
     }
 }
