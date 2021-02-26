@@ -98,4 +98,23 @@ class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         return $query->execute();
         //====
     }
+
+    /**
+     * findByQuestion
+     *
+     * @param \RKW\RkwSurvey\Domain\Model\Question $question
+     * @return \RKW\RkwSurvey\Domain\Model\QuestionResult|null
+     */
+    public function findByQuestion(\RKW\RkwSurvey\Domain\Model\Question $question)
+    {
+        $query = $this->createQuery();
+
+        $query->matching(
+            $query->equals('question', $question)
+        );
+
+        return $query->execute();
+        //====
+    }
+
 }

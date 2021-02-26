@@ -6,8 +6,12 @@
 	<f:section name="main">
 
         <div id="chart">
-
         </div>
+
+        <f:for each="{donuts}" as="donut" iteration="iterDonut" key="identifier">
+            <div id="{identifier}">
+            </div>
+        </f:for>
 
         <f:if condition="{settings.showSurveyNameIntroExtro}">
             <f:then>

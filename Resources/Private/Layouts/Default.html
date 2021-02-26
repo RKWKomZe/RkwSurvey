@@ -33,4 +33,28 @@
 
     </script>
 
+    <f:for each="{donuts}" as="donut" iteration="iterDonut" key="identifier">
+
+        <script>
+
+            var options = {
+                chart: {
+                    type: 'donut'
+                },
+                series: <f:format.raw><rkwSurvey:passArrayToJS data="{donut.evaluation.series}" /></f:format.raw>,
+                plotOptions: {
+                    pie: {
+                        customScale: 0.5
+                    }
+                }
+            }
+
+            var chart = new ApexCharts(document.querySelector("#{identifier}"), options);
+
+            chart.render();
+
+        </script>
+
+    </f:for>
+
 </html>

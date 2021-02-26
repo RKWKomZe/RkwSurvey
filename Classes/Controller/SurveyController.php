@@ -7,6 +7,7 @@ use \RKW\RkwSurvey\Domain\Model\SurveyResult;
 use \RKW\RkwSurvey\Domain\Model\QuestionResult;
 use \RKW\RkwSurvey\Utility\SurveyProgressUtility;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -370,6 +371,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         $this->view->assign('surveyResult', $surveyResult);
         $this->view->assign('tokenInput', $tokenInput);
         $this->view->assign('chart', $this->prepareChart($surveyResult));
+        $this->view->assign('donuts', $this->prepareDonuts($surveyResult));
     }
 
 
@@ -564,7 +566,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
             }
         }
 
-        $radar = [
+        $chart = [
             'labels' => $questionShortNames,
             'values' => [
                 'benchmark'  => $benchmarkValues,
@@ -572,6 +574,73 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
             ]
         ];
 
-        return $radar;
+        return $chart;
     }
+
+    /**
+     * @param SurveyResult $surveyResult
+     * @return array
+     */
+    protected function prepareDonuts(SurveyResult $surveyResult): array
+    {
+
+        $donuts = [];
+
+        $surveyQuestions = $surveyResult->getSurvey()->getQuestion();
+
+        foreach ($surveyQuestions as $question) {
+
+            $slug = $this->slugify($question->getQuestion());
+
+            $donuts[$slug] = [
+                'name' => $question->getQuestion(),
+            ];
+
+            //  aggregate all answers to same question
+
+            $questionResults = $this->questionResultRepository->findByQuestion($question);
+
+            //  group the values
+            $evaluation = [
+                'low' => [],
+                'neutral' => [],
+                'high' => [],
+            ];
+
+            foreach ($questionResults as $result) {
+
+                if ((int) $result->getAnswer() < 5) {
+                    $evaluation['low'][] = $result;
+                }
+
+                if ((int) $result->getAnswer() === 5) {
+                    $evaluation['neutral'][] = $result;
+                }
+
+                if ((int) $result->getAnswer() > 5) {
+                    $evaluation['high'][] = $result;
+                }
+            }
+
+            $donuts[$slug]['evaluation']['low'] = (isset($evaluation['low'])) ? count($evaluation['low']) : 0;
+            $donuts[$slug]['evaluation']['neutral'] = (isset($evaluation['neutral'])) ? count($evaluation['neutral']) : 0;
+            $donuts[$slug]['evaluation']['high'] = (isset($evaluation['high'])) ? count($evaluation['low']) : 0;
+
+            //  @todo: improve this whole aggregation process
+            $donuts[$slug]['evaluation']['series'] = [$donuts[$slug]['evaluation']['low'], $donuts[$slug]['evaluation']['neutral'], $donuts[$slug]['evaluation']['high']];
+
+        }
+
+        return $donuts;
+    }
+
+    //  @todo: Fix to convert real umlauts
+    protected function slugify($input, $word_delimiter='-') {
+        $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $input);
+        $slug = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $slug);
+        $slug = strtolower(trim($slug, '-'));
+        $slug = preg_replace("/[\/_|+ -]+/", $word_delimiter, $slug);
+        return $slug;
+    }
+
 }
