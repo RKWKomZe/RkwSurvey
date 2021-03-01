@@ -15,6 +15,8 @@ namespace RKW\RkwSurvey\ViewHelpers;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Class ExplodeViewHelper
  *
@@ -33,8 +35,18 @@ class ExplodeViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHel
      */
     public function render($string, $delimiter = '|')
     {
+
+        $options = [];
+
+        $lines = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(PHP_EOL, $string, true);
+        if (count($lines) > 1) {
+            $options = $lines;
+        } else {
+            $options = GeneralUtility::trimExplode($delimiter, $string, true);
+        }
+
         // additional: Filter empty entries
-        return array_filter(\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode($delimiter, $string));
+        return array_filter($options);
         //===
     }
 }
