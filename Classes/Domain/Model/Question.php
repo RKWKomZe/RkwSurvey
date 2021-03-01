@@ -89,6 +89,13 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $scaleToPoints = 0;
 
     /**
+     * scaleStep
+     *
+     * @var integer
+     */
+    protected $scaleStep = 0;
+
+    /**
      * required
      *
      * @var boolean
@@ -358,6 +365,27 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
     /**
+     * Returns the scaleStep
+     *
+     * @return int $scaleStep
+     */
+    public function getScaleStep()
+    {
+        return $this->scaleStep;
+    }
+
+    /**
+     * Sets the scaleStep
+     *
+     * @param int $scaleStep
+     * @return void
+     */
+    public function setScaleStep($scaleStep)
+    {
+        $this->scaleStep = $scaleStep;
+    }
+
+    /**
      * Returns the benchmarkValue
      *
      * @return int $benchmarkValue
@@ -491,5 +519,19 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function setSurvey(\RKW\RkwSurvey\Domain\Model\Survey $survey)
     {
         $this->survey = $survey;
+    }
+
+    /**
+     * Returns the range for scaled questions
+     *
+     * @return array
+     */
+    public function getScale()
+    {
+        $range = range($this->scaleFromPoints, $this->scaleToPoints, $this->scaleStep);
+
+        file_put_contents('range.txt', json_encode($range));
+
+        return range($this->scaleFromPoints, $this->scaleToPoints, $this->scaleStep);
     }
 }

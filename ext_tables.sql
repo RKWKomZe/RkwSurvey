@@ -53,6 +53,7 @@ CREATE TABLE tx_rkwsurvey_domain_model_question (
 	text_rejection varchar(255) DEFAULT '' NOT NULL,
 	scale_from_points int(11) DEFAULT '0' NOT NULL,
 	scale_to_points int(11) DEFAULT '0' NOT NULL,
+    scale_step int(11) DEFAULT '0' NOT NULL,
 
 	do_action tinyint(4) unsigned DEFAULT '0' NOT NULL,
 	do_action_if tinyint(4) unsigned DEFAULT '0' NOT NULL,
