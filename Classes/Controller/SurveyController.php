@@ -548,7 +548,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         $benchmarkValues = [];
         $questionShortNames = [];
         foreach ($surveyResult->getSurvey()->getQuestion() as $question) {
-            $benchmarkValues[] = $question->getBenchmark();
+            $benchmarkValues[] = $question->getBenchmarkValue();
             $questionShortNames[] = $question->getShortName();
         }
 

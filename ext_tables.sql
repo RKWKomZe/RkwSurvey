@@ -45,6 +45,7 @@ CREATE TABLE tx_rkwsurvey_domain_model_question (
 	hint varchar(255) DEFAULT '' NOT NULL,
 	required int(11) DEFAULT '0' NOT NULL,
 	benchmark int(11) DEFAULT '0' NOT NULL,
+	benchmark_value int(11) DEFAULT '0' NOT NULL,
 	answer_option text NOT NULL,
 	survey int(11) unsigned DEFAULT '0',
 	type int(11) DEFAULT '0' NOT NULL,

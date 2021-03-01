@@ -89,11 +89,18 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $scaleToPoints = 0;
 
     /**
-     * benchmark
+     * required
+     *
+     * @var boolean
+     */
+    protected $benchmark = 0;
+
+    /**
+     * benchmarkValue
      *
      * @var integer
      */
-    protected $benchmark = 0;
+    protected $benchmarkValue = 0;
 
     /**
      * answerOption
@@ -332,7 +339,7 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Returns the benchmark
      *
-     * @return int $benchmark
+     * @return boolean $benchmark
      */
     public function getBenchmark()
     {
@@ -342,12 +349,33 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Sets the benchmark
      *
-     * @param int $benchmark
+     * @param boolean $required
      * @return void
      */
     public function setBenchmark($benchmark)
     {
         $this->benchmark = $benchmark;
+    }
+
+    /**
+     * Returns the benchmarkValue
+     *
+     * @return int $benchmarkValue
+     */
+    public function getBenchmarkValue()
+    {
+        return $this->benchmarkValue;
+    }
+
+    /**
+     * Sets the benchmarkValue
+     *
+     * @param int $benchmarkValue
+     * @return void
+     */
+    public function setBenchmarkValue($benchmarkValue)
+    {
+        $this->benchmarkValue = $benchmarkValue;
     }
 
     /**

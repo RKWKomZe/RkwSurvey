@@ -81,6 +81,12 @@
 			<trans-unit id="tx_rkwsurvey_domain_model_question.scale_to_points">
 				<source>Scale to points</source>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark">
+				<source>Benchmark</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark.value">
+				<source>Reference value</source>
+			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.do_action">
                 <source>Define action</source>
             </trans-unit>
