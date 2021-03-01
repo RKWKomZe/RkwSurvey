@@ -545,22 +545,26 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      */
     protected function prepareChart(SurveyResult $surveyResult): array
     {
+
+        //  get only questions marked as benchmark
+        $benchmarkQuestions = $surveyResult->getSurvey()->getBenchmarkQuestions();
+
         $benchmarkValues = [];
         $questionShortNames = [];
-        foreach ($surveyResult->getSurvey()->getQuestion() as $question) {
+        foreach ($benchmarkQuestions as $question) {
             $benchmarkValues[] = $question->getBenchmarkValue();
             $questionShortNames[] = $question->getShortName();
         }
 
         $individualValues = [];
-        foreach ($surveyResult->getQuestionResult() as $result) {
-            //  cast anwser to int, if question is of type benchmark
-
+        //  filter to results matching a benchmark question
+        foreach ($surveyResult->getBenchmarkQuestionResults() as $result) {
+            //  cast answer to int, if question is of marked as benchmark
             $individualValues[] = (int)$result->getAnswer();
         }
 
         //  mit 0 auffüllen, wenn bisher weniger Antworten als Labels Fragen zur Verfügung stehen
-        if (($fill = count($surveyResult->getSurvey()->getQuestion()) - count($individualValues)) > 0) {
+        if (($fill = count($benchmarkValues) - count($individualValues)) > 0) {
             for ($i = 1; $i === $fill; $i++) {
                 $individualValues[] = 0;
             }

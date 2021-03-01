@@ -377,4 +377,20 @@ class Survey extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->token = $token;
     }
+
+    /**
+     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage
+     */
+    public function getBenchmarkQuestions()
+    {
+        $benchmarkQuestions = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        foreach ($this->getQuestion() as $question) {
+            if ($question->getBenchmark()) {
+                $benchmarkQuestions->attach($question);
+            }
+        }
+
+        return $benchmarkQuestions;
+    }
+
 }
