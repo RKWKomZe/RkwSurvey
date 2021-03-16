@@ -5,13 +5,18 @@
 
 	<f:section name="main">
 
-        <div id="chart">
-        </div>
+        <div id="chart"></div>
 
-        <f:for each="{donuts}" as="donut" iteration="iterDonut" key="identifier">
-            <div id="{identifier}">
+        <div class="tiles-wrapper">
+            <div class="tiles flex-container flex-container--margin">
+                <f:for each="{donuts}" as="donut" iteration="iterDonut" key="identifier">
+                    <p>{donut.name}</p>
+                    <f:for each="{donut}" as="comparison" iteration="iterComparison" key="comparisonIdentifier">
+                        <div id="{identifier}-{comparisonIdentifier}" class="flex-item flex-basis-4"></div>
+                    </f:for>
+                </f:for>
             </div>
-        </f:for>
+        </div>
 
         <f:if condition="{settings.showSurveyNameIntroExtro}">
             <f:then>

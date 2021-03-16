@@ -22,6 +22,18 @@
                 {
                     name: "GEM",
                     data: <f:format.raw><rkwSurvey:passArrayToJS data="{chart.values.benchmark}" /></f:format.raw>,
+                },
+                {
+                    data: [0, 0, 11, 11],
+                },
+                {
+                    data: [11, 0, 0, 11],
+                },
+                {
+                    data: [11, 11, 0, 0],
+                },
+                {
+                    data: [0, 11, 11, 0],
                 }
             ],
             labels: <f:format.raw><rkwSurvey:passArrayToJS data="{chart.labels}" /></f:format.raw>
@@ -35,25 +47,38 @@
 
     <f:for each="{donuts}" as="donut" iteration="iterDonut" key="identifier">
 
-        <script>
+        <f:for each="{donut}" as="comparison" iteration="iterComparison" key="comparisonIdentifier">
 
-            var options = {
-                chart: {
-                    type: 'donut'
-                },
-                series: <f:format.raw><rkwSurvey:passArrayToJS data="{donut.evaluation.series}" /></f:format.raw>,
-                plotOptions: {
-                    pie: {
-                        customScale: 0.5
+            <p>{comparisonIdentifier}</p>
+
+            <script>
+
+                var options = {
+                    chart: {
+                        type: 'donut'
+                    },
+                    series: <f:format.raw><rkwSurvey:passArrayToJS data="{donut.data.my-region.evaluation.series}" /></f:format.raw>,
+                    plotOptions: {
+                        pie: {
+                            customScale: 0.5
+                        }
+                    },
+                    legend: {
+                        show: false
                     }
                 }
-            }
 
-            var chart = new ApexCharts(document.querySelector("#{identifier}"), options);
+                var selector = '#{identifier}-{comparisonIdentifier}';
 
-            chart.render();
+                console.log(selector);
 
-        </script>
+                var chart = new ApexCharts(document.querySelector(selector), options);
+
+                chart.render();
+
+            </script>
+
+        </f:for>
 
     </f:for>
 

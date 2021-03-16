@@ -600,7 +600,11 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                 'name' => $question->getQuestion(),
             ];
 
-            //  aggregate all answers to same question
+            //  aggregate all answers for
+            //  a) my region
+            //  b) ostdeutschland
+            //  c) deutschland
+            //  to same question
 
             $questionResults = $this->questionResultRepository->findByQuestion($question);
 
@@ -626,12 +630,15 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                 }
             }
 
-            $donuts[$slug]['evaluation']['low'] = (isset($evaluation['low'])) ? count($evaluation['low']) : 0;
-            $donuts[$slug]['evaluation']['neutral'] = (isset($evaluation['neutral'])) ? count($evaluation['neutral']) : 0;
-            $donuts[$slug]['evaluation']['high'] = (isset($evaluation['high'])) ? count($evaluation['low']) : 0;
+            //  show results for each question
+            //  meine Region, Ostdeutschland, Deutschland
+
+            $donuts[$slug]['data']['my-region']['evaluation']['low'] = (isset($evaluation['low'])) ? count($evaluation['low']) : 0;
+            $donuts[$slug]['data']['my-region']['evaluation']['neutral'] = (isset($evaluation['neutral'])) ? count($evaluation['neutral']) : 0;
+            $donuts[$slug]['data']['my-region']['evaluation']['high'] = (isset($evaluation['high'])) ? count($evaluation['low']) : 0;
 
             //  @todo: improve this whole aggregation process
-            $donuts[$slug]['evaluation']['series'] = [$donuts[$slug]['evaluation']['low'], $donuts[$slug]['evaluation']['neutral'], $donuts[$slug]['evaluation']['high']];
+            $donuts[$slug]['data']['my-region']['evaluation']['series'] = [$donuts[$slug]['data']['my-region']['evaluation']['low'], $donuts[$slug]['data']['my-region']['evaluation']['neutral'], $donuts[$slug]['data']['my-region']['evaluation']['high']];
 
         }
 
