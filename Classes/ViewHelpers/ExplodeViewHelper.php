@@ -36,17 +36,13 @@ class ExplodeViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHel
     public function render($string, $delimiter = '|')
     {
 
-        $options = [];
+        $items = GeneralUtility::trimExplode(PHP_EOL, $string, true);
 
-        $lines = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(PHP_EOL, $string, true);
-        if (count($lines) > 1) {
-            $options = $lines;
-        } else {
-            $options = GeneralUtility::trimExplode($delimiter, $string, true);
+        if (count($items) === 1) {
+            $items = GeneralUtility::trimExplode($delimiter, $string, true);
         }
 
-        // additional: Filter empty entries
-        return array_filter($options);
+        return array_filter($items);
         //===
     }
 }
