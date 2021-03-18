@@ -614,30 +614,16 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @param SurveyResult $surveyResult
      * @return array
      */
-    protected function prepareDonuts(SurveyResult $surveyResult): array
+    protected function prepareDonuts(SurveyResult $surveyResult): array // @todo: Make this dynamic somehow
     {
 
         $donuts = [];
 
         $surveyQuestions = $surveyResult->getSurvey()->getQuestion();
 
-        //  @todo: Evaluation muss anhand der Region gruppieren, d. h., nur, wenn das aktuelle Ergebnis meiner Region angehört, kann es dazugerechnet werden!
+        $myFirstQuestion = $surveyResult->getQuestionResult()->toArray()[0];    //  @todo: How to identify grouping by as it does not have to be always the first question?
 
-        //  get all surveyResultIds, which have answered question 1 the same way as I did
-        $myFirstQuestion = $surveyResult->getQuestionResult()->toArray()[0];
-
-        //  get all question results same to my first answer
-
-        //  get all surveyresults, where the first question has been answered the same way I did to compare results
-        //  $this->compareResults()
         $allQuestionResultsByQuestion = $this->questionResultRepository->findByQuestionAndAnswer($myFirstQuestion->getQuestion(), $myFirstQuestion->getAnswer());
-        //  get corresponding surveyResultIds
-
-        //  aggregate all answers for
-        //  a) my region
-        //  b) ostdeutschland
-        //  c) deutschland
-        //  to same question
 
         $surveyResultUids = [];
 
@@ -658,47 +644,34 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                 'question' => $question->getQuestion(),
             ];
 
-            $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
-
             //  group the values
             $evaluation = [
-                'low' => [],
-                'neutral' => [],
-                'high' => [],
+                'my-region' => [
+                    'low' => [],
+                    'neutral' => [],
+                    'high' => [],
+                ],
+                'all-regions' => [
+                    'low' => [],
+                    'neutral' => [],
+                    'high' => [],
+                ]
             ];
 
-            foreach ($questionResults as $result) {
+            $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
+            $donuts = $this->collectData($questionResults, $evaluation, $myFirstQuestion, $donuts, $slug, $key = 'my_region');
 
-                if ((int) $result->getAnswer() < 5) {
-                    $evaluation['low'][] = $result;
-                }
+            //  Ostdeutschland = all regions
+            $questionResults = $this->questionResultRepository->findByQuestion($question);
+            $donuts = $this->collectData($questionResults, $evaluation, $myFirstQuestion, $donuts, $slug, $key = 'all_regions');
 
-                if ((int) $result->getAnswer() === 5) {
-                    $evaluation['neutral'][] = $result;
-                }
+            //  Deutschland = GEM
+            $donuts[$slug]['data']['benchmark']['region'] = 'Bundesweit (GEM)';
 
-                if ((int) $result->getAnswer() > 5) {
-                    $evaluation['high'][] = $result;
-                }
-
-            }
-
-            //  show results for each question
-            //  meine Region, Ostdeutschland, Deutschland
-            $myFirstQuestionAnswerOptions = GeneralUtility::trimExplode(PHP_EOL, $myFirstQuestion->getQuestion()->getAnswerOption(), true);
-            $donuts[$slug]['data']['my_region']['region'] = $myFirstQuestionAnswerOptions[((int) $myFirstQuestion->getAnswer() - 1)];
-
-            $donuts[$slug]['data']['my_region']['evaluation']['low'] = (isset($evaluation['low'])) ? count($evaluation['low']) : 0;
-            $donuts[$slug]['data']['my_region']['evaluation']['neutral'] = (isset($evaluation['neutral'])) ? count($evaluation['neutral']) : 0;
-            $donuts[$slug]['data']['my_region']['evaluation']['high'] = (isset($evaluation['high'])) ? count($evaluation['high']) : 0;
-
-            //  @todo: improve this whole aggregation process
-            $donuts[$slug]['data']['my_region']['evaluation']['series'] = [$donuts[$slug]['data']['my_region']['evaluation']['low'], $donuts[$slug]['data']['my_region']['evaluation']['neutral'], $donuts[$slug]['data']['my_region']['evaluation']['high']];
-            $donuts[$slug]['data']['my_region']['evaluation']['labels'] = ['low', 'neutral', 'high'];
-
-            unset($donuts[$slug]['data']['my_region']['evaluation']['low']);
-            unset($donuts[$slug]['data']['my_region']['evaluation']['neutral']);
-            unset($donuts[$slug]['data']['my_region']['evaluation']['high']);
+            //  get benchmark from question = GEM
+            //  @todo: Need all three values per question (low, neutral, high) from GEM - must be put to question
+            $donuts[$slug]['data']['benchmark']['evaluation']['series'] = [rand(0, 100), rand(0, 100), rand(0, 100)];
+            $donuts[$slug]['data']['benchmark']['evaluation']['labels'] = ['low', 'neutral', 'high'];
 
         }
 
@@ -822,6 +795,56 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
 
         return $script;
 
+    }
+
+    /**
+     * @param \TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $questionResults
+     * @param array               $evaluation
+     * @param                     $myFirstQuestion
+     * @param array               $donuts
+     * @param string              $slug
+     * @param key                 $key
+     * @return array              $donuts
+     */
+    protected function collectData(\TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $questionResults, array $evaluation, $myFirstQuestion, array $donuts, string $slug, string $key): array
+    {
+        foreach ($questionResults as $result) {
+
+            if ((int)$result->getAnswer() < 5) {
+                $evaluation[$key]['low'][] = $result;
+            }
+
+            if ((int)$result->getAnswer() === 5) {
+                $evaluation[$key]['neutral'][] = $result;
+            }
+
+            if ((int)$result->getAnswer() > 5) {
+                $evaluation[$key]['high'][] = $result;
+            }
+
+        }
+
+        //  show results for each question
+        //  meine Region, Ostdeutschland, Deutschland
+
+        //  my-region
+        $myFirstQuestionAnswerOptions = GeneralUtility::trimExplode(PHP_EOL, $myFirstQuestion->getQuestion()->getAnswerOption(), true);
+        $donuts[$slug]['data'][$key]['region'] = $myFirstQuestionAnswerOptions[((int)$myFirstQuestion->getAnswer() - 1)];
+        $donuts[$slug]['data'][$key]['region'] = 'Ihre Region';
+
+        $donuts[$slug]['data'][$key]['evaluation']['low'] = (isset($evaluation[$key]['low'])) ? count($evaluation[$key]['low']) : 0;
+        $donuts[$slug]['data'][$key]['evaluation']['neutral'] = (isset($evaluation[$key]['neutral'])) ? count($evaluation[$key]['neutral']) : 0;
+        $donuts[$slug]['data'][$key]['evaluation']['high'] = (isset($evaluation[$key]['high'])) ? count($evaluation[$key]['high']) : 0;
+
+        //  @todo: improve this whole aggregation process
+        $donuts[$slug]['data'][$key]['evaluation']['series'] = [$donuts[$slug]['data'][$key]['evaluation']['low'], $donuts[$slug]['data'][$key]['evaluation']['neutral'], $donuts[$slug]['data'][$key]['evaluation']['high']];
+        $donuts[$slug]['data'][$key]['evaluation']['labels'] = ['low', 'neutral', 'high'];
+
+        unset($donuts[$slug]['data'][$key]['evaluation']['low']);
+        unset($donuts[$slug]['data'][$key]['evaluation']['neutral']);
+        unset($donuts[$slug]['data'][$key]['evaluation']['high']);
+
+        return $donuts;
     }
 
 }

@@ -5,15 +5,20 @@
 
 	<f:section name="main">
 
+        <h3>Darstellung einzelner Aussagen im Polaritätsprofil</h3>
         <div id="chart_{surveyResult.uid}"></div>
 
+        <h3>Darstellung der Durchschnittswerte für die übergeordneten fünf Kategorien</h3>
+        <div id=""></div>
+
+        <h3>Darstellung der Werte in Form von Donuts</h3>
         <div class="tiles-wrapper">
             <div class="tiles flex-container flex-container--margin">
                 <f:for each="{donuts}" as="donut" iteration="iterDonut" key="identifier">
                     <p>{donut.question}</p>
                     <f:for each="{donut.data}" as="comparison" iteration="iterComparison" key="comparisonIdentifier">
 
-                        <div class="flex-item flex-basis-4">
+                        <div class="flex-item flex-basis-3"><!-- @todo: flex-basis-4 forces last chart to new line -->
                             <div class="tile tile--no-img">
                                 <a href="#">
                                     <div class="tile__content">
@@ -35,6 +40,10 @@
                 </f:for>
             </div>
         </div>
+
+        <h3>Ergänzende Daten für den Fitnesscheck</h3>
+
+        <h3>Normale Umfrage</h3>
 
         <f:if condition="{settings.showSurveyNameIntroExtro}">
             <f:then>
