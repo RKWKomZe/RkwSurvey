@@ -5,14 +5,32 @@
 
 	<f:section name="main">
 
-        <div id="chart"></div>
+        <div id="chart_{surveyResult.uid}"></div>
 
         <div class="tiles-wrapper">
             <div class="tiles flex-container flex-container--margin">
                 <f:for each="{donuts}" as="donut" iteration="iterDonut" key="identifier">
-                    <p>{donut.name}</p>
-                    <f:for each="{donut}" as="comparison" iteration="iterComparison" key="comparisonIdentifier">
-                        <div id="{identifier}-{comparisonIdentifier}" class="flex-item flex-basis-4"></div>
+                    <p>{donut.question}</p>
+                    <f:for each="{donut.data}" as="comparison" iteration="iterComparison" key="comparisonIdentifier">
+
+                        <div class="flex-item flex-basis-4">
+                            <div class="tile tile--no-img">
+                                <a href="#">
+                                    <div class="tile__content">
+                                        <h3 class="tile__title">
+                                            <span class="tile__title-text">
+                                                {comparison.region}
+                                            </span>
+                                        </h3>
+                                        <div id="{identifier}_{comparisonIdentifier}" class="tile__text tile__text--no-img">
+                                        </div>
+                                    </div>
+                                    <div class="tile__footer">
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
                     </f:for>
                 </f:for>
             </div>

@@ -2,7 +2,9 @@
 
 namespace RKW\RkwSurvey\Controller;
 
+use TYPO3\CMS\Core\Page\PageRenderer;
 use \RKW\RkwSurvey\Domain\Model\Survey;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use \RKW\RkwSurvey\Domain\Model\SurveyResult;
 use \RKW\RkwSurvey\Domain\Model\QuestionResult;
 use \RKW\RkwSurvey\Utility\SurveyProgressUtility;
@@ -39,6 +41,13 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @const string
      */
     const SIGNAL_AFTER_CREATING_SURVEY = 'afterCreatingSurvey';
+
+    /**
+     * Expose the pageRenderer
+     *
+     * @var $pageRenderer
+     */
+    protected $pageRenderer;
 
     /**
      * surveyRepository
@@ -368,10 +377,30 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         // check access restriction
         $this->checkAccessRestriction($surveyResult, $tokenInput);
 
+        $this->pageRenderer = GeneralUtility::makeInstance( PageRenderer::class );
+
+        // Inject necessary js libs
+        $this->pageRenderer->addJsFooterLibrary(
+            'ApexCharts', /* name */
+            'https://cdn.jsdelivr.net/npm/apexcharts',
+            'text/javascript', /* type */
+            false, /* compress*/
+            true, /* force on top */
+            '', /* allwrap */
+            true /* exlude from concatenation */
+        );
+
+        $chart = $this->prepareChart($surveyResult);
+        $donuts = $this->prepareDonuts($surveyResult);
+
+        $this->pageRenderer->addJsFooterInlineCode( 'chartScript', $this->renderChart($chart, $surveyResult), true );
+        $this->pageRenderer->addJsFooterInlineCode( 'donutScript', $this->renderDonuts($donuts, $surveyResult), true );
+
         $this->view->assign('surveyResult', $surveyResult);
         $this->view->assign('tokenInput', $tokenInput);
-        $this->view->assign('chart', $this->prepareChart($surveyResult));
-        $this->view->assign('donuts', $this->prepareDonuts($surveyResult));
+
+        $this->view->assign('donuts', $donuts);
+
     }
 
 
@@ -592,21 +621,44 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
 
         $surveyQuestions = $surveyResult->getSurvey()->getQuestion();
 
+        //  @todo: Evaluation muss anhand der Region gruppieren, d. h., nur, wenn das aktuelle Ergebnis meiner Region angehört, kann es dazugerechnet werden!
+
+        //  get all surveyResultIds, which have answered question 1 the same way as I did
+        $myFirstQuestion = $surveyResult->getQuestionResult()->toArray()[0];
+
+        //  get all question results same to my first answer
+
+        //  get all surveyresults, where the first question has been answered the same way I did to compare results
+        //  $this->compareResults()
+        $allQuestionResultsByQuestion = $this->questionResultRepository->findByQuestionAndAnswer($myFirstQuestion->getQuestion(), $myFirstQuestion->getAnswer());
+        //  get corresponding surveyResultIds
+
+        //  aggregate all answers for
+        //  a) my region
+        //  b) ostdeutschland
+        //  c) deutschland
+        //  to same question
+
+        $surveyResultUids = [];
+
+        foreach ($allQuestionResultsByQuestion as $questionResult) {
+            $surveyResultUids[] = $questionResult->getSurveyResult()->getUid();
+        }
+
         foreach ($surveyQuestions as $question) {
+
+            //  use question only if it is a scale
+            if ($question->getType() !== 3) {
+                continue;
+            }
 
             $slug = $this->slugify($question->getQuestion());
 
             $donuts[$slug] = [
-                'name' => $question->getQuestion(),
+                'question' => $question->getQuestion(),
             ];
 
-            //  aggregate all answers for
-            //  a) my region
-            //  b) ostdeutschland
-            //  c) deutschland
-            //  to same question
-
-            $questionResults = $this->questionResultRepository->findByQuestion($question);
+            $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
 
             //  group the values
             $evaluation = [
@@ -628,17 +680,25 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                 if ((int) $result->getAnswer() > 5) {
                     $evaluation['high'][] = $result;
                 }
+
             }
 
             //  show results for each question
             //  meine Region, Ostdeutschland, Deutschland
+            $myFirstQuestionAnswerOptions = GeneralUtility::trimExplode(PHP_EOL, $myFirstQuestion->getQuestion()->getAnswerOption(), true);
+            $donuts[$slug]['data']['my_region']['region'] = $myFirstQuestionAnswerOptions[((int) $myFirstQuestion->getAnswer() - 1)];
 
-            $donuts[$slug]['data']['my-region']['evaluation']['low'] = (isset($evaluation['low'])) ? count($evaluation['low']) : 0;
-            $donuts[$slug]['data']['my-region']['evaluation']['neutral'] = (isset($evaluation['neutral'])) ? count($evaluation['neutral']) : 0;
-            $donuts[$slug]['data']['my-region']['evaluation']['high'] = (isset($evaluation['high'])) ? count($evaluation['low']) : 0;
+            $donuts[$slug]['data']['my_region']['evaluation']['low'] = (isset($evaluation['low'])) ? count($evaluation['low']) : 0;
+            $donuts[$slug]['data']['my_region']['evaluation']['neutral'] = (isset($evaluation['neutral'])) ? count($evaluation['neutral']) : 0;
+            $donuts[$slug]['data']['my_region']['evaluation']['high'] = (isset($evaluation['high'])) ? count($evaluation['high']) : 0;
 
             //  @todo: improve this whole aggregation process
-            $donuts[$slug]['data']['my-region']['evaluation']['series'] = [$donuts[$slug]['data']['my-region']['evaluation']['low'], $donuts[$slug]['data']['my-region']['evaluation']['neutral'], $donuts[$slug]['data']['my-region']['evaluation']['high']];
+            $donuts[$slug]['data']['my_region']['evaluation']['series'] = [$donuts[$slug]['data']['my_region']['evaluation']['low'], $donuts[$slug]['data']['my_region']['evaluation']['neutral'], $donuts[$slug]['data']['my_region']['evaluation']['high']];
+            $donuts[$slug]['data']['my_region']['evaluation']['labels'] = ['low', 'neutral', 'high'];
+
+            unset($donuts[$slug]['data']['my_region']['evaluation']['low']);
+            unset($donuts[$slug]['data']['my_region']['evaluation']['neutral']);
+            unset($donuts[$slug]['data']['my_region']['evaluation']['high']);
 
         }
 
@@ -646,12 +706,107 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
     }
 
     //  @todo: Fix to convert real umlauts
-    protected function slugify($input, $word_delimiter='-') {
+    protected function slugify($input, $word_delimiter='_') {
         $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $input);
         $slug = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $slug);
         $slug = strtolower(trim($slug, '-'));
         $slug = preg_replace("/[\/_|+ -]+/", $word_delimiter, $slug);
         return $slug;
+    }
+
+    /**
+     * @param array        $chart
+     * @param SurveyResult $surveyResult
+     * @return string
+     */
+    protected function renderChart(array $chart, SurveyResult $surveyResult): string
+    {
+
+        return '
+            
+            var options = {
+                chart: {
+                    type: \'radar\'
+                },
+                series: [
+                    {
+                        name: "Ihr Wert",
+                        data: ' . json_encode($chart['values']['individual']) . ',
+                    },
+                    {
+                        name: "GEM",
+                        data: ' . json_encode($chart['values']['benchmark']) . ',
+                    },
+                    {
+                        data: [0, 0, 11, 11],
+                    },
+                    {
+                        data: [11, 0, 0, 11],
+                    },
+                    {
+                        data: [11, 11, 0, 0],
+                    },
+                    {
+                        data: [0, 11, 11, 0],
+                    }
+                ],
+                labels: ' . json_encode($chart['labels']) . '
+            }
+            
+            var chart = new ApexCharts(document.querySelector(\'#chart_' . $surveyResult->getUid() . '\'), options);
+
+            chart.render(); 
+                
+        ';
+
+    }
+
+    /**
+     * @param array        $charts
+     * @param SurveyResult $surveyResult
+     * @return string
+     */
+    protected function renderDonuts(array $charts, SurveyResult $surveyResult): string
+    {
+
+        $script = '';
+
+        foreach ($charts as $chartIdentifier => $comparisons) {
+
+            foreach ($comparisons['data'] as $comparisonIdentifier => $comparison) {
+
+                $identifier = $chartIdentifier . '_' . $comparisonIdentifier;
+
+                $script .= '
+                    
+                    var options_' . $identifier . ' = {
+                        chart: {
+                            type: \'donut\'
+                        },
+                        series: ' . json_encode($comparison['evaluation']['series']) . ',
+                        labels: ' . json_encode($comparison['evaluation']['labels']) . ',
+                        plotOptions: {
+                            pie: {
+                                customScale: 0.5
+                            }
+                        },
+                        legend: {
+                            show: true
+                        }
+                    }
+                    
+                    var chart_' . $identifier . ' = new ApexCharts(document.querySelector(\'#' . $identifier . '\'), options_' . $identifier . ');
+
+                    chart_' . $identifier . '.render(); 
+                    
+                ';
+
+            }
+
+        }
+
+        return $script;
+
     }
 
 }

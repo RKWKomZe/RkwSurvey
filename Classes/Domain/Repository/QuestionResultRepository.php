@@ -15,6 +15,8 @@ namespace RKW\RkwSurvey\Domain\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+
 
 /**
  * QuestionResults
@@ -48,6 +50,29 @@ class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         return $query->execute()->getFirst();
         //====
     }
+
+    /**
+     * findByQuestionAndSurveyResultUids
+     *
+     * @param \RKW\RkwSurvey\Domain\Model\Question $question
+     * @param array $surveyResultIds
+     * @return \RKW\RkwSurvey\Domain\Model\QuestionResult|null
+     */
+    public function findByQuestionAndSurveyResultUids(\RKW\RkwSurvey\Domain\Model\Question $question, array $surveyResultUids)
+    {
+        $query = $this->createQuery();
+
+        $query->matching(
+            $query->logicalAnd(
+                $query->equals('question', $question),
+                $query->in('survey_result', $surveyResultUids)
+            )
+        );
+
+        return $query->execute();
+        //====
+    }
+
 
 
     /**
@@ -111,6 +136,27 @@ class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 
         $query->matching(
             $query->equals('question', $question)
+        );
+
+        return $query->execute();
+        //====
+    }
+
+    /**
+     * findByQuestionAndAnswer
+     *
+     * @param \RKW\RkwSurvey\Domain\Model\Question $question
+     * @return \RKW\RkwSurvey\Domain\Model\QuestionResult|null
+     */
+    public function findByQuestionAndAnswer(\RKW\RkwSurvey\Domain\Model\Question $question, $answer)
+    {
+        $query = $this->createQuery();
+
+        $query->matching(
+            $query->logicalAnd(
+                $query->equals('question', $question),
+                $query->equals('answer', $answer)
+            )
         );
 
         return $query->execute();
