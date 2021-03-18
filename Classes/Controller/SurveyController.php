@@ -638,7 +638,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                 continue;
             }
 
-            $slug = $this->slugify($question->getQuestion());
+            $slug = $this->slugify($question->getQuestion(), '_');
 
             $donuts[$slug] = [
                 'question' => $question->getQuestion(),
@@ -678,13 +678,30 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         return $donuts;
     }
 
-    //  @todo: Fix to convert real umlauts
-    protected function slugify($input, $word_delimiter='_') {
-        $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $input);
-        $slug = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $slug);
-        $slug = strtolower(trim($slug, '-'));
-        $slug = preg_replace("/[\/_|+ -]+/", $word_delimiter, $slug);
-        return $slug;
+    protected function slugify($string, $separator = '-') {
+
+        $slug = strtolower($string);
+
+        $slug = str_replace('ä', 'ae', $slug);
+        $slug = str_replace('ö', 'oe', $slug);
+        $slug = str_replace('ü', 'ue', $slug);
+        $slug = str_replace('ß', 'ss', $slug);
+
+        // Convert all dashes/underscores into separator
+        $flip = $separator === '-' ? '_' : '-';
+
+        $slug = preg_replace('!['.preg_quote($flip).']+!u', $separator, $slug);
+
+        // Replace @ with the word 'at'
+        $slug = str_replace('@', $separator.'at'.$separator, $slug);
+
+        // Remove all characters that are not the separator, letters, numbers, or whitespace.
+        $slug = preg_replace('![^'.preg_quote($separator).'\pL\pN\s]+!u', '', strtolower($slug));
+
+        // Replace all separator characters and whitespace by a single separator
+        $slug = preg_replace('!['.preg_quote($separator).'\s]+!u', $separator, $slug);
+
+        return trim($slug, $separator);
     }
 
     /**
