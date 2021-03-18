@@ -791,7 +791,22 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                             }
                         },
                         legend: {
-                            show: true
+                            show: false
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        tooltip: {
+                            enabled: false,
+                        },
+                        plotOptions: {
+                            pie: {
+                                donut: {
+                                    labels: {
+                                        show: true
+                                    }
+                                }
+                            }
                         }
                     }
                     
