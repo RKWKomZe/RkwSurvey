@@ -55,6 +55,13 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $required = 1;
 
     /**
+     * group_by
+     *
+     * @var boolean
+     */
+    protected $groupBy = 0;
+
+    /**
      * type
      *
      * @var integer
@@ -245,6 +252,28 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         return $this->required;
     }
+
+    /**
+     * Returns the groupBy
+     *
+     * @return boolean $groupBy
+     */
+    public function getGroupBy()
+    {
+        return $this->groupBy;
+    }
+
+    /**
+     * Sets the groupBy
+     *
+     * @param bool $groupBy
+     * @return void
+     */
+    public function setGroupBy($groupBy)
+    {
+        $this->groupBy = $groupBy;
+    }
+
 
     /**
      * Returns the type

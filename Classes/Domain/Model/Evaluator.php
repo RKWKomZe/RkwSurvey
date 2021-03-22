@@ -3,6 +3,7 @@
 namespace RKW\RkwSurvey\Domain\Model;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use RKW\RkwSurvey\Domain\Repository\QuestionRepository;
 use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
 
 /*
@@ -45,13 +46,25 @@ class Evaluator
      */
     protected $questionResultRepository;
 
+    /**
+     * questionRepository
+     *
+     * @var \RKW\RkwSurvey\Domain\Repository\QuestionRepository
+     * @inject
+     */
+    protected $questionRepository;
+
     public function __construct()
     {
+        $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+
         if (!$this->questionResultRepository) {
-            $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
             $this->questionResultRepository = $objectManager->get(QuestionResultRepository::class);
         }
 
+        if (!$this->questionRepository) {
+            $this->questionRepository = $objectManager->get(QuestionRepository::class);
+        }
     }
 
     /**
@@ -65,12 +78,16 @@ class Evaluator
     /**
      * @return array
      */
-    public function getQuestionResultsWithSameFirstAnswer(): array
+    public function getQuestionToGroupByResults(): array
     {
-        $myFirstQuestion = $this->surveyResult->getQuestionResult()->current();    //  @todo: How could it be that this does not work?
-        $myFirstQuestion = $this->surveyResult->getQuestionResult()->toArray()[0];    //  @todo: How to identify grouping by as it does not have to be always the first question?
+        //  get survey questions with group_by = 1
+        $survey = $this->surveyResult->getSurvey();
 
-        $allQuestionResultsByQuestion = $this->questionResultRepository->findByQuestionAndAnswer($myFirstQuestion->getQuestion(), $myFirstQuestion->getAnswer());
+        $groupByQuestion = $this->questionRepository->findByGroupedByAndSurvey($survey)->current();
+
+        $groupByQuestion = $this->questionResultRepository->findByQuestionAndSurveyResult($groupByQuestion, $this->surveyResult);
+
+        $allQuestionResultsByQuestion = $this->questionResultRepository->findByQuestionAndAnswer($groupByQuestion->getQuestion(), $groupByQuestion->getAnswer());
 
         $surveyResultUids = [];
 
@@ -78,7 +95,7 @@ class Evaluator
             $surveyResultUids[] = $questionResult->getSurveyResult()->getUid();
         }
 
-        return array($myFirstQuestion, $surveyResultUids);
+        return array($groupByQuestion, $surveyResultUids);
     }
 
     /**
@@ -100,7 +117,7 @@ class Evaluator
                     if ($scope) {
                         //  filter questionResults to my region only
                         //  this must be dynamic by a groupBy attribute or similar
-                        list($myFirstQuestion, $surveyResultUids) = $this->getQuestionResultsWithSameFirstAnswer();
+                        list($myFirstQuestion, $surveyResultUids) = $this->getQuestionToGroupByResults();
                         $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
                     } else {
                         $questionResults = $this->questionResultRepository->findByQuestion($question);
@@ -219,7 +236,7 @@ class Evaluator
                 ],
             ];
 
-            list($myFirstQuestion, $surveyResultUids) = $this->getQuestionResultsWithSameFirstAnswer($this->surveyResult);
+            list($myFirstQuestion, $surveyResultUids) = $this->getQuestionToGroupByResults();
             //  my-region
             $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
             $donuts = $this->collectData($questionResults, $evaluation, $myFirstQuestion, $donuts, $slug, $key = 'my_region', $title = 'Meine Region');
