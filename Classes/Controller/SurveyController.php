@@ -2,13 +2,12 @@
 
 namespace RKW\RkwSurvey\Controller;
 
-use Doctrine\Common\Util\Debug;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use RKW\RkwSurvey\Domain\Model\Survey;
+use RKW\RkwSurvey\Domain\Model\Evaluator;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use RKW\RkwSurvey\Domain\Model\SurveyResult;
 use RKW\RkwSurvey\Domain\Model\QuestionResult;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use RKW\RkwSurvey\Utility\SurveyProgressUtility;
 
 /*
@@ -41,13 +40,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @const string
      */
     const SIGNAL_AFTER_CREATING_SURVEY = 'afterCreatingSurvey';
-
-    /**
-     * Expose the pageRenderer
-     *
-     * @var $pageRenderer
-     */
-    protected $pageRenderer;
 
     /**
      * surveyRepository
@@ -118,6 +110,12 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      */
     protected $logger;
 
+    /**
+     * Expose the pageRenderer
+     *
+     * @var $pageRenderer
+     */
+    protected $pageRenderer;
 
     /**
      * action welcome
@@ -377,6 +375,17 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         // check access restriction
         $this->checkAccessRestriction($surveyResult, $tokenInput);
 
+
+
+        $this->view->assign('surveyResult', $surveyResult);
+        $this->view->assign('tokenInput', $tokenInput);
+
+
+        //  @todo: Das muss ausgelagert werden in die RkwGraphs! Allerdings muss auch ein Identifier übergeben werden, anhand dessen die RkwGraphs das Ergebnis render kann!
+        //  instantiate with object manager -> see feecalculator
+        $evaluator = GeneralUtility::makeInstance(Evaluator::class);
+        $evaluator->setSurveyResult($surveyResult);
+
         $this->pageRenderer = GeneralUtility::makeInstance( PageRenderer::class );
 
         // Inject necessary js libs
@@ -390,23 +399,19 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
             true /* exlude from concatenation */
         );
 
-        $chart = $this->prepareChart($surveyResult);
-        $this->pageRenderer->addJsFooterInlineCode( 'chartScript', $this->renderChart($chart, $surveyResult), true );
+        $chart = $evaluator->prepareChart();
+        $this->pageRenderer->addJsFooterInlineCode( 'chartScript', $evaluator->renderChart($chart), true );
 
-        $this->view->assign('surveyResult', $surveyResult);
-        $this->view->assign('tokenInput', $tokenInput);
+        $donuts = $evaluator->prepareDonuts();
+        $this->pageRenderer->addJsFooterInlineCode( 'donutScript', $evaluator->renderDonuts($donuts), true );
 
-
-        //  @todo: Das muss ausgelagert werden in die RkwGraphs! Allerdings muss auch ein Identifier übergeben werden, anhand dessen die RkwGraphs das Ergebnis render kann!
-
-        $donuts = $this->prepareDonuts($surveyResult);
-        $this->pageRenderer->addJsFooterInlineCode( 'donutScript', $this->renderDonuts($donuts, $surveyResult), true );
-
-        $bars = $this->prepareBars($surveyResult);
-        $this->pageRenderer->addJsFooterInlineCode( 'barScript', $this->renderBars($bars, $surveyResult), true );
+        $bars = $evaluator->prepareBars();
+        $this->pageRenderer->addJsFooterInlineCode( 'barScript', $evaluator->renderBars($bars), true );
 
         $this->view->assign('bars', $bars);
         $this->view->assign('donuts', $donuts);
+
+
 
     }
 
@@ -573,485 +578,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
 
         return $this->logger;
         //===
-    }
-
-    /**
-     * @param SurveyResult $surveyResult
-     * @return array
-     */
-    protected function prepareChart(SurveyResult $surveyResult): array
-    {
-
-        //  get only questions marked as benchmark
-        $benchmarkQuestions = $surveyResult->getSurvey()->getBenchmarkQuestions();
-
-        $benchmarkValues = [];
-        $questionShortNames = [];
-        foreach ($benchmarkQuestions as $question) {
-            $benchmarkValues[] = $question->getBenchmarkValue();
-            $questionShortNames[] = $question->getShortName();
-        }
-
-        $individualValues = [];
-        //  filter to results matching a benchmark question
-        foreach ($surveyResult->getBenchmarkQuestionResults() as $result) {
-            //  cast answer to int, if question is of marked as benchmark
-            $individualValues[] = (int)$result->getAnswer();
-        }
-
-        //  mit 0 auffüllen, wenn bisher weniger Antworten als Labels Fragen zur Verfügung stehen
-        if (($fill = count($benchmarkValues) - count($individualValues)) > 0) {
-            for ($i = 1; $i === $fill; $i++) {
-                $individualValues[] = 0;
-            }
-        }
-
-        $chart = [
-            'labels' => $questionShortNames,
-            'values' => [
-                'benchmark'  => $benchmarkValues,
-                'individual' => $individualValues
-            ]
-        ];
-
-        return $chart;
-    }
-
-    /**
-     * @param SurveyResult $surveyResult
-     * @return array
-     */
-    protected function prepareDonuts(SurveyResult $surveyResult): array // @todo: Make this dynamic somehow
-    {
-
-        $donuts = [];
-
-        $surveyQuestions = $surveyResult->getSurvey()->getQuestion();
-
-        foreach ($surveyQuestions as $question) {
-
-            //  use question only if it is a scale
-            if ($question->getType() !== 3) {
-                continue;
-            }
-
-            $slug = $this->slugify($question->getQuestion(), '_');
-
-            $donuts[$slug] = [
-                'question' => $question->getQuestion(),
-            ];
-
-            //  group the values
-            $evaluation = [
-                'my-region' => [
-                    'low' => [],
-                    'neutral' => [],
-                    'high' => [],
-                ],
-                'all-regions' => [
-                    'low' => [],
-                    'neutral' => [],
-                    'high' => [],
-                ]
-            ];
-
-            list($myFirstQuestion, $surveyResultUids) = $this->getQuestionResultsWithSameFirstAnswer($surveyResult);
-            //  my-region
-            $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
-            $donuts = $this->collectData($questionResults, $evaluation, $myFirstQuestion, $donuts, $slug, $key = 'my_region', $title = 'Meine Region');
-
-            //  Ostdeutschland = all regions
-            $questionResults = $this->questionResultRepository->findByQuestion($question);
-            $donuts = $this->collectData($questionResults, $evaluation, $myFirstQuestion, $donuts, $slug, $key = 'all_regions', $title = 'Alle Regionen');
-
-            //  Deutschland = GEM
-            $donuts[$slug]['data']['benchmark']['region'] = 'Bundesweit (GEM)';
-
-            //  get benchmark from question = GEM
-            //  @todo: Need all three values per question (low, neutral, high) from GEM - must be put to question
-            $donuts[$slug]['data']['benchmark']['evaluation']['series'] = [rand(0, 100), rand(0, 100), rand(0, 100)];
-            $donuts[$slug]['data']['benchmark']['evaluation']['labels'] = ['low', 'neutral', 'high'];
-
-        }
-
-        return $donuts;
-    }
-
-    /**
-     * @param SurveyResult $surveyResult
-     * @return array
-     */
-    protected function prepareBars(SurveyResult $surveyResult): array // @todo: Make this dynamic somehow
-    {
-
-        //  get the topics -> muss dynamisch über Zuordnung im Fragebogen zu Themen erfolgen
-        $topics = $surveyResult->getSurvey()->getTopics();
-
-//        $collectedTopics = [];
-//
-//        foreach ($topics as $topic) {
-//
-//            $collectedTopics[$this->slugify($topic->getName())] = [
-//                'name' => $topic->getName(),
-//                'questions' => $topic->getQuestions(),
-//            ];
-//
-//        }
-
-        $topicNames = [
-            'P/I',
-            'T',
-            'F'
-        ];
-
-        $bars = [];
-
-        //  my-region vs. all-regions
-        //  extract name from topics
-        $title = 'Meine Region/Alle Regionen';
-        $slug = $this->slugify($title, '_');
-        $bars[$slug]['topics'] = $topicNames;
-        $bars[$slug]['title'] = $title;
-        $bars[$slug]['series'] = [
-            [
-                'name' => 'Meine Region',
-                'data' => $this->getAverageResultByTopics($surveyResult, $topics, $scope = 'my-region'),
-            ],
-            [
-                'name' => 'Alle Regionen',
-                'data' => $this->getAverageResultByTopics($surveyResult, $topics, $scope = null),
-            ],
-        ];
-
-        //  my-region vs. gem -> muss die benchmarks holen
-        $title = 'Meine Region/GEM';
-        $slug = $this->slugify($title, '_');
-
-        $bars[$slug]['topics'] = $topicNames;
-        $bars[$slug]['title'] = $title;
-        $bars[$slug]['series'] = [
-            [
-                'name' => 'Meine Region',
-                'data' => $this->getAverageResultByTopics($surveyResult, $topics, $scope = 'my-region'),   //  @todo: Mist, das geht auf alle, nicht nur auf meine Region.
-            ],
-            [
-                'name' => 'Alle Regionen',
-                'data' => [9, 6, 3],
-            ],
-        ];
-
-        return $bars;
-
-    }
-
-    protected function slugify($string, $separator = '-') {
-
-        $slug = strtolower($string);
-
-        $slug = str_replace('ä', 'ae', $slug);
-        $slug = str_replace('ä', 'ae', $slug);
-        $slug = str_replace('ö', 'oe', $slug);
-        $slug = str_replace('ü', 'ue', $slug);
-        $slug = str_replace('/', $separator, $slug);
-
-        // Convert all dashes/underscores into separator
-        $flip = $separator === '-' ? '_' : '-';
-
-        $slug = preg_replace('!['.preg_quote($flip).']+!u', $separator, $slug);
-
-        // Replace @ with the word 'at'
-        $slug = str_replace('@', $separator.'at'.$separator, $slug);
-
-        // Remove all characters that are not the separator, letters, numbers, or whitespace.
-        $slug = preg_replace('![^'.preg_quote($separator).'\pL\pN\s]+!u', '', strtolower($slug));
-
-        // Replace all separator characters and whitespace by a single separator
-        $slug = preg_replace('!['.preg_quote($separator).'\s]+!u', $separator, $slug);
-
-        return trim($slug, $separator);
-    }
-
-    /**
-     * @param array        $chart
-     * @param SurveyResult $surveyResult
-     * @return string
-     */
-    protected function renderChart(array $chart, SurveyResult $surveyResult): string
-    {
-
-        return '
-            
-            var options = {
-                chart: {
-                    type: \'radar\'
-                },
-                series: [
-                    {
-                        name: "Ihr Wert",
-                        data: ' . json_encode($chart['values']['individual']) . ',
-                    },
-                    {
-                        name: "GEM",
-                        data: ' . json_encode($chart['values']['benchmark']) . ',
-                    },
-                    {
-                        data: [0, 0, 11, 11],
-                    },
-                    {
-                        data: [11, 0, 0, 11],
-                    },
-                    {
-                        data: [11, 11, 0, 0],
-                    },
-                    {
-                        data: [0, 11, 11, 0],
-                    }
-                ],
-                labels: ' . json_encode($chart['labels']) . '
-            }
-            
-            var chart = new ApexCharts(document.querySelector(\'#chart_' . $surveyResult->getUid() . '\'), options);
-
-            chart.render(); 
-                
-        ';
-
-    }
-
-    /**
-     * @param array        $charts
-     * @param SurveyResult $surveyResult
-     * @return string
-     */
-    protected function renderDonuts(array $charts, SurveyResult $surveyResult): string
-    {
-
-        $script = '';
-
-        foreach ($charts as $chartIdentifier => $comparisons) {
-
-            foreach ($comparisons['data'] as $comparisonIdentifier => $comparison) {
-
-                $identifier = $chartIdentifier . '_' . $comparisonIdentifier;
-
-                $script .= '
-                    
-                    var options_' . $identifier . ' = {
-                        chart: {
-                            type: \'donut\'
-                        },
-                        series: ' . json_encode($comparison['evaluation']['series']) . ',
-                        labels: ' . json_encode($comparison['evaluation']['labels']) . ',
-                        plotOptions: {
-                            pie: {
-                                donut: {
-                                    labels: {
-                                        show: true
-                                    }
-                                }
-                            }
-                        },
-                        legend: {
-                            show: false
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        tooltip: {
-                            enabled: false,
-                        }
-                    }
-                    
-                    var chart_' . $identifier . ' = new ApexCharts(document.querySelector(\'#' . $identifier . '\'), options_' . $identifier . ');
-
-                    chart_' . $identifier . '.render(); 
-                    
-                ';
-
-            }
-
-        }
-
-        return $script;
-
-    }
-
-    /**
-     * @param array        $charts
-     * @param SurveyResult $surveyResult
-     * @return string
-     */
-    protected function renderBars(array $charts, SurveyResult $surveyResult): string
-    {
-
-        // @todo: We need topics like in Webcheck (optional)
-
-        $script = '';
-
-        foreach ($charts as $chartIdentifier => $comparison) {
-
-            $identifier = $chartIdentifier;
-
-            $script .= '
-                
-                var options_' . $identifier . ' = {
-                    chart: {
-                        type: \'bar\'
-                    },
-                    series: ' . json_encode($comparison['series']) . ',
-                    plotOptions: {
-                        bar: {
-                            horizontal: false
-                        }
-                    },
-                    legend: {
-                        show: false
-                    },
-                    dataLabels: {
-                        enabled: false
-                    },
-                    tooltip: {
-                        enabled: false,
-                    },
-                    xaxis: {
-                        categories: ' . json_encode($comparison['topics']) . ',
-                    }
-                }
-                
-                var chart_' . $identifier . ' = new ApexCharts(document.querySelector(\'#' . $identifier . '\'), options_' . $identifier . ');
-
-                chart_' . $identifier . '.render(); 
-                
-            ';
-
-        }
-
-        return $script;
-
-    }
-
-    /**
-     * @param \TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $questionResults
-     * @param array               $evaluation
-     * @param                     $myFirstQuestion
-     * @param array               $donuts
-     * @param string              $slug
-     * @param key                 $key
-     * @param title               $title
-     * @return array              $donuts
-     */
-    protected function collectData(\TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $questionResults, array $evaluation, $myFirstQuestion, array $donuts, string $slug, string $key, string $title): array
-    {
-        foreach ($questionResults as $result) {
-
-            if ((int)$result->getAnswer() < 5) {
-                $evaluation[$key]['low'][] = $result;
-            }
-
-            if ((int)$result->getAnswer() === 5) {
-                $evaluation[$key]['neutral'][] = $result;
-            }
-
-            if ((int)$result->getAnswer() > 5) {
-                $evaluation[$key]['high'][] = $result;
-            }
-
-        }
-
-        //  show results for each question
-        //  meine Region, Ostdeutschland, Deutschland
-
-        //  my-region
-        $myFirstQuestionAnswerOptions = GeneralUtility::trimExplode(PHP_EOL, $myFirstQuestion->getQuestion()->getAnswerOption(), true);
-        $donuts[$slug]['data'][$key]['region'] = $myFirstQuestionAnswerOptions[((int)$myFirstQuestion->getAnswer() - 1)];
-        $donuts[$slug]['data'][$key]['region'] = $title;
-
-        $donuts[$slug]['data'][$key]['evaluation']['low'] = (isset($evaluation[$key]['low'])) ? count($evaluation[$key]['low']) : 0;
-        $donuts[$slug]['data'][$key]['evaluation']['neutral'] = (isset($evaluation[$key]['neutral'])) ? count($evaluation[$key]['neutral']) : 0;
-        $donuts[$slug]['data'][$key]['evaluation']['high'] = (isset($evaluation[$key]['high'])) ? count($evaluation[$key]['high']) : 0;
-
-        //  @todo: improve this whole aggregation process
-        $donuts[$slug]['data'][$key]['evaluation']['series'] = [$donuts[$slug]['data'][$key]['evaluation']['low'], $donuts[$slug]['data'][$key]['evaluation']['neutral'], $donuts[$slug]['data'][$key]['evaluation']['high']];
-        $donuts[$slug]['data'][$key]['evaluation']['labels'] = ['low', 'neutral', 'high'];
-
-        unset($donuts[$slug]['data'][$key]['evaluation']['low']);
-        unset($donuts[$slug]['data'][$key]['evaluation']['neutral']);
-        unset($donuts[$slug]['data'][$key]['evaluation']['high']);
-
-        return $donuts;
-    }
-
-    //  @todo: Diese Evaluierung muss in eine eigene Klasse wandern, sonst wird das völlig unübersichtlich und verrückt.
-
-
-    /**
-     * @param SurveyResult $surveyResult
-     * @param      $topics
-     * @param null $scope
-     * @return array
-     */
-    protected function getAverageResultByTopics(SurveyResult $surveyResult, $topics, $scope = null)
-    {
-
-        foreach ($topics as $topic) {
-
-            $average = [];
-
-            if ($topic->getQuestions()->count() > 0) {
-
-                foreach ($topic->getQuestions() as $question) {
-
-                    if ($scope) {
-                        //  filter questionResults to my region only
-                        list($myFirstQuestion, $surveyResultUids) = $this->getQuestionResultsWithSameFirstAnswer($surveyResult);
-                        $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
-                    } else {
-                        $questionResults = $this->questionResultRepository->findByQuestion($question);
-                    }
-
-                    $answers = [];
-                    foreach ($questionResults as $questionResult) {
-                        $answers[] = (int)$questionResult->getAnswer();
-                    }
-
-                    //  Was ist der Wert von "weiß ich nicht"?
-                    $answers = array_filter($answers, function ($x) {
-                        return $x !== '';
-                    });
-
-                    //  average on question
-                    $average[] = array_sum($answers) / count($answers);
-
-                }
-
-                //  average on topic
-                $results[] = array_sum($average) / count($average);
-
-            }
-
-        }
-
-        return $results;
-    }
-
-    /**
-     * @param SurveyResult $surveyResult
-     * @return array
-     */
-    protected function getQuestionResultsWithSameFirstAnswer(SurveyResult $surveyResult): array
-    {
-        $myFirstQuestion = $surveyResult->getQuestionResult()->current();    //  @todo: How could it be that this does not work?
-        $myFirstQuestion = $surveyResult->getQuestionResult()->toArray()[0];    //  @todo: How to identify grouping by as it does not have to be always the first question?
-
-        $allQuestionResultsByQuestion = $this->questionResultRepository->findByQuestionAndAnswer($myFirstQuestion->getQuestion(), $myFirstQuestion->getAnswer());
-
-        $surveyResultUids = [];
-
-        foreach ($allQuestionResultsByQuestion as $questionResult) {
-            $surveyResultUids[] = $questionResult->getSurveyResult()->getUid();
-        }
-
-        return array($myFirstQuestion, $surveyResultUids);
     }
 
 }
