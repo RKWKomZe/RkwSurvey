@@ -30,13 +30,13 @@ use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 {
     /**
-     * findByQuestionAndSurveyResult
+     * findOneByQuestionAndSurveyResult
      *
      * @param \RKW\RkwSurvey\Domain\Model\Question $question
      * @param \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult
      * @return \RKW\RkwSurvey\Domain\Model\QuestionResult|null
      */
-    public function findByQuestionAndSurveyResult(\RKW\RkwSurvey\Domain\Model\Question $question, \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult)
+    public function findOneByQuestionAndSurveyResult(\RKW\RkwSurvey\Domain\Model\Question $question, \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult)
     {
         $query = $this->createQuery();
 

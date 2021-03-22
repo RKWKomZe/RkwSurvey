@@ -3,6 +3,7 @@
 namespace RKW\RkwSurvey\Domain\Model;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use RKW\RkwSurvey\Domain\Repository\QuestionRepository;
 use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
 
@@ -20,7 +21,7 @@ use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
  */
 
 /**
- * Question
+ * Evaluator
  *
  * @author Christian Dilger <c.dilger@addorange.de>
  * @copyright Rkw Kompetenzzentrum
@@ -83,11 +84,11 @@ class Evaluator
         //  get survey questions with group_by = 1
         $survey = $this->surveyResult->getSurvey();
 
-        $groupByQuestion = $this->questionRepository->findByGroupedByAndSurvey($survey)->current();
+        $question = $this->questionRepository->findOneByGroupedByAndSurvey($survey);
 
-        $groupByQuestion = $this->questionResultRepository->findByQuestionAndSurveyResult($groupByQuestion, $this->surveyResult);
+        $questionResult = $this->questionResultRepository->findOneByQuestionAndSurveyResult($question, $this->surveyResult);
 
-        $allQuestionResultsByQuestion = $this->questionResultRepository->findByQuestionAndAnswer($groupByQuestion->getQuestion(), $groupByQuestion->getAnswer());
+        $allQuestionResultsByQuestion = $this->questionResultRepository->findByQuestionAndAnswer($question, $questionResult->getAnswer());
 
         $surveyResultUids = [];
 
@@ -95,7 +96,7 @@ class Evaluator
             $surveyResultUids[] = $questionResult->getSurveyResult()->getUid();
         }
 
-        return array($groupByQuestion, $surveyResultUids);
+        return $surveyResultUids;
     }
 
     /**
@@ -106,18 +107,18 @@ class Evaluator
     public function getAverageResultByTopics($topics, $scope = null)
     {
 
-        foreach ($topics as $topic) {
+        $averageOnTopic = [];
 
-            $average = [];
+        foreach ($topics as $topic) {
 
             if ($topic->getQuestions()->count() > 0) {
 
                 foreach ($topic->getQuestions() as $question) {
 
+                    $averageOnQuestion = [];
+
                     if ($scope) {
-                        //  filter questionResults to my region only
-                        //  this must be dynamic by a groupBy attribute or similar
-                        list($myFirstQuestion, $surveyResultUids) = $this->getQuestionToGroupByResults();
+                        $surveyResultUids = $this->getQuestionToGroupByResults();
                         $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
                     } else {
                         $questionResults = $this->questionResultRepository->findByQuestion($question);
@@ -133,19 +134,17 @@ class Evaluator
                         return $x !== '';
                     });
 
-                    //  average on question
-                    $average[] = array_sum($answers) / count($answers);
+                    $averageOnQuestion[] = $this->getAverage($answers);
 
                 }
 
-                //  average on topic
-                $results[] = array_sum($average) / count($average);
+                $averageOnTopic[] = $this->getAverage($averageOnQuestion);
 
             }
 
         }
 
-        return $results;
+        return $averageOnTopic;
     }
 
     /**
@@ -222,28 +221,14 @@ class Evaluator
                 'question' => $question->getQuestion(),
             ];
 
-            //  group the values
-            $evaluation = [
-                'my-region'   => [
-                    'low'     => [],
-                    'neutral' => [],
-                    'high'    => [],
-                ],
-                'all-regions' => [
-                    'low'     => [],
-                    'neutral' => [],
-                    'high'    => [],
-                ],
-            ];
-
-            list($myFirstQuestion, $surveyResultUids) = $this->getQuestionToGroupByResults();
+            $surveyResultUids = $this->getQuestionToGroupByResults();
             //  my-region
             $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
-            $donuts = $this->collectData($questionResults, $evaluation, $myFirstQuestion, $donuts, $slug, $key = 'my_region', $title = 'Meine Region');
+            $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'my_region', $title = 'Meine Region');
 
             //  Ostdeutschland = all regions
             $questionResults = $this->questionResultRepository->findByQuestion($question);
-            $donuts = $this->collectData($questionResults, $evaluation, $myFirstQuestion, $donuts, $slug, $key = 'all_regions', $title = 'Alle Regionen');
+            $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'all_regions', $title = 'Alle Regionen');
 
             //  Deutschland = GEM
             $donuts[$slug]['data']['benchmark']['region'] = 'Bundesweit (GEM)';
@@ -335,10 +320,7 @@ class Evaluator
         //  my-region vs. all-regions
         //  extract name from topics
         $title = 'Meine Region/Alle Regionen';
-        $slug = $this->slugify($title, '_');
-        $bars[$slug]['topics'] = $topicNames;
-        $bars[$slug]['title'] = $title;
-        $bars[$slug]['series'] = [
+        $series = [
             [
                 'name' => 'Meine Region',
                 'data' => $this->getAverageResultByTopics($topics, $scope = 'my-region'),
@@ -349,13 +331,11 @@ class Evaluator
             ],
         ];
 
+        $bars = $this->buildBar($topicNames, $title, $series, $bars);
+
         //  my-region vs. gem -> muss die benchmarks holen
         $title = 'Meine Region/GEM';
-        $slug = $this->slugify($title, '_');
-
-        $bars[$slug]['topics'] = $topicNames;
-        $bars[$slug]['title'] = $title;
-        $bars[$slug]['series'] = [
+        $series = [
             [
                 'name' => 'Meine Region',
                 'data' => $this->getAverageResultByTopics($topics, $scope = 'my-region'),
@@ -365,6 +345,8 @@ class Evaluator
                 'data' => [9, 6, 3],
             ],
         ];
+
+        $bars = $this->buildBar($topicNames, $title, $series, $bars);
 
         return $bars;
 
@@ -459,16 +441,23 @@ class Evaluator
 
     /**
      * @param \TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $questionResults
-     * @param array                                              $evaluation
-     * @param                                                    $myFirstQuestion
      * @param array                                              $donuts
      * @param string                                             $slug
-     * @param key                                                $key
-     * @param title                                              $title
+     * @param string                                             $key
+     * @param string                                             $title
      * @return array              $donuts
      */
-    public function collectData(\TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $questionResults, array $evaluation, $myFirstQuestion, array $donuts, string $slug, string $key, string $title): array
+    public function collectData(\TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $questionResults, array $donuts, string $slug, string $key, string $title): array
     {
+        //  group the values
+        $evaluation = [
+            $key   => [
+                'low'     => [],
+                'neutral' => [],
+                'high'    => [],
+            ],
+        ];
+
         foreach ($questionResults as $result) {
 
             if ((int)$result->getAnswer() < 5) {
@@ -485,25 +474,14 @@ class Evaluator
 
         }
 
-        //  show results for each question
-        //  meine Region, Ostdeutschland, Deutschland
-
-        //  my-region
-        $myFirstQuestionAnswerOptions = GeneralUtility::trimExplode(PHP_EOL, $myFirstQuestion->getQuestion()->getAnswerOption(), true);
-        $donuts[$slug]['data'][$key]['region'] = $myFirstQuestionAnswerOptions[((int)$myFirstQuestion->getAnswer() - 1)];
         $donuts[$slug]['data'][$key]['region'] = $title;
 
-        $donuts[$slug]['data'][$key]['evaluation']['low'] = (isset($evaluation[$key]['low'])) ? count($evaluation[$key]['low']) : 0;
-        $donuts[$slug]['data'][$key]['evaluation']['neutral'] = (isset($evaluation[$key]['neutral'])) ? count($evaluation[$key]['neutral']) : 0;
-        $donuts[$slug]['data'][$key]['evaluation']['high'] = (isset($evaluation[$key]['high'])) ? count($evaluation[$key]['high']) : 0;
-
-        //  @todo: improve this whole aggregation process
-        $donuts[$slug]['data'][$key]['evaluation']['series'] = [$donuts[$slug]['data'][$key]['evaluation']['low'], $donuts[$slug]['data'][$key]['evaluation']['neutral'], $donuts[$slug]['data'][$key]['evaluation']['high']];
-        $donuts[$slug]['data'][$key]['evaluation']['labels'] = ['low', 'neutral', 'high'];
-
-        unset($donuts[$slug]['data'][$key]['evaluation']['low']);
-        unset($donuts[$slug]['data'][$key]['evaluation']['neutral']);
-        unset($donuts[$slug]['data'][$key]['evaluation']['high']);
+        $donuts[$slug]['data'][$key]['evaluation']['series'] = [
+            count($evaluation[$key]['low']) ?? 0,
+            count($evaluation[$key]['neutral']) ??  0,
+            count($evaluation[$key]['high']) ??  0,
+        ];
+        $donuts[$slug]['data'][$key]['evaluation']['labels'] = array_keys($evaluation[$key]);
 
         return $donuts;
     }
@@ -534,6 +512,35 @@ class Evaluator
         $slug = preg_replace('![' . preg_quote($separator) . '\s]+!u', $separator, $slug);
 
         return trim($slug, $separator);
+    }
+
+    /**
+     * @param array $data
+     * @return float
+     */
+    protected function getAverage(array $data): float
+    {
+        return array_sum($data) / count($data);
+    }
+
+    /**
+     * @param array  $topicNames
+     * @param string $title
+     * @param array  $series
+     * @param array $bars
+     * @return array
+     */
+    protected function buildBar(array $topicNames, string $title, array $series, array $bars): array
+    {
+        $slug = $this->slugify($title, '_');
+
+        $bars[$slug] = [
+            'topics' => $topicNames,
+            'title'  => $title,
+            'series' => $series
+        ];
+
+        return $bars;
     }
 
 }

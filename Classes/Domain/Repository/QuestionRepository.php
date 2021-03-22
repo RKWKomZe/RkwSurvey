@@ -27,12 +27,12 @@ class QuestionRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 {
 
     /**
-     * findByGroupedByAndSurvey
+     * findOneByGroupedByAndSurvey
      *
      * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
      * @return \RKW\RkwSurvey\Domain\Model\Question|null
      */
-    public function findByGroupedByAndSurvey(\RKW\RkwSurvey\Domain\Model\Survey $survey)
+    public function findOneByGroupedByAndSurvey(\RKW\RkwSurvey\Domain\Model\Survey $survey)
     {
         $query = $this->createQuery();
 
@@ -43,7 +43,7 @@ class QuestionRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
             )
         );
 
-        return $query->execute();
+        return $query->execute()->getFirst();
         //====
     }
 
