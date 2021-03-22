@@ -17,6 +17,7 @@ namespace RKW\RkwSurvey\Domain\Model;
 /**
  * Question
  *
+ * @author Christian Dilger <c.dilger@addorange.de>
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
  * @copyright Rkw Kompetenzzentrum
@@ -143,6 +144,13 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @var \RKW\RkwSurvey\Domain\Model\Survey
      */
     protected $survey = null;
+
+    /**
+     * topic
+     *
+     * @var \RKW\RkwSurvey\Domain\Model\Topic
+     */
+    protected $topic = null;
 
     /**
      * Returns the question
@@ -519,6 +527,27 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function setSurvey(\RKW\RkwSurvey\Domain\Model\Survey $survey)
     {
         $this->survey = $survey;
+    }
+
+    /**
+     * Returns the topic
+     *
+     * @return \RKW\RkwSurvey\Domain\Model\Topic $topic
+     */
+    public function getTopic()
+    {
+        return $this->topic;
+    }
+
+    /**
+     * Sets the topic
+     *
+     * @param \RKW\RkwSurvey\Domain\Model\Topic $topic
+     * @return void
+     */
+    public function setTopic(\RKW\RkwSurvey\Domain\Model\Topic $topic)
+    {
+        $this->topic = $topic;
     }
 
     /**

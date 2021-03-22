@@ -103,7 +103,7 @@
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.scale_to_points">
 				<source>Scale to points</source>
-				<target>Skala: Anzahl der Items</target>
+				<target>Skala: Maximale Punktzahl</target>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.do_action">
                 <source>Define action</source>

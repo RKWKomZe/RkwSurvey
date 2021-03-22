@@ -2,11 +2,13 @@
 
 namespace RKW\RkwSurvey\Controller;
 
+use Doctrine\Common\Util\Debug;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use RKW\RkwSurvey\Domain\Model\Survey;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use RKW\RkwSurvey\Domain\Model\SurveyResult;
 use RKW\RkwSurvey\Domain\Model\QuestionResult;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use RKW\RkwSurvey\Utility\SurveyProgressUtility;
 
 /*
@@ -683,29 +685,18 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
     {
 
         //  get the topics -> muss dynamisch über Zuordnung im Fragebogen zu Themen erfolgen
-        $topics = [
-            [
-                'name' => 'Politik und Infrastruktur',
-                'questionUids' => [
-                    135,
-                    136
-                ],
-            ],
-            [
-                'name' => 'Talentpool',
-                'questionUids' => [
-                    137,
-                    138
-                ],
-            ],
-            [
-                'name' => 'Finanzierung',
-                'questionUids' => [
-                    139
-                ],
-            ]
+        $topics = $surveyResult->getSurvey()->getTopics();
 
-        ];
+//        $collectedTopics = [];
+//
+//        foreach ($topics as $topic) {
+//
+//            $collectedTopics[$this->slugify($topic->getName())] = [
+//                'name' => $topic->getName(),
+//                'questions' => $topic->getQuestions(),
+//            ];
+//
+//        }
 
         $topicNames = [
             'P/I',
@@ -929,8 +920,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                 
                 var chart_' . $identifier . ' = new ApexCharts(document.querySelector(\'#' . $identifier . '\'), options_' . $identifier . ');
 
-                console.log(document.querySelector(\'#' . $identifier . '\'))
-                
                 chart_' . $identifier . '.render(); 
                 
             ';
@@ -1007,35 +996,38 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         foreach ($topics as $topic) {
 
             $average = [];
-            //  get all results by questionUid
-            foreach ($topic['questionUids'] as $questionUid) {
 
-                //  @todo: constraint to my region - die aktuelle Abfrage geht über alle Ergebnisse
+            if ($topic->getQuestions()->count() > 0) {
 
-                if ($scope) {
-                    //  filter questionResults to my region only
-                    //  my-region
-                    list($myFirstQuestion, $surveyResultUids) = $this->getQuestionResultsWithSameFirstAnswer($surveyResult);
-                    $questionResults = $this->questionResultRepository->findByQuestionUidAndSurveyResultUids($questionUid, $surveyResultUids);
-                } else {
-                    $questionResults = $this->questionResultRepository->findByQuestionUid($questionUid);
+                foreach ($topic->getQuestions() as $question) {
+
+                    if ($scope) {
+                        //  filter questionResults to my region only
+                        list($myFirstQuestion, $surveyResultUids) = $this->getQuestionResultsWithSameFirstAnswer($surveyResult);
+                        $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
+                    } else {
+                        $questionResults = $this->questionResultRepository->findByQuestion($question);
+                    }
+
+                    $answers = [];
+                    foreach ($questionResults as $questionResult) {
+                        $answers[] = (int)$questionResult->getAnswer();
+                    }
+
+                    //  Was ist der Wert von "weiß ich nicht"?
+                    $answers = array_filter($answers, function ($x) {
+                        return $x !== '';
+                    });
+
+                    //  average on question
+                    $average[] = array_sum($answers) / count($answers);
+
                 }
 
-                $answers = [];
-                foreach ($questionResults as $questionResult) {
-                    $answers[] = (int)$questionResult->getAnswer();
-                }
+                //  average on topic
+                $results[] = array_sum($average) / count($average);
 
-                //  Was ist der Wert von "weiß ich nicht"?
-
-                $answers = array_filter($answers, function ($x) {
-                    return $x !== '';
-                });
-                //  average on question, but not on topic
-                $average[] = array_sum($answers) / count($answers);
             }
-
-            $results[] = array_sum($average) / count($average);
 
         }
 

@@ -17,17 +17,17 @@ return [
 			'starttime' => 'starttime',
 			'endtime' => 'endtime',
 		],
-		'searchFields' => 'required,question,hint,short_name,type,text_consent,text_rejection,scale_from_points,scale_to_points,scale_step,answer_option,benchmark,benchmark_value, survey,do_action,do_action_if,do_action_jump',
+		'searchFields' => 'required,topic,question,hint,short_name,type,text_consent,text_rejection,scale_from_points,scale_to_points,scale_step,answer_option,benchmark,benchmark_value, survey,do_action,do_action_if,do_action_jump',
 		'iconfile' => 'EXT:rkw_survey/Resources/Public/Icons/tx_rkwsurvey_domain_model_question.gif'
 	],
 	'interface' => [
 		// 'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, required, question, type, short_name, hint, text_consent, text_rejection, scale_from_points, scale_to_points, benchmark, answer_option, survey',
-        'showRecordFieldList' => 'hidden, required, question, type, short_name, hint, text_consent, text_rejection, scale_from_points, scale_to_points, scale_step, answer_option, benchmark, benchmark_value, scale_open_from, scale_open_to, scale_open_step,  do_action, do_action_if, do_action_jump, survey',
+        'showRecordFieldList' => 'hidden, required, topic, question, type, short_name, hint, text_consent, text_rejection, scale_from_points, scale_to_points, scale_step, answer_option, benchmark, benchmark_value, scale_open_from, scale_open_to, scale_open_step,  do_action, do_action_if, do_action_jump, survey',
 
     ],
 	'types' => [
         // '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, required, question, hint, short_name, type, text_consent, text_rejection, scale_from_points, scale_to_points, benchmark, answer_option, survey, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
-		'1' => ['showitem' => 'hidden, required, question, hint, short_name, type, text_consent, text_rejection, scale_from_points, scale_to_points, scale_step, answer_option, benchmark, benchmark_value, scale_open_from, scale_open_to, scale_open_step,  do_action, do_action_if, do_action_jump, survey, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
+		'1' => ['showitem' => 'hidden, required, topic, question, hint, short_name, type, text_consent, text_rejection, scale_from_points, scale_to_points, scale_step, answer_option, benchmark, benchmark_value, scale_open_from, scale_open_to, scale_open_step,  do_action, do_action_if, do_action_jump, survey, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
     ],
 	'columns' => [
 	    /*
@@ -199,6 +199,24 @@ return [
                 ]
 			],
 		],
+        'topic' => [
+            'exclude' => 0,
+            'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:pages.tx_rkwnewsletter_newsletter',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'size' => 1,
+                'eval' => 'int',
+                'items' => [
+                    ['LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:pages.tx_rkwnewsletter_newsletter.please_choose',0],
+                ],
+                'minitems' => 0,
+                'maxitems' => 1,
+                'default' => '',
+                'foreign_table' => 'tx_rkwsurvey_domain_model_topic',
+                'foreign_table_where' => 'AND tx_rkwsurvey_domain_model_topic.survey = ###REC_FIELD_survey###',
+            ],
+        ],
         'do_action' => [
             'exclude' => false,
             'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.do_action',
