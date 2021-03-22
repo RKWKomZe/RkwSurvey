@@ -73,7 +73,27 @@ class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         //====
     }
 
+    /**
+     * findByQuestionUidAndSurveyResultUids
+     *
+     * @param int $questionUid
+     * @param array $surveyResultIds
+     * @return \RKW\RkwSurvey\Domain\Model\QuestionResult|null
+     */
+    public function findByQuestionUidAndSurveyResultUids($questionUid, array $surveyResultUids)
+    {
+        $query = $this->createQuery();
 
+        $query->matching(
+            $query->logicalAnd(
+                $query->equals('question', $questionUid),
+                $query->in('survey_result', $surveyResultUids)
+            )
+        );
+
+        return $query->execute();
+        //====
+    }
 
     /**
      * findBySurveyOrderByQuestionAndType
@@ -136,6 +156,24 @@ class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 
         $query->matching(
             $query->equals('question', $question)
+        );
+
+        return $query->execute();
+        //====
+    }
+
+    /**
+     * findByQuestionUid
+     *
+     * @param int $questionUid
+     * @return \RKW\RkwSurvey\Domain\Model\QuestionResult|null
+     */
+    public function findByQuestionUid($questionUid)
+    {
+        $query = $this->createQuery();
+
+        $query->matching(
+            $query->equals('question', $questionUid)
         );
 
         return $query->execute();

@@ -9,7 +9,29 @@
         <div id="chart_{surveyResult.uid}"></div>
 
         <h3>Darstellung der Durchschnittswerte für die übergeordneten fünf Kategorien</h3>
-        <div id=""></div>
+        <div class="tiles-wrapper">
+            <div class="tiles flex-container flex-container--margin">
+                <f:for each="{bars}" as="comparison" iteration="iterBar" key="identifier">
+                    <div class="flex-item flex-basis-4"><!-- @todo: flex-basis-4 forces last chart to new line -->
+                        <div class="tile tile--no-img">
+                            <a href="#">
+                                <div class="tile__content">
+                                    <h3 class="tile__title">
+                                        <span class="tile__title-text">
+                                            {comparison.title}
+                                        </span>
+                                    </h3>
+                                    <div id="{identifier}" class="tile__text tile__text--no-img">
+                                    </div>
+                                </div>
+                                <div class="tile__footer">
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </f:for>
+            </div>
+        </div>
 
         <h3>Darstellung der Werte in Form von Donuts</h3>
         <div class="tiles-wrapper">

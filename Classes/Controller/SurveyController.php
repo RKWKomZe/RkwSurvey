@@ -3,13 +3,11 @@
 namespace RKW\RkwSurvey\Controller;
 
 use TYPO3\CMS\Core\Page\PageRenderer;
-use \RKW\RkwSurvey\Domain\Model\Survey;
+use RKW\RkwSurvey\Domain\Model\Survey;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use \RKW\RkwSurvey\Domain\Model\SurveyResult;
-use \RKW\RkwSurvey\Domain\Model\QuestionResult;
-use \RKW\RkwSurvey\Utility\SurveyProgressUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
-use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
+use RKW\RkwSurvey\Domain\Model\SurveyResult;
+use RKW\RkwSurvey\Domain\Model\QuestionResult;
+use RKW\RkwSurvey\Utility\SurveyProgressUtility;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -391,14 +389,21 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         );
 
         $chart = $this->prepareChart($surveyResult);
-        $donuts = $this->prepareDonuts($surveyResult);
-
         $this->pageRenderer->addJsFooterInlineCode( 'chartScript', $this->renderChart($chart, $surveyResult), true );
-        $this->pageRenderer->addJsFooterInlineCode( 'donutScript', $this->renderDonuts($donuts, $surveyResult), true );
 
         $this->view->assign('surveyResult', $surveyResult);
         $this->view->assign('tokenInput', $tokenInput);
 
+
+        //  @todo: Das muss ausgelagert werden in die RkwGraphs! Allerdings muss auch ein Identifier übergeben werden, anhand dessen die RkwGraphs das Ergebnis render kann!
+
+        $donuts = $this->prepareDonuts($surveyResult);
+        $this->pageRenderer->addJsFooterInlineCode( 'donutScript', $this->renderDonuts($donuts, $surveyResult), true );
+
+        $bars = $this->prepareBars($surveyResult);
+        $this->pageRenderer->addJsFooterInlineCode( 'barScript', $this->renderBars($bars, $surveyResult), true );
+
+        $this->view->assign('bars', $bars);
         $this->view->assign('donuts', $donuts);
 
     }
@@ -621,16 +626,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
 
         $surveyQuestions = $surveyResult->getSurvey()->getQuestion();
 
-        $myFirstQuestion = $surveyResult->getQuestionResult()->toArray()[0];    //  @todo: How to identify grouping by as it does not have to be always the first question?
-
-        $allQuestionResultsByQuestion = $this->questionResultRepository->findByQuestionAndAnswer($myFirstQuestion->getQuestion(), $myFirstQuestion->getAnswer());
-
-        $surveyResultUids = [];
-
-        foreach ($allQuestionResultsByQuestion as $questionResult) {
-            $surveyResultUids[] = $questionResult->getSurveyResult()->getUid();
-        }
-
         foreach ($surveyQuestions as $question) {
 
             //  use question only if it is a scale
@@ -658,12 +653,14 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                 ]
             ];
 
+            list($myFirstQuestion, $surveyResultUids) = $this->getQuestionResultsWithSameFirstAnswer($surveyResult);
+            //  my-region
             $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
-            $donuts = $this->collectData($questionResults, $evaluation, $myFirstQuestion, $donuts, $slug, $key = 'my_region');
+            $donuts = $this->collectData($questionResults, $evaluation, $myFirstQuestion, $donuts, $slug, $key = 'my_region', $title = 'Meine Region');
 
             //  Ostdeutschland = all regions
             $questionResults = $this->questionResultRepository->findByQuestion($question);
-            $donuts = $this->collectData($questionResults, $evaluation, $myFirstQuestion, $donuts, $slug, $key = 'all_regions');
+            $donuts = $this->collectData($questionResults, $evaluation, $myFirstQuestion, $donuts, $slug, $key = 'all_regions', $title = 'Alle Regionen');
 
             //  Deutschland = GEM
             $donuts[$slug]['data']['benchmark']['region'] = 'Bundesweit (GEM)';
@@ -678,14 +675,93 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         return $donuts;
     }
 
+    /**
+     * @param SurveyResult $surveyResult
+     * @return array
+     */
+    protected function prepareBars(SurveyResult $surveyResult): array // @todo: Make this dynamic somehow
+    {
+
+        //  get the topics -> muss dynamisch über Zuordnung im Fragebogen zu Themen erfolgen
+        $topics = [
+            [
+                'name' => 'Politik und Infrastruktur',
+                'questionUids' => [
+                    135,
+                    136
+                ],
+            ],
+            [
+                'name' => 'Talentpool',
+                'questionUids' => [
+                    137,
+                    138
+                ],
+            ],
+            [
+                'name' => 'Finanzierung',
+                'questionUids' => [
+                    139
+                ],
+            ]
+
+        ];
+
+        $topicNames = [
+            'P/I',
+            'T',
+            'F'
+        ];
+
+        $bars = [];
+
+        //  my-region vs. all-regions
+        //  extract name from topics
+        $title = 'Meine Region/Alle Regionen';
+        $slug = $this->slugify($title, '_');
+        $bars[$slug]['topics'] = $topicNames;
+        $bars[$slug]['title'] = $title;
+        $bars[$slug]['series'] = [
+            [
+                'name' => 'Meine Region',
+                'data' => $this->getAverageResultByTopics($surveyResult, $topics, $scope = 'my-region'),
+            ],
+            [
+                'name' => 'Alle Regionen',
+                'data' => $this->getAverageResultByTopics($surveyResult, $topics, $scope = null),
+            ],
+        ];
+
+        //  my-region vs. gem -> muss die benchmarks holen
+        $title = 'Meine Region/GEM';
+        $slug = $this->slugify($title, '_');
+
+        $bars[$slug]['topics'] = $topicNames;
+        $bars[$slug]['title'] = $title;
+        $bars[$slug]['series'] = [
+            [
+                'name' => 'Meine Region',
+                'data' => $this->getAverageResultByTopics($surveyResult, $topics, $scope = 'my-region'),   //  @todo: Mist, das geht auf alle, nicht nur auf meine Region.
+            ],
+            [
+                'name' => 'Alle Regionen',
+                'data' => [9, 6, 3],
+            ],
+        ];
+
+        return $bars;
+
+    }
+
     protected function slugify($string, $separator = '-') {
 
         $slug = strtolower($string);
 
         $slug = str_replace('ä', 'ae', $slug);
+        $slug = str_replace('ä', 'ae', $slug);
         $slug = str_replace('ö', 'oe', $slug);
         $slug = str_replace('ü', 'ue', $slug);
-        $slug = str_replace('ß', 'ss', $slug);
+        $slug = str_replace('/', $separator, $slug);
 
         // Convert all dashes/underscores into separator
         $flip = $separator === '-' ? '_' : '-';
@@ -777,7 +853,11 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                         labels: ' . json_encode($comparison['evaluation']['labels']) . ',
                         plotOptions: {
                             pie: {
-                                customScale: 0.5
+                                donut: {
+                                    labels: {
+                                        show: true
+                                    }
+                                }
                             }
                         },
                         legend: {
@@ -788,15 +868,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                         },
                         tooltip: {
                             enabled: false,
-                        },
-                        plotOptions: {
-                            pie: {
-                                donut: {
-                                    labels: {
-                                        show: true
-                                    }
-                                }
-                            }
                         }
                     }
                     
@@ -815,15 +886,72 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
     }
 
     /**
+     * @param array        $charts
+     * @param SurveyResult $surveyResult
+     * @return string
+     */
+    protected function renderBars(array $charts, SurveyResult $surveyResult): string
+    {
+
+        // @todo: We need topics like in Webcheck (optional)
+
+        $script = '';
+
+        foreach ($charts as $chartIdentifier => $comparison) {
+
+            $identifier = $chartIdentifier;
+
+            $script .= '
+                
+                var options_' . $identifier . ' = {
+                    chart: {
+                        type: \'bar\'
+                    },
+                    series: ' . json_encode($comparison['series']) . ',
+                    plotOptions: {
+                        bar: {
+                            horizontal: false
+                        }
+                    },
+                    legend: {
+                        show: false
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    tooltip: {
+                        enabled: false,
+                    },
+                    xaxis: {
+                        categories: ' . json_encode($comparison['topics']) . ',
+                    }
+                }
+                
+                var chart_' . $identifier . ' = new ApexCharts(document.querySelector(\'#' . $identifier . '\'), options_' . $identifier . ');
+
+                console.log(document.querySelector(\'#' . $identifier . '\'))
+                
+                chart_' . $identifier . '.render(); 
+                
+            ';
+
+        }
+
+        return $script;
+
+    }
+
+    /**
      * @param \TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $questionResults
      * @param array               $evaluation
      * @param                     $myFirstQuestion
      * @param array               $donuts
      * @param string              $slug
      * @param key                 $key
+     * @param title               $title
      * @return array              $donuts
      */
-    protected function collectData(\TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $questionResults, array $evaluation, $myFirstQuestion, array $donuts, string $slug, string $key): array
+    protected function collectData(\TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $questionResults, array $evaluation, $myFirstQuestion, array $donuts, string $slug, string $key, string $title): array
     {
         foreach ($questionResults as $result) {
 
@@ -847,7 +975,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         //  my-region
         $myFirstQuestionAnswerOptions = GeneralUtility::trimExplode(PHP_EOL, $myFirstQuestion->getQuestion()->getAnswerOption(), true);
         $donuts[$slug]['data'][$key]['region'] = $myFirstQuestionAnswerOptions[((int)$myFirstQuestion->getAnswer() - 1)];
-        $donuts[$slug]['data'][$key]['region'] = 'Ihre Region';
+        $donuts[$slug]['data'][$key]['region'] = $title;
 
         $donuts[$slug]['data'][$key]['evaluation']['low'] = (isset($evaluation[$key]['low'])) ? count($evaluation[$key]['low']) : 0;
         $donuts[$slug]['data'][$key]['evaluation']['neutral'] = (isset($evaluation[$key]['neutral'])) ? count($evaluation[$key]['neutral']) : 0;
@@ -862,6 +990,76 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         unset($donuts[$slug]['data'][$key]['evaluation']['high']);
 
         return $donuts;
+    }
+
+    //  @todo: Diese Evaluierung muss in eine eigene Klasse wandern, sonst wird das völlig unübersichtlich und verrückt.
+
+
+    /**
+     * @param SurveyResult $surveyResult
+     * @param      $topics
+     * @param null $scope
+     * @return array
+     */
+    protected function getAverageResultByTopics(SurveyResult $surveyResult, $topics, $scope = null)
+    {
+
+        foreach ($topics as $topic) {
+
+            $average = [];
+            //  get all results by questionUid
+            foreach ($topic['questionUids'] as $questionUid) {
+
+                //  @todo: constraint to my region - die aktuelle Abfrage geht über alle Ergebnisse
+
+                if ($scope) {
+                    //  filter questionResults to my region only
+                    //  my-region
+                    list($myFirstQuestion, $surveyResultUids) = $this->getQuestionResultsWithSameFirstAnswer($surveyResult);
+                    $questionResults = $this->questionResultRepository->findByQuestionUidAndSurveyResultUids($questionUid, $surveyResultUids);
+                } else {
+                    $questionResults = $this->questionResultRepository->findByQuestionUid($questionUid);
+                }
+
+                $answers = [];
+                foreach ($questionResults as $questionResult) {
+                    $answers[] = (int)$questionResult->getAnswer();
+                }
+
+                //  Was ist der Wert von "weiß ich nicht"?
+
+                $answers = array_filter($answers, function ($x) {
+                    return $x !== '';
+                });
+                //  average on question, but not on topic
+                $average[] = array_sum($answers) / count($answers);
+            }
+
+            $results[] = array_sum($average) / count($average);
+
+        }
+
+        return $results;
+    }
+
+    /**
+     * @param SurveyResult $surveyResult
+     * @return array
+     */
+    protected function getQuestionResultsWithSameFirstAnswer(SurveyResult $surveyResult): array
+    {
+        $myFirstQuestion = $surveyResult->getQuestionResult()->current();    //  @todo: How could it be that this does not work?
+        $myFirstQuestion = $surveyResult->getQuestionResult()->toArray()[0];    //  @todo: How to identify grouping by as it does not have to be always the first question?
+
+        $allQuestionResultsByQuestion = $this->questionResultRepository->findByQuestionAndAnswer($myFirstQuestion->getQuestion(), $myFirstQuestion->getAnswer());
+
+        $surveyResultUids = [];
+
+        foreach ($allQuestionResultsByQuestion as $questionResult) {
+            $surveyResultUids[] = $questionResult->getSurveyResult()->getUid();
+        }
+
+        return array($myFirstQuestion, $surveyResultUids);
     }
 
 }
