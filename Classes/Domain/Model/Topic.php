@@ -35,11 +35,11 @@ class Topic extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $name;
 
     /**
-     * description
+     * shortName
      *
      * @var string
      */
-    protected $description;
+    protected $shortName;
 
     /**
      * questions
@@ -71,24 +71,24 @@ class Topic extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
     /**
-     * Returns the description
+     * Returns the shortName
      *
-     * @return string $description
+     * @return string $shortName
      */
-    public function getDescription()
+    public function getShortName()
     {
-        return $this->description;
+        return $this->shortName;
     }
 
     /**
-     * Sets the description
+     * Sets the shortName
      *
-     * @param string $description
+     * @param string $shortName
      * @return void
      */
-    public function setDescription($description)
+    public function setShortName($shortName)
     {
-        $this->description = $description;
+        $this->shortName = $shortName;
     }
 
     /**

@@ -13,17 +13,17 @@ return [
         'enablecolumns'            => [
             'disabled' => 'hidden',
         ],
-        'searchFields'             => 'name,description',
+        'searchFields'             => 'name,short_name',
         'iconfile'                 => 'EXT:rkw_survey/Resources/Public/Icons/tx_rkwsurvey_domain_model_topic.gif',
         'hideTable'                => true,
     ],
     'interface' => [
-        // 'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, description, weight, result_a, result_b, result_c, questions',
-        'showRecordFieldList' => 'hidden, name, description',
+        // 'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, short_name, weight, result_a, result_b, result_c, questions',
+        'showRecordFieldList' => 'hidden, name, short_name',
     ],
     'types'     => [
-        // '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, description, weight, result_a, result_b, result_c, questions'],
-        '1' => ['showitem' => 'hidden, name, description'],
+        // '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, short_name, weight, result_a, result_b, result_c, questions'],
+        '1' => ['showitem' => 'hidden, name, short_name'],
     ],
     'columns'   => [
         /*
@@ -118,14 +118,13 @@ return [
                 'eval' => 'trim,required',
             ],
         ],
-        'description'      => [
-            'exclude' => true,
-            'label'   => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_topic.description',
+        'short_name'            => [
+            'exclude' => false,
+            'label'   => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_topic.short_name',
             'config'  => [
-                'type' => 'text',
-                'cols' => 40,
-                'rows' => 15,
-                'eval' => 'trim',
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim,required',
             ],
         ],
         'questions'        => [

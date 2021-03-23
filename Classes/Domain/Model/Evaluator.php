@@ -81,7 +81,6 @@ class Evaluator
      */
     public function getQuestionToGroupByResults(): array
     {
-        //  get survey questions with group_by = 1
         $survey = $this->surveyResult->getSurvey();
 
         $question = $this->questionRepository->findOneByGroupedByAndSurvey($survey);
@@ -106,7 +105,6 @@ class Evaluator
      */
     public function getAverageResultByTopics($topics, $scope = null)
     {
-
         $averageOnTopic = [];
 
         foreach ($topics as $topic) {
@@ -129,7 +127,7 @@ class Evaluator
                         $answers[] = (int)$questionResult->getAnswer();
                     }
 
-                    //  Was ist der Wert von "weiß ich nicht"?
+                    //  Was ist der Wert von "weiß ich nicht"? -> skipped = null
                     $answers = array_filter($answers, function ($x) {
                         return $x !== '';
                     });
@@ -138,7 +136,7 @@ class Evaluator
 
                 }
 
-                $averageOnTopic[] = $this->getAverage($averageOnQuestion);
+                $averageOnTopic[$topic->getShortName()] = $this->getAverage($averageOnQuestion);
 
             }
 
@@ -156,9 +154,7 @@ class Evaluator
 
         $script = '';
 
-        foreach ($charts as $chartIdentifier => $comparison) {
-
-            $identifier = $chartIdentifier;
+        foreach ($charts as $identifier => $comparison) {
 
             $script .= '
                 
@@ -173,13 +169,16 @@ class Evaluator
                         }
                     },
                     legend: {
-                        show: false
+                        show: true
                     },
                     dataLabels: {
                         enabled: false
                     },
                     tooltip: {
                         enabled: false,
+                    },
+                    yaxis: {
+                        decimalsInFloat: 0,
                     },
                     xaxis: {
                         categories: ' . json_encode($comparison['topics']) . ',
@@ -201,7 +200,7 @@ class Evaluator
     /**
      * @return array
      */
-    public function prepareDonuts(): array // @todo: Make this dynamic somehow
+    public function prepareDonuts(): array
     {
 
         $donuts = [];
@@ -222,9 +221,9 @@ class Evaluator
             ];
 
             $surveyResultUids = $this->getQuestionToGroupByResults();
-            //  my-region
+            //  single_region
             $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
-            $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'my_region', $title = 'Meine Region');
+            $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'single_region', $title = 'Meine Region');
 
             //  Ostdeutschland = all regions
             $questionResults = $this->questionResultRepository->findByQuestion($question);
@@ -303,42 +302,43 @@ class Evaluator
     /**
      * @return array
      */
-    public function prepareBars(): array // @todo: Make this dynamic somehow
+    public function prepareBars(): array
     {
 
         //  get the topics -> muss dynamisch über Zuordnung im Fragebogen zu Themen erfolgen
         $topics = $this->surveyResult->getSurvey()->getTopics();
 
-        $topicNames = [
-            'P/I',
-            'T',
-            'F',
-        ];
+        $topicNames = [];
+
+        foreach ($topics as $topic) {
+            $topicNames[] = $topic->getShortName();
+        }
 
         $bars = [];
 
-        //  my-region vs. all-regions
-        //  extract name from topics
+        //  single_region vs. all_regions
+        $topicNames = array_keys($this->getAverageResultByTopics($topics, $scope = null));
+
         $title = 'Meine Region/Alle Regionen';
         $series = [
             [
                 'name' => 'Meine Region',
-                'data' => $this->getAverageResultByTopics($topics, $scope = 'my-region'),
+                'data' => array_values($this->getAverageResultByTopics($topics, $scope = 'single_region')),
             ],
             [
                 'name' => 'Alle Regionen',
-                'data' => $this->getAverageResultByTopics($topics, $scope = null),
-            ],
+                'data' => array_values($this->getAverageResultByTopics($topics, $scope = null)),
+            ]
         ];
 
         $bars = $this->buildBar($topicNames, $title, $series, $bars);
 
-        //  my-region vs. gem -> muss die benchmarks holen
+        //  single_region vs. gem -> muss die benchmarks holen
         $title = 'Meine Region/GEM';
         $series = [
             [
                 'name' => 'Meine Region',
-                'data' => $this->getAverageResultByTopics($topics, $scope = 'my-region'),
+                'data' => array_values($this->getAverageResultByTopics($topics, $scope = 'single_region')),
             ],
             [
                 'name' => 'GEM',
