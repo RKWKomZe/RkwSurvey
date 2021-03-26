@@ -85,7 +85,7 @@ class Evaluator
 
         $question = $this->questionRepository->findOneByGroupedByAndSurvey($survey);
 
-        $questionResult = $this->questionResultRepository->findOneByQuestionAndSurveyResult($question, $this->surveyResult);
+        $questionResult = $this->questionResultRepository->findByQuestionAndSurveyResult($question, $this->surveyResult);
 
         $allQuestionResultsByQuestion = $this->questionResultRepository->findByQuestionAndAnswer($question, $questionResult->getAnswer());
 
@@ -414,18 +414,6 @@ class Evaluator
                     {
                         name: "GEM",
                         data: ' . json_encode($chart['values']['benchmark']) . ',
-                    },
-                    {
-                        data: [0, 0, 11, 11],
-                    },
-                    {
-                        data: [11, 0, 0, 11],
-                    },
-                    {
-                        data: [11, 11, 0, 0],
-                    },
-                    {
-                        data: [0, 11, 11, 0],
                     }
                 ],
                 labels: ' . json_encode($chart['labels']) . '
