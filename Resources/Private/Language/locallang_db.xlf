@@ -69,6 +69,9 @@
 			<trans-unit id="tx_rkwsurvey_domain_model_question.type.free_text">
 				<source>Free text</source>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.type.free_text_short">
+				<source>Free text (short)</source>
+			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.text_consent">
 				<source>Label "from"</source>
 			</trans-unit>

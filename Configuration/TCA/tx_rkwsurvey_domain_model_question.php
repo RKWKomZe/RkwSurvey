@@ -164,6 +164,7 @@ return [
 				'renderType' => 'selectSingle',
 				'items' => [
 					['LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.type.free_text', 0],
+					['LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.type.free_text_short', 4],
 					['LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.type.multiple', 1],
 					['LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.type.single', 2],
 					['LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.type.scale', 3],

@@ -89,6 +89,10 @@
 				<source>Free text</source>
 				<target>Freitext</target>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.type.free_text_short">
+				<source>Free text (short)</source>
+				<target>Freitext (kurz)</target>
+			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.text_consent">
 				<source>Label "from"</source>
 				<target>Beschriftung "von" (z.B. "sehr wichtig", "sehr gute Nachfrage", "trifft zu")</target>
