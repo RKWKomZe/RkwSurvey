@@ -113,9 +113,9 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * benchmarkValue
      *
-     * @var integer
+     * @var float
      */
-    protected $benchmarkValue = 0;
+    protected $benchmarkValue = 0.0;
 
     /**
      * answerOption
@@ -435,7 +435,7 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Sets the benchmarkValue
      *
-     * @param int $benchmarkValue
+     * @param float $benchmarkValue
      * @return void
      */
     public function setBenchmarkValue($benchmarkValue)
