@@ -124,6 +124,19 @@ class Evaluator
         return $surveyResultUids;
     }
 
+    public function getGroupByQuestionAnswer()
+    {
+
+        $survey = $this->surveyResult->getSurvey();
+
+        $question = $this->questionRepository->findOneByGroupedByAndSurvey($survey);
+
+        $result = $this->questionResultRepository->findByQuestionAndSurveyResult($question, $this->surveyResult);
+
+        return $this->parseStringToArray($result->getQuestion()->getAnswerOption(), PHP_EOL)[(int) $result->getAnswer()];
+
+    }
+
     /**
      * @param              $topics
      * @param null         $scope
@@ -131,6 +144,7 @@ class Evaluator
      */
     public function getAverageResultByTopics($topics, $scope = null)
     {
+
         $averageOnTopic = [];
 
         foreach ($topics as $topic) {
@@ -257,7 +271,10 @@ class Evaluator
 
             //  single_region
             $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
-            $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'single_region', $title = 'Meine Region');
+
+            $this->getGroupByQuestionAnswer();
+
+            $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'single_region', $title = $this->getGroupByQuestionAnswer());
 
             //  Ostdeutschland = all regions
             $questionResults = $this->questionResultRepository->findByQuestion($question);
@@ -373,14 +390,14 @@ class Evaluator
         //  single_region vs. all_regions
         $topicNames = array_keys($this->getAverageResultByTopics($topics, $scope = null));
 
-        $title = 'Ich/Meine Region/Alle Regionen';
+        $title = 'Vergleich';
         $series = [
             [
                 'name' => 'Meine Werte',
                 'data' => array_values($this->getAverageResultByTopics($topics, $scope = 'my_values')),
             ],
             [
-                'name' => 'Meine Region',
+                'name' => $this->getGroupByQuestionAnswer(),
                 'data' => array_values($this->getAverageResultByTopics($topics, $scope = 'single_region')),
             ],
             [
@@ -414,7 +431,7 @@ class Evaluator
         $individualValues = [];
         //  filter to results matching a benchmark question
         foreach ($this->surveyResult->getBenchmarkQuestionResults() as $result) {
-            //  cast answer to int, if question is of marked as benchmark
+            //  cast answer to int, if question is marked as benchmark
             $individualValues[] = (int)$result->getAnswer();
         }
 
