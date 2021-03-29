@@ -82,6 +82,7 @@ CREATE TABLE tx_rkwsurvey_domain_model_question (
 	group_by int(11) DEFAULT '0' NOT NULL,
 	benchmark int(11) DEFAULT '0' NOT NULL,
 	benchmark_value double DEFAULT '0' NOT NULL,
+	benchmark_weighting varchar(255) DEFAULT '' NOT NULL,
 	answer_option text NOT NULL,
 	survey int(11) unsigned DEFAULT '0',
 	topic int(11) unsigned DEFAULT '0' NOT NULL,

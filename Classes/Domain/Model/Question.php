@@ -118,6 +118,14 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $benchmarkValue = 0.0;
 
     /**
+     * benchmarkWeighting
+     *
+     * @var string
+     */
+    protected $benchmarkWeighting = '';
+
+
+    /**
      * answerOption
      *
      * @var string
@@ -442,6 +450,28 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->benchmarkValue = $benchmarkValue;
     }
+
+    /**
+     * Returns the benchmarkWeighting
+     *
+     * @return string $benchmarkWeighting
+     */
+    public function getBenchmarkWeighting()
+    {
+        return $this->benchmarkWeighting;
+    }
+
+    /**
+     * Sets the benchmarkWeighting
+     *
+     * @param string $benchmarkWeighting
+     * @return void
+     */
+    public function setBenchmarkWeighting($benchmarkWeighting)
+    {
+        $this->benchmarkWeighting = $benchmarkWeighting;
+    }
+
 
     /**
      * Returns the answerOption

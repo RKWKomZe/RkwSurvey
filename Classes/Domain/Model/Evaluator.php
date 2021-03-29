@@ -268,7 +268,7 @@ class Evaluator
 
             //  get benchmark from question = GEM
             //  @todo: Need all three values per question (low, neutral, high) from GEM - must be put to question
-            $donuts[$slug]['data']['benchmark']['evaluation']['series'] = [rand(0, 100), rand(0, 100), rand(0, 100)];
+            $donuts[$slug]['data']['benchmark']['evaluation']['series'] = $this->parseStringToArray($question->getBenchmarkWeighting(), $delimiter = '|', $checkFloat = true);
             $donuts[$slug]['data']['benchmark']['evaluation']['labels'] = [
                 $this->labels['weighting']['low'],
                 $this->labels['weighting']['neutral'],
@@ -580,6 +580,36 @@ class Evaluator
         ];
 
         return $bars;
+    }
+
+    /**
+     * Parses strings to arrays
+     *
+     * @param string $data
+     * @param string $delimiter
+     * @param bool   $checkFloat
+     * @return integer
+     */
+    public function parseStringToArray($data, $delimiter = '|', $checkFloat = false)
+    {
+
+        $parsedData = [];
+        $strings = GeneralUtility::trimExplode($delimiter, $data, true);
+        foreach ($strings as $string) {
+            if ($checkFloat) {
+                $parsedData[] = (float)str_replace(',', '.', $string);
+            } else {
+                $parsedData[] = addslashes($string);
+            }
+        }
+
+        if (count($parsedData) < 1) {
+            $parsedData = [];
+            //===
+        }
+
+        return $parsedData;
+        //===
     }
 
 }
