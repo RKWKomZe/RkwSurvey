@@ -55,8 +55,34 @@ class Evaluator
      */
     protected $questionRepository;
 
+    /**
+     * @var array
+     */
+    protected $colors = [];
+
+    /**
+     * @var array
+     */
+    protected $labels = [];
+
     public function __construct()
     {
+
+        $this->colors = [
+            'me' => '#d63f11', // $color-primary
+            'my-region' => '#009fee', // $color-blue
+            'all-regions' => '#fdc500', // $color-webcheck-yellow
+            'gem' => '#94c119', // $color-webcheck-green
+        ];
+
+        $this->labels = [
+            'weighting' => [
+                'low' => \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.low', 'RkwSurvey'),
+                'neutral' => \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.neutral', 'RkwSurvey'),
+                'high' => \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.low', 'RkwSurvey'),
+            ]
+        ];
+
         $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
 
         if (!$this->questionResultRepository) {
@@ -164,6 +190,11 @@ class Evaluator
                     chart: {
                         type: \'bar\'
                     },
+                    colors: [
+                        \'' . $this->colors['me'] . '\',
+                        \'' . $this->colors['my-region'] . '\',
+                        \'' . $this->colors['all-regions'] . '\',
+                    ],
                     series: ' . json_encode($comparison['series']) . ',
                     plotOptions: {
                         bar: {
@@ -174,7 +205,7 @@ class Evaluator
                         show: true
                     },
                     dataLabels: {
-                        enabled: false
+                        enabled: false,
                     },
                     tooltip: {
                         enabled: false,
@@ -238,7 +269,11 @@ class Evaluator
             //  get benchmark from question = GEM
             //  @todo: Need all three values per question (low, neutral, high) from GEM - must be put to question
             $donuts[$slug]['data']['benchmark']['evaluation']['series'] = [rand(0, 100), rand(0, 100), rand(0, 100)];
-            $donuts[$slug]['data']['benchmark']['evaluation']['labels'] = ['low', 'neutral', 'high'];
+            $donuts[$slug]['data']['benchmark']['evaluation']['labels'] = [
+                $this->labels['weighting']['low'],
+                $this->labels['weighting']['neutral'],
+                $this->labels['weighting']['high'],
+            ];
 
         }
 
@@ -266,6 +301,11 @@ class Evaluator
                         chart: {
                             type: \'donut\'
                         },
+                        colors: [
+                            \'' . $this->colors['me'] . '\',
+                            \'' . $this->colors['my-region'] . '\',
+                            \'' . $this->colors['all-regions'] . '\',
+                        ],
                         series: ' . json_encode($comparison['evaluation']['series']) . ',
                         labels: ' . json_encode($comparison['evaluation']['labels']) . ',
                         plotOptions: {
@@ -409,6 +449,10 @@ class Evaluator
                 chart: {
                     type: \'radar\'
                 },
+                colors: [
+                    \'' . $this->colors['me'] . '\',
+                    \'' . $this->colors['gem'] . '\',
+                ],
                 series: [
                     {
                         name: "Ihr Wert",
@@ -472,7 +516,11 @@ class Evaluator
             count($evaluation[$key]['neutral']) ??  0,
             count($evaluation[$key]['high']) ??  0,
         ];
-        $donuts[$slug]['data'][$key]['evaluation']['labels'] = array_keys($evaluation[$key]);
+        $donuts[$slug]['data'][$key]['evaluation']['labels'] = [
+            $this->labels['weighting']['low'],
+            $this->labels['weighting']['neutral'],
+            $this->labels['weighting']['high'],
+        ];
 
         return $donuts;
     }

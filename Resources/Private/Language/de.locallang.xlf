@@ -107,7 +107,19 @@
 				<target>Frage</target>
 			</trans-unit>
 
-
+			<!-- Models/Evaluator.php -->
+            <trans-unit id="tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.low">
+                <source>low</source>
+                <target>trifft nicht zu</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.neutral">
+                <source>neutral</source>
+                <target>teils/teils</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.high">
+                <source>high</source>
+                <target>trifft zu</target>
+            </trans-unit>
 
 			<!-- ############################## -->
 			<!-- CONTROLLER -->

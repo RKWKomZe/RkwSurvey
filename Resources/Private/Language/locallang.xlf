@@ -81,7 +81,16 @@
 				<source>Question</source>
 			</trans-unit>
 
-
+			<!-- Models/Evaluator.php -->
+            <trans-unit id="tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.low">
+                <source>low</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.neutral">
+                <source>neutral</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.high">
+                <source>high</source>
+            </trans-unit>
 
 			<!-- ############################## -->
 			<!-- CONTROLLER -->

@@ -264,7 +264,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         $this->view->assign('surveyResult', $surveyResult);
         $this->view->assign('extensionSuffix', $extensionSuffix);
         $this->view->assign('tokenInput', $tokenInput);
-//        $this->view->assign('chart', $this->prepareChart($surveyResult));
     }
 
 
