@@ -272,13 +272,24 @@ class Evaluator
                             pie: {
                                 donut: {
                                     labels: {
-                                        show: true
+                                        show: true,
+                                        name: {
+                                            show: false
+                                        },
+                                        value: {
+                                            formatter: function (val, w) {
+                                                const total = w.globals.seriesTotals.reduce((acc, val) => acc + val, 0)
+                                                let percent = (100 * val) / total
+                                                return percent.toFixed(1) + \' %\'
+                                            }
+                                        }
                                     }
                                 }
                             }
                         },
                         legend: {
-                            show: false
+                            show: true,
+                            position: \'bottom\'
                         },
                         dataLabels: {
                             enabled: false
