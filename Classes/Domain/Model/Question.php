@@ -34,7 +34,7 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $question = '';
 
     /**
-     * answerOption
+     * shortName
      *
      * @var string
      */

@@ -2,9 +2,11 @@
 
 namespace RKW\RkwSurvey\Domain\Model;
 
+use Doctrine\Common\Util\Debug;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use RKW\RkwSurvey\Domain\Repository\QuestionRepository;
+use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
 use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
 
 /*
@@ -38,6 +40,14 @@ class Evaluator
      * @var \RKW\RkwSurvey\Domain\Model\SurveyResult
      */
     protected $surveyResult;
+
+    /**
+     * surveyResultRepository
+     *
+     * @var \RKW\RkwSurvey\Domain\Repository\SurveyResultRepository
+     * @inject
+     */
+    protected $surveyResultRepository;
 
     /**
      * questionResultRepository
@@ -85,6 +95,10 @@ class Evaluator
 
         $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
 
+        if (!$this->surveyResultRepository) {
+            $this->surveyResultRepository = $objectManager->get(SurveyResultRepository::class);
+        }
+
         if (!$this->questionResultRepository) {
             $this->questionResultRepository = $objectManager->get(QuestionResultRepository::class);
         }
@@ -105,20 +119,17 @@ class Evaluator
     /**
      * @return array
      */
-    public function getQuestionToGroupByResults(): array
+    public function getSurveyResultUidsGroupedByQuestion(): array
     {
         $survey = $this->surveyResult->getSurvey();
+        $groupByQuestion = $this->questionRepository->findOneByGroupedByAndSurvey($survey);
+        $myGroupByQuestionResult = $this->questionResultRepository->findByQuestionAndSurveyResult($groupByQuestion, $this->surveyResult);
 
-        $question = $this->questionRepository->findOneByGroupedByAndSurvey($survey);
-
-        $questionResult = $this->questionResultRepository->findByQuestionAndSurveyResult($question, $this->surveyResult);
-
-        $allQuestionResultsByQuestion = $this->questionResultRepository->findByQuestionAndAnswer($question, $questionResult->getAnswer());
+        $surveyResults = $this->surveyResultRepository->findBySurveyAndQuestionAndAnswerAndFinished($survey, $groupByQuestion, $myGroupByQuestionResult->getAnswer(), $finished = 1);
 
         $surveyResultUids = [];
-
-        foreach ($allQuestionResultsByQuestion as $questionResult) {
-            $surveyResultUids[] = $questionResult->getSurveyResult()->getUid();
+        foreach ($surveyResults as $surveyResult) {
+            $surveyResultUids[] = $surveyResult->getUid();
         }
 
         return $surveyResultUids;
@@ -155,13 +166,18 @@ class Evaluator
 
                     $averageOnQuestion = [];
 
-                    if ($scope === 'single_region') {
-                        $surveyResultUids = $this->getQuestionToGroupByResults();
-                        $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
-                    } else if ($scope === 'my_values') {
+                    if ($scope === 'my_values') {
                         $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, [$this->surveyResult->getUid()]);
-                    } else {
-                        $questionResults = $this->questionResultRepository->findByQuestion($question);
+                    } else if ($scope === 'single_region') {
+                        $surveyResultUids = $this->getSurveyResultUidsGroupedByQuestion();
+                        $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
+                    } else {    //  all regions
+                        $surveyResults = $this->surveyResultRepository->findBySurveyAndFinished($this->surveyResult->getSurvey());
+                        $surveyResultUids = [];
+                        foreach ($surveyResults as $surveyResult) {
+                            $surveyResultUids[] = $surveyResult->getUid();
+                        }
+                        $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
                     }
 
                     $answers = [];
@@ -256,7 +272,7 @@ class Evaluator
 
         foreach ($surveyQuestions as $question) {
 
-            //  use question only if it is a scale
+            //  use question only if it is of type scale
             if ($question->getType() !== 3) {
                 continue;
             }
@@ -267,7 +283,7 @@ class Evaluator
                 'question' => $question->getQuestion(),
             ];
 
-            $surveyResultUids = $this->getQuestionToGroupByResults();
+            $surveyResultUids = $this->getSurveyResultUidsGroupedByQuestion();
 
             //  single_region
             $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
@@ -281,10 +297,9 @@ class Evaluator
             $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'all_regions', $title = 'Alle Regionen');
 
             //  Deutschland = GEM
-            $donuts[$slug]['data']['benchmark']['region'] = 'Bundesweit (GEM)';
+            $donuts[$slug]['data']['benchmark']['title'] = 'Bundesweit (GEM)';
 
             //  get benchmark from question = GEM
-            //  @todo: Need all three values per question (low, neutral, high) from GEM - must be put to question
             $donuts[$slug]['data']['benchmark']['evaluation']['series'] = $this->parseStringToArray($question->getBenchmarkWeighting(), $delimiter = '|', $checkFloat = true);
             $donuts[$slug]['data']['benchmark']['evaluation']['labels'] = [
                 $this->labels['weighting']['low'],
@@ -313,7 +328,6 @@ class Evaluator
                 $identifier = $chartIdentifier . '_' . $comparisonIdentifier;
 
                 $script .= '
-                    
                     var options_' . $identifier . ' = {
                         chart: {
                             type: \'donut\'
@@ -499,7 +513,7 @@ class Evaluator
      * @param string                                             $title
      * @return array              $donuts
      */
-    public function collectData(\TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $questionResults, array $donuts, string $slug, string $key, string $title): array
+    public function collectData(\TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $questionResults, array $donuts, string $slug, string $key = '', string $title): array
     {
         //  group the values
         $evaluation = [
@@ -526,7 +540,8 @@ class Evaluator
 
         }
 
-        $donuts[$slug]['data'][$key]['region'] = $title;
+        $donuts[$slug]['data'][$key]['title'] = $title;
+        $donuts[$slug]['data'][$key]['participations'] = (strlen($key) > 0) ? $questionResults->count() : '';
 
         $donuts[$slug]['data'][$key]['evaluation']['series'] = [
             count($evaluation[$key]['low']) ?? 0,
