@@ -133,7 +133,7 @@ class Evaluator
 
         $result = $this->questionResultRepository->findByQuestionAndSurveyResult($question, $this->surveyResult);
 
-        return $this->parseStringToArray($result->getQuestion()->getAnswerOption(), PHP_EOL)[(int) $result->getAnswer()];
+        return $this->parseStringToArray($result->getQuestion()->getAnswerOption(), PHP_EOL)[((int) $result->getAnswer() - 1)];
 
     }
 
