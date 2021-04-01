@@ -296,16 +296,18 @@ class Evaluator
             $questionResults = $this->questionResultRepository->findByQuestion($question);
             $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'all_regions', $title = 'Alle Regionen');
 
-            //  Deutschland = GEM
-            $donuts[$slug]['data']['benchmark']['title'] = 'Bundesweit (GEM)';
+            if ($question->getBenchmark()) {
+                //  Deutschland = GEM
+                $donuts[$slug]['data']['benchmark']['title'] = 'Bundesweit (GEM)';
 
-            //  get benchmark from question = GEM
-            $donuts[$slug]['data']['benchmark']['evaluation']['series'] = $this->parseStringToArray($question->getBenchmarkWeighting(), $delimiter = '|', $checkFloat = true);
-            $donuts[$slug]['data']['benchmark']['evaluation']['labels'] = [
-                $this->labels['weighting']['low'],
-                $this->labels['weighting']['neutral'],
-                $this->labels['weighting']['high'],
-            ];
+                //  get benchmark from question = GEM
+                $donuts[$slug]['data']['benchmark']['evaluation']['series'] = $this->parseStringToArray($question->getBenchmarkWeighting(), $delimiter = '|', $checkFloat = true);
+                $donuts[$slug]['data']['benchmark']['evaluation']['labels'] = [
+                    $this->labels['weighting']['low'],
+                    $this->labels['weighting']['neutral'],
+                    $this->labels['weighting']['high'],
+                ];
+            }
 
         }
 
