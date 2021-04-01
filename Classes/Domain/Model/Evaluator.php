@@ -80,9 +80,9 @@ class Evaluator
 
         $this->colors = [
             'me' => '#d63f11', // $color-primary
-            'my-region' => '#009fee', // $color-blue
-            'all-regions' => '#fdc500', // $color-webcheck-yellow
-            'gem' => '#94c119', // $color-webcheck-green
+            'my-region' => '#792400', //    #009fee' - $color-blue
+            'all-regions' => '#7c7c7b', // #fdc500' - $color-webcheck-yellow
+            'gem' => '#4a4a49', // #94c119' - $color-webcheck-green
         ];
 
         $this->labels = [

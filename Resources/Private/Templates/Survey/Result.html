@@ -21,9 +21,9 @@
         <div id="chart_{surveyResult.uid}"></div>
 
         <h3>Darstellung der Durchschnittswerte für die übergeordneten fünf Kategorien</h3>
-        <div class="tiles-wrapper">
-            <div class="tiles flex-container flex-container--margin">
-                <f:for each="{bars}" as="comparison" iteration="iterBar" key="identifier">
+        <f:for each="{bars}" as="comparison" iteration="iterBar" key="identifier">
+            <div class="tiles-wrapper">
+                <div class="tiles flex-container flex-container--margin">
                     <div class="flex-item flex-basis-12">
                         <div class="tile tile--no-img">
                             <a href="#">
@@ -41,17 +41,16 @@
                             </a>
                         </div>
                     </div>
-                </f:for>
+                </div>
             </div>
-        </div>
+        </f:for>
 
         <h3>Darstellung der Werte in Form von Donuts</h3>
-        <div class="tiles-wrapper">
-            <div class="tiles flex-container flex-container--margin">
-                <f:for each="{donuts}" as="donut" iteration="iterDonut" key="identifier">
-                    <p>{donut.question}</p>
+        <f:for each="{donuts}" as="donut" iteration="iterDonut" key="identifier">
+            <p>{donut.question}</p>
+            <div class="tiles-wrapper">
+                <div class="tiles flex-container flex-container--margin">
                     <f:for each="{donut.data}" as="comparison" iteration="iterComparison" key="comparisonIdentifier">
-
                         <div class="flex-item flex-basis-4" style="width: 33.33333%;"><!-- @todo: flex-basis-4 forces last chart to new line -->
                             <div class="tile tile--no-img">
                                 <a href="#">
@@ -69,11 +68,10 @@
                                 </a>
                             </div>
                         </div>
-
                     </f:for>
-                </f:for>
+                </div>
             </div>
-        </div>
+        </f:for>
 
         <h3>Ergänzende Daten für den Fitnesscheck</h3>
 
