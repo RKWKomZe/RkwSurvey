@@ -410,15 +410,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         $this->view->assign('bars', $bars);
         $this->view->assign('donuts', $donuts);
 
-        $participations = [
-            'single_region' => 10,
-            'all_regions' => 100,
-        ];
-
-        $this->view->assign('participations', $participations);
-
-
-
     }
 
 

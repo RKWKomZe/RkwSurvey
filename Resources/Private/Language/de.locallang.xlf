@@ -42,9 +42,25 @@
 				<source>RKW Survey: Question</source>
 				<target>RKW Survey: Frage</target>
 			</trans-unit>
-			<trans-unit id="tx_rkwsurvey_domain_model_question.question">
+			<trans-unit id="tx_rkwsurvey_domain_model_question.please_choose">
+				<source>Please choose</source>
+				<target>Bitte wählen</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.group_by">
+				<source>Group results by this question</source>
+				<target>Ergebnisse anhand dieser Frage gruppieren</target>
+			</trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_question.question">
 				<source>Question</source>
 				<target>Frage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.short_name">
+				<source>Short name of question</source>
+				<target>Kurzbezeichnung der Frage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.topic">
+				<source>Topic</source>
+				<target>Thema</target>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.type">
 				<source>Type</source>
@@ -110,15 +126,15 @@
 			<!-- Models/Evaluator.php -->
             <trans-unit id="tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.low">
                 <source>low</source>
-                <target>trifft nicht zu</target>
+                <target>trifft nicht zu (0 - 4)</target>
             </trans-unit>
             <trans-unit id="tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.neutral">
                 <source>neutral</source>
-                <target>teils/teils</target>
+                <target>teils/teils (5)</target>
             </trans-unit>
             <trans-unit id="tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.high">
                 <source>high</source>
-                <target>trifft zu</target>
+                <target>trifft zu (6 - 10)</target>
             </trans-unit>
 
 			<!-- ############################## -->
@@ -606,7 +622,7 @@
 			</trans-unit>
 			<trans-unit id="partials_backend_survey.participants">
 				<source>Participants</source>
-				<target>Teilnehmer</target>
+				<target>Teilnehmende</target>
 			</trans-unit>
 			<trans-unit id="partials_backend_survey.finishedSurveys">
 				<source>Finished</source>

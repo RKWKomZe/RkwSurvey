@@ -128,6 +128,7 @@ return [
                 'type' => 'check',
                 'default' => 0,
             ],
+            'displayCond' => 'FIELD:benchmark:=:1',
         ],
 		'question' => [
 			'exclude' => false,
@@ -146,6 +147,7 @@ return [
                 'size' => 30,
                 'eval' => 'trim, required'
             ],
+            'displayCond' => 'FIELD:benchmark:=:1',
         ],
 		'hint' => [
 			'exclude' => false,
@@ -156,6 +158,25 @@ return [
 				'eval' => 'trim'
 			],
 		],
+        'topic' => [
+            'exclude' => 0,
+            'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.topic',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'size' => 1,
+                'eval' => 'int',
+                'items' => [
+                    ['LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.please_choose',0],
+                ],
+                'minitems' => 0,
+                'maxitems' => 1,
+                'default' => '',
+                'foreign_table' => 'tx_rkwsurvey_domain_model_topic',
+                'foreign_table_where' => 'AND tx_rkwsurvey_domain_model_topic.survey = ###REC_FIELD_survey###',
+            ],
+            'displayCond' => 'FIELD:benchmark:=:1',
+        ],
 		'type' => [
 			'exclude' => false,
 			'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.type',
@@ -218,24 +239,6 @@ return [
                 ]
 			],
 		],
-        'topic' => [
-            'exclude' => 0,
-            'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:pages.tx_rkwnewsletter_newsletter',
-            'config' => [
-                'type' => 'select',
-                'renderType' => 'selectSingle',
-                'size' => 1,
-                'eval' => 'int',
-                'items' => [
-                    ['LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:pages.tx_rkwnewsletter_newsletter.please_choose',0],
-                ],
-                'minitems' => 0,
-                'maxitems' => 1,
-                'default' => '',
-                'foreign_table' => 'tx_rkwsurvey_domain_model_topic',
-                'foreign_table_where' => 'AND tx_rkwsurvey_domain_model_topic.survey = ###REC_FIELD_survey###',
-            ],
-        ],
         'do_action' => [
             'exclude' => false,
             'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.do_action',
@@ -337,7 +340,7 @@ return [
         ],
         'scale_step' => [
             'exclude' => false,
-            'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.scale.step',
+            'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.scale_step',
             'config' => [
                 'type' => 'input',
                 'size' => 10,

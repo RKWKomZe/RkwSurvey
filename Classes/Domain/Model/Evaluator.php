@@ -89,7 +89,7 @@ class Evaluator
             'weighting' => [
                 'low' => \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.low', 'RkwSurvey'),
                 'neutral' => \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.neutral', 'RkwSurvey'),
-                'high' => \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.low', 'RkwSurvey'),
+                'high' => \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.high', 'RkwSurvey'),
             ]
         ];
 
@@ -270,6 +270,8 @@ class Evaluator
 
         $surveyQuestions = $this->surveyResult->getSurvey()->getQuestion();
 
+        $groupByTitle = GeneralUtility::trimExplode('(', $this->getGroupByQuestionAnswer(), true)[0];
+
         foreach ($surveyQuestions as $question) {
 
             //  use question only if it is of type scale
@@ -288,9 +290,7 @@ class Evaluator
             //  single_region
             $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
 
-            $this->getGroupByQuestionAnswer();
-
-            $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'single_region', $title = $this->getGroupByQuestionAnswer());
+            $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'single_region', $title = $groupByTitle);
 
             //  Ostdeutschland = all regions
             $questionResults = $this->questionResultRepository->findByQuestion($question);
@@ -411,7 +411,7 @@ class Evaluator
                 'data' => array_values($this->getAverageResultByTopics($topics, $scope = 'my_values')),
             ],
             [
-                'name' => $this->getGroupByQuestionAnswer(),
+                'name' => GeneralUtility::trimExplode('(', $this->getGroupByQuestionAnswer(), true)[0],
                 'data' => array_values($this->getAverageResultByTopics($topics, $scope = 'single_region')),
             ],
             [

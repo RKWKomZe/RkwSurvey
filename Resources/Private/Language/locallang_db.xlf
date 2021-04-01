@@ -39,8 +39,17 @@
 			<trans-unit id="tx_rkwsurvey_domain_model_question">
 				<source>RKW Survey: Question</source>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.please_choose">
+				<source>Please choose</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.group_by">
+				<source>Group results by this question</source>
+			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.question">
 				<source>Question</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.short_name">
+				<source>Short name of question</source>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.hint">
 				<source>Hint / Help</source>
@@ -53,6 +62,9 @@
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.survey">
 				<source>Survey</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.topic">
+				<source>Topic</source>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.type">
 				<source>Type</source>
@@ -84,11 +96,17 @@
 			<trans-unit id="tx_rkwsurvey_domain_model_question.scale_to_points">
 				<source>Scale to points</source>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.scale_step">
+				<source>Scale step</source>
+			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark">
 				<source>Benchmark</source>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark.value">
 				<source>Reference value</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark.weighting.values">
+				<source>Reference values by topic (weighed)</source>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.do_action">
                 <source>Define action</source>

@@ -21,12 +21,10 @@
         <div id="chart_{surveyResult.uid}"></div>
 
         <h3>Darstellung der Durchschnittswerte für die übergeordneten fünf Kategorien</h3>
-        <p>Teilnehmer in Ihrer Region: {participations.single_region}<br/>
-        Teilnehmer in allen Regionen: {participations.all_regions}</p>
         <div class="tiles-wrapper">
             <div class="tiles flex-container flex-container--margin">
                 <f:for each="{bars}" as="comparison" iteration="iterBar" key="identifier">
-                    <div class="flex-item flex-basis-12"><!-- @todo: flex-basis-4 forces last chart to new line -->
+                    <div class="flex-item flex-basis-12">
                         <div class="tile tile--no-img">
                             <a href="#">
                                 <div class="tile__content">
@@ -54,13 +52,13 @@
                     <p>{donut.question}</p>
                     <f:for each="{donut.data}" as="comparison" iteration="iterComparison" key="comparisonIdentifier">
 
-                        <div class="flex-item flex-basis-4">
+                        <div class="flex-item flex-basis-4" style="width: 33.33333%;"><!-- @todo: flex-basis-4 forces last chart to new line -->
                             <div class="tile tile--no-img">
                                 <a href="#">
                                     <div class="tile__content">
                                         <h3 class="tile__title">
                                             <span class="tile__title-text">
-                                                {comparison.title} <f:if condition="{comparison.participations}">({comparison.participations} Teilnehmer)</f:if>
+                                                {comparison.title} <f:if condition="{comparison.participations}">({comparison.participations} Teilnehmende)</f:if>
                                             </span>
                                         </h3>
                                         <div id="{identifier}_{comparisonIdentifier}" class="tile__text tile__text--no-img">

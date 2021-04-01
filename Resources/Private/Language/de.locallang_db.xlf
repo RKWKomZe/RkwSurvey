@@ -49,9 +49,21 @@
 				<source>RKW Survey: Question</source>
 				<target>RKW Survey: Frage</target>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.please_choose">
+				<source>Please choose</source>
+				<target>Bitte wählen</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.group_by">
+				<source>Group results by this question</source>
+				<target>Ergebnisse anhand dieser Frage gruppieren</target>
+			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.question">
 				<source>Question</source>
 				<target>Frage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.short_name">
+				<source>Short name of question</source>
+				<target>Kurzbezeichnung der Frage</target>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.hint">
 				<source>Hint / Help</source>
@@ -68,6 +80,10 @@
 			<trans-unit id="tx_rkwsurvey_domain_model_question.survey">
 				<source>Survey</source>
 				<target>Umfrage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.topic">
+				<source>Topic</source>
+				<target>Thema</target>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.type">
 				<source>Type</source>
@@ -108,6 +124,22 @@
 			<trans-unit id="tx_rkwsurvey_domain_model_question.scale_to_points">
 				<source>Scale to points</source>
 				<target>Skala: Maximale Punktzahl</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.scale_step">
+				<source>Scale step</source>
+				<target>Skala: Schritt</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark">
+				<source>Benchmark</source>
+				<target>Benchmark</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark.value">
+				<source>Reference value</source>
+				<target>Referenzwert</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark.weighting.values">
+				<source>Reference values by topic (weighed)</source>
+				<target>Referenzwerte nach Thema (gewichtet)</target>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.do_action">
                 <source>Define action</source>
