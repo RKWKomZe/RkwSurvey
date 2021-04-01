@@ -279,7 +279,7 @@ class Evaluator
                 continue;
             }
 
-            $slug = $this->slugify($question->getQuestion(), '_');
+            $slug = $this->slugify('donuts-' . $question->getQuestion(), '_');
 
             $donuts[$slug] = [
                 'question' => $question->getQuestion(),
@@ -568,6 +568,7 @@ class Evaluator
         $slug = str_replace('ä', 'ae', $slug);
         $slug = str_replace('ö', 'oe', $slug);
         $slug = str_replace('ü', 'ue', $slug);
+        $slug = str_replace('ß', 'ss', $slug);
         $slug = str_replace('/', $separator, $slug);
 
         // Convert all dashes/underscores into separator
@@ -605,7 +606,7 @@ class Evaluator
      */
     protected function buildBar(array $topicNames, string $title, array $series, array $bars): array
     {
-        $slug = $this->slugify($title, '_');
+        $slug = $this->slugify('bar-' . $title, '_');
 
         $bars[$slug] = [
             'topics' => $topicNames,
