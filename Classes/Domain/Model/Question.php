@@ -616,10 +616,6 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      */
     public function getScale()
     {
-        $range = range($this->scaleFromPoints, $this->scaleToPoints, $this->scaleStep);
-
-        file_put_contents('range.txt', json_encode($range));
-
         return range($this->scaleFromPoints, $this->scaleToPoints, $this->scaleStep);
     }
 }
