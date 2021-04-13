@@ -197,9 +197,9 @@
 				<source>Freetext field</source>
 				<target>Freitextfeld</target>
 			</trans-unit>
-			<trans-unit id="tx_rkwsurvey_controller_backend_csv.scaleMax">
-				<source>Maximum: </source>
-				<target>Maximalwert: </target>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.scale">
+                <source>Scale: %s - %s, step: %s</source>
+				<target>Skala: %s - %s, Schritt: %s</target>
 			</trans-unit>
 
 
