@@ -16,7 +16,16 @@
 			<trans-unit id="tx_rkwsurvey_domain_model_survey.name">
 				<source>Name</source>
 			</trans-unit>
-			<trans-unit id="tx_rkwsurvey_domain_model_survey.starttext">
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.type">
+				<source>Type</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.type.default">
+                <source>Standard</source>
+            </trans-unit>
+    		<trans-unit id="tx_rkwsurvey_domain_model_survey.type.benchmark">
+                <source>Benchmark</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_survey.starttext">
 				<source>Starttext</source>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_survey.endtext">

@@ -7,6 +7,7 @@ CREATE TABLE tx_rkwsurvey_domain_model_survey (
 	pid int(11) DEFAULT '0' NOT NULL,
 
 	name varchar(255) DEFAULT '' NOT NULL,
+    type int(11) unsigned DEFAULT '0' NOT NULL,
 	starttext text NOT NULL,
 	endtext text NOT NULL,
 	question int(11) unsigned DEFAULT '0' NOT NULL,

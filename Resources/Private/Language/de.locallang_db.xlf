@@ -19,6 +19,18 @@
 				<source>Name</source>
 				<target>Name</target>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.type">
+				<source>Type</source>
+				<target>Typ</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.type.default">
+                <source>Standard</source>
+                <target>Standard</target>
+            </trans-unit>
+    		<trans-unit id="tx_rkwsurvey_domain_model_survey.type.benchmark">
+                <source>Benchmark</source>
+                <target>Benchmark</target>
+            </trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_survey.starttext">
 				<source>Starttext</source>
 				<target>Einleitungstext</target>

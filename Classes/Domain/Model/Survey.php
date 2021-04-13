@@ -97,6 +97,13 @@ class Survey extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $token = null;
 
     /**
+     * type
+     *
+     * @var integer
+     */
+    protected $type = 0;
+
+    /**
      * __construct
      */
     public function __construct()
@@ -140,6 +147,27 @@ class Survey extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * Returns the type
+     *
+     * @return int $type
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Sets the type
+     *
+     * @param int $type
+     * @return void
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 
     /**

@@ -21,10 +21,10 @@ return [
 		'iconfile' => 'EXT:rkw_survey/Resources/Public/Icons/tx_rkwsurvey_domain_model_survey.gif'
 	],
 	'interface' => [
-		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, starttext, endtext, topics, question, admin, access_restricted, token',
+		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, type, starttext, endtext, topics, question, admin, access_restricted, token',
 	],
 	'types' => [
-		'1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, topics, question, starttext, endtext, admin, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime, access_restricted'],
+		'1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, type, topics, question, starttext, endtext, admin, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime, access_restricted'],
 	],
 	'columns' => [
 		'sys_language_uid' => [
@@ -117,6 +117,20 @@ return [
 				'eval' => 'trim, required'
 			],
 		],
+        'type' => [
+            'exclude' => false,
+            'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_survey.type',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'items' => [
+                    ['LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_survey.type.default', 0],
+                    ['LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_survey.type.benchmark', 1],
+                ],
+                'default' => 0
+            ],
+            'onChange' => 'reload'
+        ],
 		'starttext' => [
 			'exclude' => false,
 			'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_survey.starttext',
@@ -157,6 +171,7 @@ return [
                     'showAllLocalizationLink' => 1
                 ],
             ],
+            'displayCond' => 'FIELD:type:=:1',
         ],
 		'question' => [
 			'exclude' => false,
