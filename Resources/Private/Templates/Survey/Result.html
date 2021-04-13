@@ -17,10 +17,22 @@
             </f:else>
         </f:if>
 
-        <h3>Darstellung einzelner Aussagen im Polaritätsprofil</h3>
-        <div id="chart_{surveyResult.uid}"></div>
+        <h3>Gründungsbezogene Rahmenbedingungen</h3>
+        <div class="tiles-wrapper">
+            <div class="tiles flex-container flex-container--margin">
+                <div class="flex-item flex-basis-12">
+                    <div class="tile tile--no-img">
+                        <a href="#">
+                            <div class="tile__content">
+                                <div id="chart_{surveyResult.uid}" class="tile__text tile__text--no-img">
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <h3>Darstellung der Durchschnittswerte für die übergeordneten fünf Kategorien</h3>
+        <h3>Ausprägung der Elemente im Gründungsökosystem</h3>
         <f:for each="{bars}" as="comparison" iteration="iterBar" key="identifier">
             <div class="tiles-wrapper">
                 <div class="tiles flex-container flex-container--margin">
@@ -28,15 +40,17 @@
                         <div class="tile tile--no-img">
                             <a href="#">
                                 <div class="tile__content">
-                                    <h3 class="tile__title">
-                                        <span class="tile__title-text">
-                                            {comparison.title}
-                                        </span>
-                                    </h3>
+                                    <f:if condition="{comparison.title}">
+                                        <f:then>
+                                            <h3 class="tile__title">
+                                                <span class="tile__title-text">
+                                                    {comparison.title}
+                                                </span>
+                                            </h3>
+                                        </f:then>
+                                    </f:if>
                                     <div id="{identifier}" class="tile__text tile__text--no-img">
                                     </div>
-                                </div>
-                                <div class="tile__footer">
                                 </div>
                             </a>
                         </div>
@@ -45,25 +59,27 @@
             </div>
         </f:for>
 
-        <h3>Darstellung der Werte in Form von Donuts</h3>
+        <h3>Ausprägung der gründungsbezogenen Rahmenbedingungen</h3>
         <f:for each="{donuts}" as="donut" iteration="iterDonut" key="identifier">
             <p>{donut.question}</p>
             <div class="tiles-wrapper">
                 <div class="tiles flex-container flex-container--margin">
                     <f:for each="{donut.data}" as="comparison" iteration="iterComparison" key="comparisonIdentifier">
-                        <div class="flex-item flex-basis-4" style="width: 33.33333%;"><!-- @todo: flex-basis-4 forces last chart to new line -->
+                        <div class="flex-item flex-basis-6" style="width: 50%;"><!-- @todo: flex-basis-4 forces last chart to new line -->
                             <div class="tile tile--no-img">
                                 <a href="#">
                                     <div class="tile__content">
-                                        <h3 class="tile__title">
-                                            <span class="tile__title-text">
-                                                {comparison.title} <f:if condition="{comparison.participations}">({comparison.participations} Teilnehmende)</f:if>
-                                            </span>
-                                        </h3>
+                                        <f:if condition="{comparison.title}">
+                                            <f:then>
+                                                <h3 class="tile__title">
+                                                <span class="tile__title-text">
+                                                    {comparison.title} <f:if condition="{comparison.participations}">({comparison.participations} Teilnehmende)</f:if>
+                                                </span>
+                                                </h3>
+                                            </f:then>
+                                        </f:if>
                                         <div id="{identifier}_{comparisonIdentifier}" class="tile__text tile__text--no-img">
                                         </div>
-                                    </div>
-                                    <div class="tile__footer">
                                     </div>
                                 </a>
                             </div>

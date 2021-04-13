@@ -194,7 +194,7 @@ class Evaluator
 
                 }
 
-                $averageOnTopic[$topic->getShortName()] = $this->getAverage($averageOnQuestion);
+                $averageOnTopic[$topic->getUid()] = $this->getAverage($averageOnQuestion);
 
             }
 
@@ -242,6 +242,19 @@ class Evaluator
                     },
                     yaxis: {
                         decimalsInFloat: 0,
+                        min: 0,
+                        max: 10,
+                        labels: {
+                            formatter: (value) => { 
+                                if (value === 0) {
+                                    return \'0 = schwach\'
+                                }
+                                if (value === 10) {
+                                    return \'10 = stark\'
+                                }
+                                return value
+                            },
+                        }
                     },
                     xaxis: {
                         categories: ' . json_encode($comparison['topics']) . ',
@@ -292,9 +305,9 @@ class Evaluator
 
             $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'single_region', $title = $groupByTitle);
 
-            //  Ostdeutschland = all regions
-            $questionResults = $this->questionResultRepository->findByQuestion($question);
-            $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'all_regions', $title = 'Alle Regionen');
+//            //    Ostdeutschland = all regions
+//            $questionResults = $this->questionResultRepository->findByQuestion($question);
+//            $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'all_regions', $title = 'Alle 12 Regionen');
 
             if ($question->getBenchmark()) {
                 //  Deutschland = GEM
@@ -398,15 +411,13 @@ class Evaluator
         $topicNames = [];
 
         foreach ($topics as $topic) {
-            $topicNames[] = $topic->getShortName();
+            $topicNames[] = ($topic->getShortName()) ? $topic->getShortName() : $topic->getName();
         }
 
         $bars = [];
 
         //  single_region vs. all_regions
-        $topicNames = array_keys($this->getAverageResultByTopics($topics, $scope = null));
-
-        $title = 'Vergleich';
+        $title = '';
         $series = [
             [
                 'name' => 'Meine Werte',
@@ -417,7 +428,7 @@ class Evaluator
                 'data' => array_values($this->getAverageResultByTopics($topics, $scope = 'single_region')),
             ],
             [
-                'name' => 'Alle Regionen',
+                'name' => 'Alle 12 Regionen',
                 'data' => array_values($this->getAverageResultByTopics($topics, $scope = null)),
             ]
         ];
@@ -476,6 +487,11 @@ class Evaluator
     public function renderChart(array $chart): string
     {
 
+        $labelColors = [];
+        foreach ($chart['labels'] as $label) {
+            $labelColors[] = '#505050';
+        }
+
         return '
             
             var options = {
@@ -486,17 +502,29 @@ class Evaluator
                     \'' . $this->colors['me'] . '\',
                     \'' . $this->colors['gem'] . '\',
                 ],
+                yaxis: {
+                    min: 0,
+                    max: 10
+                },
                 series: [
                     {
                         name: "Ihr Wert",
                         data: ' . json_encode($chart['values']['individual']) . ',
                     },
                     {
-                        name: "GEM",
+                        name: "GEM-Expertenbefragung",
                         data: ' . json_encode($chart['values']['benchmark']) . ',
                     }
                 ],
-                labels: ' . json_encode($chart['labels']) . '
+                xaxis: {
+                    categories: ' . json_encode($chart['labels']) . ',
+                    labels: {
+                        style: {
+                            colors: ' . json_encode($labelColors) . ',
+                            fontSize: \'12px\'
+                        }
+                    }
+                }
             }
             
             var chart = new ApexCharts(document.querySelector(\'#chart_' . $this->surveyResult->getUid() . '\'), options);

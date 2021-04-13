@@ -172,6 +172,18 @@
 				<target>RKW Survey: Antwortmöglichkeit</target>
 			</trans-unit>
 
+            <trans-unit id="tx_rkwsurvey_domain_model_topic">
+                <source>RKW Survey: Topic</source>
+                <target>RKW Survey: Thema</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_topic.name">
+                <source>Topic</source>
+                <target>Thema</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_topic.short_name">
+                <source>Topic (short)</source>
+                <target>Thema (kurz)</target>
+            </trans-unit>
 
 			<trans-unit id="tx_rkwsurvey_domain_model_surveyresult">
 				<source>RKW Survey: Survey Result</source>

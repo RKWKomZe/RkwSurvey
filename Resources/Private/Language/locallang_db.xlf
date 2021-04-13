@@ -127,6 +127,15 @@
                 <source>Action on value</source>
             </trans-unit>
 
+            <trans-unit id="tx_rkwsurvey_domain_model_topic">
+                <source>RKW Survey: Topic</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_topic.name">
+                <source>Topic</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_topic.short_name">
+                <source>Topic (short)</source>
+            </trans-unit>
 
 			<trans-unit id="tx_rkwsurvey_domain_model_surveyresult">
 				<source>RKW Survey: Survey Result</source>
