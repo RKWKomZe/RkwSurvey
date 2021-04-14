@@ -311,7 +311,7 @@ class Evaluator
 
             if ($question->getBenchmark()) {
                 //  Deutschland = GEM
-                $donuts[$slug]['data']['benchmark']['title'] = 'Bundesweit (GEM)';
+                $donuts[$slug]['data']['benchmark']['title'] = 'GEM-Expertenbefragung';
 
                 //  get benchmark from question = GEM
                 $donuts[$slug]['data']['benchmark']['evaluation']['series'] = $this->parseStringToArray($question->getBenchmarkWeighting(), $delimiter = '|', $checkFloat = true);
