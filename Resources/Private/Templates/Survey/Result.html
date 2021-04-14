@@ -81,8 +81,15 @@
                                                         </h3>
                                                     </f:then>
                                                 </f:if>
-                                                <div id="{identifier}_{comparisonIdentifier}" class="tile__text tile__text--no-img">
-                                                </div>
+                                                <f:if condition="{comparison.evaluation}">
+                                                    <f:then>
+                                                        <div id="{identifier}_{comparisonIdentifier}" class="tile__text tile__text--no-img">
+                                                        </div>
+                                                    </f:then>
+                                                    <f:else>
+                                                        <div class="text-small">Keine Daten vorhanden</div>
+                                                    </f:else>
+                                                </f:if>
                                             </div>
                                         </a>
                                     </div>

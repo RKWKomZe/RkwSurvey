@@ -309,9 +309,10 @@ class Evaluator
 //            $questionResults = $this->questionResultRepository->findByQuestion($question);
 //            $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'all_regions', $title = 'Alle 12 Regionen');
 
+            //  Deutschland = GEM
+            $donuts[$slug]['data']['benchmark']['title'] = 'GEM-Expertenbefragung';
+
             if ($question->getBenchmark()) {
-                //  Deutschland = GEM
-                $donuts[$slug]['data']['benchmark']['title'] = 'GEM-Expertenbefragung';
 
                 //  get benchmark from question = GEM
                 $donuts[$slug]['data']['benchmark']['evaluation']['series'] = $this->parseStringToArray($question->getBenchmarkWeighting(), $delimiter = '|', $checkFloat = true);
@@ -320,6 +321,11 @@ class Evaluator
                     $this->labels['weighting']['neutral'],
                     $this->labels['weighting']['high'],
                 ];
+
+            } else {
+
+                $donuts[$slug]['data']['benchmark']['evaluation'] = null;
+
             }
 
         }
@@ -340,56 +346,60 @@ class Evaluator
 
             foreach ($comparisons['data'] as $comparisonIdentifier => $comparison) {
 
-                $identifier = $chartIdentifier . '_' . $comparisonIdentifier;
+                if ($comparison['evaluation']['series']) {
 
-                $script .= '
-                    var options_' . $identifier . ' = {
-                        chart: {
-                            type: \'donut\'
-                        },
-                        colors: [
-                            \'' . $this->colors['me'] . '\',
-                            \'' . $this->colors['my-region'] . '\',
-                            \'' . $this->colors['all-regions'] . '\',
-                        ],
-                        series: ' . json_encode($comparison['evaluation']['series']) . ',
-                        labels: ' . json_encode($comparison['evaluation']['labels']) . ',
-                        plotOptions: {
-                            pie: {
-                                donut: {
-                                    labels: {
-                                        show: true,
-                                        name: {
-                                            show: false
-                                        },
-                                        value: {
-                                            formatter: function (val, w) {
-                                                const total = w.globals.seriesTotals.reduce((acc, val) => acc + val, 0)
-                                                let percent = (100 * val) / total
-                                                return percent.toFixed(1) + \' %\'
+                    $identifier = $chartIdentifier . '_' . $comparisonIdentifier;
+
+                    $script .= '
+                        var options_' . $identifier . ' = {
+                            chart: {
+                                type: \'donut\'
+                            },
+                            colors: [
+                                \'' . $this->colors['me'] . '\',
+                                \'' . $this->colors['my-region'] . '\',
+                                \'' . $this->colors['all-regions'] . '\',
+                            ],
+                            series: ' . json_encode($comparison['evaluation']['series']) . ',
+                            labels: ' . json_encode($comparison['evaluation']['labels']) . ',
+                            plotOptions: {
+                                pie: {
+                                    donut: {
+                                        labels: {
+                                            show: true,
+                                            name: {
+                                                show: false
+                                            },
+                                            value: {
+                                                formatter: function (val, w) {
+                                                    const total = w.globals.seriesTotals.reduce((acc, val) => acc + val, 0)
+                                                    let percent = (100 * val) / total
+                                                    return percent.toFixed(1) + \' %\'
+                                                }
                                             }
                                         }
                                     }
                                 }
+                            },
+                            legend: {
+                                show: true,
+                                position: \'bottom\'
+                            },
+                            dataLabels: {
+                                enabled: false
+                            },
+                            tooltip: {
+                                enabled: false,
                             }
-                        },
-                        legend: {
-                            show: true,
-                            position: \'bottom\'
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        tooltip: {
-                            enabled: false,
                         }
-                    }
-                    
-                    var chart_' . $identifier . ' = new ApexCharts(document.querySelector(\'#' . $identifier . '\'), options_' . $identifier . ');
+                        
+                        var chart_' . $identifier . ' = new ApexCharts(document.querySelector(\'#' . $identifier . '\'), options_' . $identifier . ');
+    
+                        chart_' . $identifier . '.render(); 
+                        
+                    ';
 
-                    chart_' . $identifier . '.render(); 
-                    
-                ';
+                }
 
             }
 
@@ -508,11 +518,11 @@ class Evaluator
                 },
                 series: [
                     {
-                        name: "Ihr Wert",
+                        name: "Ihr Wert (0 = schwach, 10 = stark)",
                         data: ' . json_encode($chart['values']['individual']) . ',
                     },
                     {
-                        name: "GEM-Expertenbefragung",
+                        name: "GEM-Expertenbefragung (0 = schwach, 10 = stark)",
                         data: ' . json_encode($chart['values']['benchmark']) . ',
                     }
                 ],
@@ -541,7 +551,7 @@ class Evaluator
      * @param string                                             $slug
      * @param string                                             $key
      * @param string                                             $title
-     * @return array              $donuts
+     * @return array                                             $donuts
      */
     public function collectData(\TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $questionResults, array $donuts, string $slug, string $key = '', string $title): array
     {

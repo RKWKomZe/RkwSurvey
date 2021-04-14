@@ -14,6 +14,9 @@ namespace RKW\RkwSurvey\Domain\Model;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+
 /**
  * Question
  *
@@ -142,9 +145,9 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * doActionIf
      *
-     * @var integer
+     * @var string
      */
-    protected $doActionIf = 0;
+    protected $doActionIf = '0';
 
     /**
      * doActionJump
@@ -528,11 +531,11 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Returns the doActionIf
      *
-     * @return int $doActionIf
+     * @return array $doActionIf
      */
     public function getDoActionIf()
     {
-        return $this->doActionIf;
+        return array_map('intval', GeneralUtility::trimExplode(',', $this->doActionIf));
     }
 
     /**

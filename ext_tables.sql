@@ -95,7 +95,7 @@ CREATE TABLE tx_rkwsurvey_domain_model_question (
     scale_step int(11) DEFAULT '0' NOT NULL,
 
 	do_action tinyint(4) unsigned DEFAULT '0' NOT NULL,
-	do_action_if tinyint(4) unsigned DEFAULT '0' NOT NULL,
+    do_action_if varchar(255) DEFAULT '0' NOT NULL,
 	do_action_jump tinyint(4) unsigned DEFAULT '0' NOT NULL,
 
 	tstamp int(11) unsigned DEFAULT '0' NOT NULL,

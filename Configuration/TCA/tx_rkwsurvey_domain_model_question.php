@@ -260,8 +260,8 @@ return [
             'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_question.do_action_if',
             'config' => [
                 'type' => 'input',
-                'size' => 2,
-                'eval' => 'trim, int'
+                'size' => 50,
+                'eval' => 'trim'
             ],
             'displayCond' => 'FIELD:do_action:=:1',
         ],
