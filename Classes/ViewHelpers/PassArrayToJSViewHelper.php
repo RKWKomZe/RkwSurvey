@@ -15,10 +15,10 @@ namespace RKW\RkwSurvey\ViewHelpers;
  * The TYPO3 project - inspiring people to share!
  */
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
- * Class ExplodeViewHelper
+ * PassArrayToJSViewHelper
  *
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
@@ -26,23 +26,19 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class ExplodeViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class PassArrayToJSViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
 {
     /**
-     * @param string $string
-     * @param string $delimiter
+     * pass data to js
+     *
+     * @param array $data
      * @return array
      */
-    public function render($string, $delimiter = '|')
+    public function render($data = [])
     {
-
-        $items = GeneralUtility::trimExplode(PHP_EOL, $string, true);
-
-        if (count($items) === 1) {
-            $items = GeneralUtility::trimExplode($delimiter, $string, true);
-        }
-
-        return array_filter($items);
+        return json_encode($data);
+//        return json_encode($data, JSON_UNESCAPED_UNICODE);
         //===
     }
+
 }

@@ -19,6 +19,18 @@
 				<source>Name</source>
 				<target>Name</target>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.type">
+				<source>Type</source>
+				<target>Typ</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.type.default">
+                <source>Standard</source>
+                <target>Standard</target>
+            </trans-unit>
+    		<trans-unit id="tx_rkwsurvey_domain_model_survey.type.benchmark">
+                <source>Benchmark</source>
+                <target>Benchmark</target>
+            </trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_survey.starttext">
 				<source>Starttext</source>
 				<target>Einleitungstext</target>
@@ -49,9 +61,21 @@
 				<source>RKW Survey: Question</source>
 				<target>RKW Survey: Frage</target>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.please_choose">
+				<source>Please choose</source>
+				<target>Bitte wählen</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.group_by">
+				<source>Group results by this question</source>
+				<target>Ergebnisse anhand dieser Frage gruppieren</target>
+			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.question">
 				<source>Question</source>
 				<target>Frage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.short_name">
+				<source>Short name of question</source>
+				<target>Kurzbezeichnung der Frage</target>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.hint">
 				<source>Hint / Help</source>
@@ -68,6 +92,10 @@
 			<trans-unit id="tx_rkwsurvey_domain_model_question.survey">
 				<source>Survey</source>
 				<target>Umfrage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.topic">
+				<source>Topic</source>
+				<target>Thema</target>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.type">
 				<source>Type</source>
@@ -89,6 +117,10 @@
 				<source>Free text</source>
 				<target>Freitext</target>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.type.free_text_short">
+				<source>Free text (short)</source>
+				<target>Freitext (kurz)</target>
+			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.text_consent">
 				<source>Label "from"</source>
 				<target>Beschriftung "von" (z.B. "sehr wichtig", "sehr gute Nachfrage", "trifft zu")</target>
@@ -103,7 +135,23 @@
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.scale_to_points">
 				<source>Scale to points</source>
-				<target>Skala: Anzahl der Items</target>
+				<target>Skala: Maximale Punktzahl</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.scale_step">
+				<source>Scale step</source>
+				<target>Skala: Schritt</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark">
+				<source>Benchmark</source>
+				<target>Benchmark</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark.value">
+				<source>Reference value</source>
+				<target>Referenzwert</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark.weighting.values">
+				<source>Reference values by topic (weighed)</source>
+				<target>Referenzwerte nach Thema (gewichtet)</target>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.do_action">
                 <source>Define action</source>
@@ -124,6 +172,18 @@
 				<target>RKW Survey: Antwortmöglichkeit</target>
 			</trans-unit>
 
+            <trans-unit id="tx_rkwsurvey_domain_model_topic">
+                <source>RKW Survey: Topic</source>
+                <target>RKW Survey: Thema</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_topic.name">
+                <source>Topic</source>
+                <target>Thema</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_topic.short_name">
+                <source>Topic (short)</source>
+                <target>Thema (kurz)</target>
+            </trans-unit>
 
 			<trans-unit id="tx_rkwsurvey_domain_model_surveyresult">
 				<source>RKW Survey: Survey Result</source>

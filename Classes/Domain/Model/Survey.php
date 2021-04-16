@@ -69,6 +69,13 @@ class Survey extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $accessRestricted = '';
 
     /**
+     * topics
+     *
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\RKW\RkwSurvey\Domain\Model\Topic>
+     */
+    protected $topics;
+
+    /**
      * question
      *
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\RKW\RkwSurvey\Domain\Model\Question>
@@ -90,6 +97,13 @@ class Survey extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $token = null;
 
     /**
+     * type
+     *
+     * @var integer
+     */
+    protected $type = 0;
+
+    /**
      * __construct
      */
     public function __construct()
@@ -108,6 +122,7 @@ class Survey extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      */
     protected function initStorageObjects()
     {
+        $this->topics = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->question = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->admin = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->token = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
@@ -132,6 +147,27 @@ class Survey extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * Returns the type
+     *
+     * @return int $type
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Sets the type
+     *
+     * @param int $type
+     * @return void
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 
     /**
@@ -247,6 +283,27 @@ class Survey extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function isAccessRestricted()
     {
         return $this->accessRestricted;
+    }
+
+    /**
+     * Returns the topics
+     *
+     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\RKW\RkwSurvey\Domain\Model\Topic> $topics
+     */
+    public function getTopics()
+    {
+        return $this->topics;
+    }
+
+    /**
+     * Sets the topics
+     *
+     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\RKW\RkwSurvey\Domain\Model\Topic> $topics
+     * @return void
+     */
+    public function setTopics($topics)
+    {
+        $this->topics = $topics;
     }
 
     /**
@@ -377,4 +434,20 @@ class Survey extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->token = $token;
     }
+
+    /**
+     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage
+     */
+    public function getBenchmarkQuestions()
+    {
+        $benchmarkQuestions = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        foreach ($this->getQuestion() as $question) {
+            if ($question->getBenchmark()) {
+                $benchmarkQuestions->attach($question);
+            }
+        }
+
+        return $benchmarkQuestions;
+    }
+
 }

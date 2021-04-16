@@ -26,6 +26,13 @@
             </div>
         </f:if>
 
+        <f:comment><!-- free text (short) --></f:comment>
+        <f:if condition="{question.type} == 4">
+            <div class="answer-container">
+                <f:render partial="Survey/QuestionType/FreeTextShort" arguments="{_all}" />
+            </div>
+        </f:if>
+
         <f:comment><!-- scale (radio) --></f:comment>
         <f:if condition="{question.type} == 3">
             <div class="answer-container scale-group">
