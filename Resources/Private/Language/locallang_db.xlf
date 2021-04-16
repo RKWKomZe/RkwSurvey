@@ -16,7 +16,16 @@
 			<trans-unit id="tx_rkwsurvey_domain_model_survey.name">
 				<source>Name</source>
 			</trans-unit>
-			<trans-unit id="tx_rkwsurvey_domain_model_survey.starttext">
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.type">
+				<source>Type</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.type.default">
+                <source>Standard</source>
+            </trans-unit>
+    		<trans-unit id="tx_rkwsurvey_domain_model_survey.type.benchmark">
+                <source>Benchmark</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_survey.starttext">
 				<source>Starttext</source>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_survey.endtext">
@@ -39,8 +48,17 @@
 			<trans-unit id="tx_rkwsurvey_domain_model_question">
 				<source>RKW Survey: Question</source>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.please_choose">
+				<source>Please choose</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.group_by">
+				<source>Group results by this question</source>
+			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.question">
 				<source>Question</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.short_name">
+				<source>Short name of question</source>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.hint">
 				<source>Hint / Help</source>
@@ -53,6 +71,9 @@
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.survey">
 				<source>Survey</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.topic">
+				<source>Topic</source>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.type">
 				<source>Type</source>
@@ -69,6 +90,9 @@
 			<trans-unit id="tx_rkwsurvey_domain_model_question.type.free_text">
 				<source>Free text</source>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.type.free_text_short">
+				<source>Free text (short)</source>
+			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.text_consent">
 				<source>Label "from"</source>
 			</trans-unit>
@@ -81,6 +105,18 @@
 			<trans-unit id="tx_rkwsurvey_domain_model_question.scale_to_points">
 				<source>Scale to points</source>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.scale_step">
+				<source>Scale step</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark">
+				<source>Benchmark</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark.value">
+				<source>Reference value</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark.weighting.values">
+				<source>Reference values by topic (weighed)</source>
+			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.do_action">
                 <source>Define action</source>
             </trans-unit>
@@ -91,6 +127,15 @@
                 <source>Action on value</source>
             </trans-unit>
 
+            <trans-unit id="tx_rkwsurvey_domain_model_topic">
+                <source>RKW Survey: Topic</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_topic.name">
+                <source>Topic</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_topic.short_name">
+                <source>Topic (short)</source>
+            </trans-unit>
 
 			<trans-unit id="tx_rkwsurvey_domain_model_surveyresult">
 				<source>RKW Survey: Survey Result</source>

@@ -14,9 +14,13 @@ namespace RKW\RkwSurvey\Domain\Model;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+
 /**
  * Question
  *
+ * @author Christian Dilger <c.dilger@addorange.de>
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
  * @copyright Rkw Kompetenzzentrum
@@ -33,6 +37,13 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $question = '';
 
     /**
+     * shortName
+     *
+     * @var string
+     */
+    protected $shortName = '';
+
+    /**
      * hint
      *
      * @var string
@@ -45,6 +56,13 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @var boolean
      */
     protected $required = 1;
+
+    /**
+     * group_by
+     *
+     * @var boolean
+     */
+    protected $groupBy = 0;
 
     /**
      * type
@@ -82,6 +100,35 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $scaleToPoints = 0;
 
     /**
+     * scaleStep
+     *
+     * @var integer
+     */
+    protected $scaleStep = 0;
+
+    /**
+     * required
+     *
+     * @var boolean
+     */
+    protected $benchmark = 0;
+
+    /**
+     * benchmarkValue
+     *
+     * @var float
+     */
+    protected $benchmarkValue = 0.0;
+
+    /**
+     * benchmarkWeighting
+     *
+     * @var string
+     */
+    protected $benchmarkWeighting = '';
+
+
+    /**
      * answerOption
      *
      * @var string
@@ -98,9 +145,9 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * doActionIf
      *
-     * @var integer
+     * @var string
      */
-    protected $doActionIf = 0;
+    protected $doActionIf = '0';
 
     /**
      * doActionJump
@@ -115,6 +162,13 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @var \RKW\RkwSurvey\Domain\Model\Survey
      */
     protected $survey = null;
+
+    /**
+     * topic
+     *
+     * @var \RKW\RkwSurvey\Domain\Model\Topic
+     */
+    protected $topic = null;
 
     /**
      * Returns the question
@@ -135,6 +189,27 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function setQuestion($question)
     {
         $this->question = $question;
+    }
+
+    /**
+     * Returns the shortName
+     *
+     * @return string $shortName
+     */
+    public function getShortName()
+    {
+        return $this->shortName;
+    }
+
+    /**
+     * Sets the shortName
+     *
+     * @param string $shortName
+     * @return void
+     */
+    public function setShortName($shortName)
+    {
+        $this->shortName = $shortName;
     }
 
     /**
@@ -188,6 +263,28 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         return $this->required;
     }
+
+    /**
+     * Returns the groupBy
+     *
+     * @return boolean $groupBy
+     */
+    public function getGroupBy()
+    {
+        return $this->groupBy;
+    }
+
+    /**
+     * Sets the groupBy
+     *
+     * @param bool $groupBy
+     * @return void
+     */
+    public function setGroupBy($groupBy)
+    {
+        $this->groupBy = $groupBy;
+    }
+
 
     /**
      * Returns the type
@@ -295,6 +392,91 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
     /**
+     * Returns the benchmark
+     *
+     * @return boolean $benchmark
+     */
+    public function getBenchmark()
+    {
+        return $this->benchmark;
+    }
+
+    /**
+     * Sets the benchmark
+     *
+     * @param boolean $required
+     * @return void
+     */
+    public function setBenchmark($benchmark)
+    {
+        $this->benchmark = $benchmark;
+    }
+
+    /**
+     * Returns the scaleStep
+     *
+     * @return int $scaleStep
+     */
+    public function getScaleStep()
+    {
+        return $this->scaleStep;
+    }
+
+    /**
+     * Sets the scaleStep
+     *
+     * @param int $scaleStep
+     * @return void
+     */
+    public function setScaleStep($scaleStep)
+    {
+        $this->scaleStep = $scaleStep;
+    }
+
+    /**
+     * Returns the benchmarkValue
+     *
+     * @return int $benchmarkValue
+     */
+    public function getBenchmarkValue()
+    {
+        return $this->benchmarkValue;
+    }
+
+    /**
+     * Sets the benchmarkValue
+     *
+     * @param float $benchmarkValue
+     * @return void
+     */
+    public function setBenchmarkValue($benchmarkValue)
+    {
+        $this->benchmarkValue = $benchmarkValue;
+    }
+
+    /**
+     * Returns the benchmarkWeighting
+     *
+     * @return string $benchmarkWeighting
+     */
+    public function getBenchmarkWeighting()
+    {
+        return $this->benchmarkWeighting;
+    }
+
+    /**
+     * Sets the benchmarkWeighting
+     *
+     * @param string $benchmarkWeighting
+     * @return void
+     */
+    public function setBenchmarkWeighting($benchmarkWeighting)
+    {
+        $this->benchmarkWeighting = $benchmarkWeighting;
+    }
+
+
+    /**
      * Returns the answerOption
      *
      * @return int $answerOption
@@ -349,11 +531,11 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Returns the doActionIf
      *
-     * @return int $doActionIf
+     * @return array $doActionIf
      */
     public function getDoActionIf()
     {
-        return $this->doActionIf;
+        return array_map('intval', GeneralUtility::trimExplode(',', $this->doActionIf));
     }
 
     /**
@@ -407,5 +589,36 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function setSurvey(\RKW\RkwSurvey\Domain\Model\Survey $survey)
     {
         $this->survey = $survey;
+    }
+
+    /**
+     * Returns the topic
+     *
+     * @return \RKW\RkwSurvey\Domain\Model\Topic $topic
+     */
+    public function getTopic()
+    {
+        return $this->topic;
+    }
+
+    /**
+     * Sets the topic
+     *
+     * @param \RKW\RkwSurvey\Domain\Model\Topic $topic
+     * @return void
+     */
+    public function setTopic(\RKW\RkwSurvey\Domain\Model\Topic $topic)
+    {
+        $this->topic = $topic;
+    }
+
+    /**
+     * Returns the range for scaled questions
+     *
+     * @return array
+     */
+    public function getScale()
+    {
+        return range($this->scaleFromPoints, $this->scaleToPoints, $this->scaleStep);
     }
 }

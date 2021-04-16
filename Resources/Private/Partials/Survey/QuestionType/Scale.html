@@ -8,16 +8,16 @@
             {question.textConsent}
         </div>
 
-        <f:for each="<rkw:loop number='{question.scaleToPoints}' />" as="element" iteration="iterScale">
+        <f:for each="{question.scale}" key="key" as="value" iteration="iterScale">
             <div class="form__field scale-group__item">
                 <f:form.radio
-                    id="tx-rkwsurvey-radio-{iterScale.cycle}"
+                    id="tx-rkwsurvey-radio-{key}"
                     class="radio"
                     name="answer"
                     property="answer"
-                    value="{iterScale.cycle}"
+                    value="{value}"
                 />
-                <label for="tx-rkwsurvey-radio-{iterScale.cycle}" class="radio-label"><span>{iterScale.cycle}</span></label>
+                <label for="tx-rkwsurvey-radio-{key}" class="radio-label"><span>{value}</span></label>
             </div>
         </f:for>
 

@@ -11,6 +11,9 @@
 				<source>RKW Survey: Survey</source>
 				<target>RKW Survey: Umfrage</target>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.please_choose">
+				<source>Please choose</source>
+			</trans-unit>
 			<trans-unit id="tx_rkw_survey_domain_model_survey.description">
 				<source>Description</source>
 			</trans-unit>
@@ -35,8 +38,17 @@
 			<trans-unit id="tx_rkwsurvey_domain_model_question">
 				<source>Question</source>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.group_by">
+				<source>Group results by this question</source>
+			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.question">
 				<source>Question</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.short_name">
+				<source>Short name of question</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.topic">
+				<source>Topic</source>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.type">
 				<source>Type</source>
@@ -81,7 +93,16 @@
 				<source>Question</source>
 			</trans-unit>
 
-
+			<!-- Models/Evaluator.php -->
+            <trans-unit id="tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.low">
+                <source>low</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.neutral">
+                <source>neutral</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.high">
+                <source>high</source>
+            </trans-unit>
 
 			<!-- ############################## -->
 			<!-- CONTROLLER -->
@@ -130,8 +151,8 @@
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.freetext">
 				<source>Freetext field</source>
 			</trans-unit>
-			<trans-unit id="tx_rkwsurvey_controller_backend_csv.scaleMax">
-				<source>Maximum: </source>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.scale">
+				<source>Scale: %s - %s, step: %s</source>
 			</trans-unit>
 
 

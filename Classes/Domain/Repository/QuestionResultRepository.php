@@ -15,6 +15,8 @@ namespace RKW\RkwSurvey\Domain\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+
 
 /**
  * QuestionResults
@@ -49,6 +51,49 @@ class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         //====
     }
 
+    /**
+     * findByQuestionAndSurveyResultUids
+     *
+     * @param \RKW\RkwSurvey\Domain\Model\Question $question
+     * @param array $surveyResultIds
+     * @return \RKW\RkwSurvey\Domain\Model\QuestionResult|null
+     */
+    public function findByQuestionAndSurveyResultUids(\RKW\RkwSurvey\Domain\Model\Question $question, array $surveyResultUids)
+    {
+        $query = $this->createQuery();
+
+        $query->matching(
+            $query->logicalAnd(
+                $query->equals('question', $question),
+                $query->in('survey_result', $surveyResultUids)
+            )
+        );
+
+        return $query->execute();
+        //====
+    }
+
+    /**
+     * findByQuestionUidAndSurveyResultUids
+     *
+     * @param int $questionUid
+     * @param array $surveyResultIds
+     * @return \RKW\RkwSurvey\Domain\Model\QuestionResult|null
+     */
+    public function findByQuestionUidAndSurveyResultUids($questionUid, array $surveyResultUids)
+    {
+        $query = $this->createQuery();
+
+        $query->matching(
+            $query->logicalAnd(
+                $query->equals('question', $questionUid),
+                $query->in('survey_result', $surveyResultUids)
+            )
+        );
+
+        return $query->execute();
+        //====
+    }
 
     /**
      * findBySurveyOrderByQuestionAndType
@@ -98,4 +143,62 @@ class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         return $query->execute();
         //====
     }
+
+    /**
+     * findByQuestion
+     *
+     * @param \RKW\RkwSurvey\Domain\Model\Question $question
+     * @return \RKW\RkwSurvey\Domain\Model\QuestionResult|null
+     */
+    public function findByQuestion(\RKW\RkwSurvey\Domain\Model\Question $question)
+    {
+        $query = $this->createQuery();
+
+        $query->matching(
+            $query->equals('question', $question)
+        );
+
+        return $query->execute();
+        //====
+    }
+
+    /**
+     * findByQuestionUid
+     *
+     * @param int $questionUid
+     * @return \RKW\RkwSurvey\Domain\Model\QuestionResult|null
+     */
+    public function findByQuestionUid($questionUid)
+    {
+        $query = $this->createQuery();
+
+        $query->matching(
+            $query->equals('question', $questionUid)
+        );
+
+        return $query->execute();
+        //====
+    }
+
+    /**
+     * findByQuestionAndAnswer
+     *
+     * @param \RKW\RkwSurvey\Domain\Model\Question $question
+     * @return \RKW\RkwSurvey\Domain\Model\QuestionResult|null
+     */
+    public function findByQuestionAndAnswer(\RKW\RkwSurvey\Domain\Model\Question $question, $answer)
+    {
+        $query = $this->createQuery();
+
+        $query->matching(
+            $query->logicalAnd(
+                $query->equals('question', $question),
+                $query->equals('answer', $answer)
+            )
+        );
+
+        return $query->execute();
+        //====
+    }
+
 }

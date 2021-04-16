@@ -209,4 +209,20 @@ class SurveyResult extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->questionResult = $questionResult;
     }
+
+    /**
+     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage
+     */
+    public function getBenchmarkQuestionResults()
+    {
+        $benchmarkQuestionResults = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        foreach ($this->getQuestionResult() as $questionResult) {
+            if ($questionResult->getQuestion()->getBenchmark()) {
+                $benchmarkQuestionResults->attach($questionResult);
+            }
+        }
+
+        return $benchmarkQuestionResults;
+    }
+
 }

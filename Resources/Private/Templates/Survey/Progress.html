@@ -6,9 +6,18 @@
 
 	<f:section name="main">
 
-		<f:if condition="{settings.showSurveyNameProgess}">
+        <f:if condition="{settings.showSurveyNameProgess}">
             <h2 class="h2">{surveyResult.survey.name}</h2>
         </f:if>
+
+        <!-- topic -->
+        <f:for each="{surveyResult.survey.question}" as="question" iteration="iter">
+            <f:if condition="{iter.index} == <f:count>{surveyResult.questionResult}</f:count>">
+                <f:if condition="{question.topic}">
+                    <h2 class="h2 h2--small flex-basis-9 h2--infoflag-space">{question.topic.name -> f:format.raw()}</h2>
+                </f:if>
+            </f:if>
+        </f:for>
 
         <f:if condition="{errorMessage}">
             <div class="system-message system-message--scroll" role="alert">

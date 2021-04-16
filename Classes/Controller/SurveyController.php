@@ -2,11 +2,13 @@
 
 namespace RKW\RkwSurvey\Controller;
 
-use \RKW\RkwSurvey\Domain\Model\Survey;
-use \RKW\RkwSurvey\Domain\Model\SurveyResult;
-use \RKW\RkwSurvey\Domain\Model\QuestionResult;
-use \RKW\RkwSurvey\Utility\SurveyProgressUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+use TYPO3\CMS\Core\Page\PageRenderer;
+use RKW\RkwSurvey\Domain\Model\Survey;
+use RKW\RkwSurvey\Domain\Model\Evaluator;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use RKW\RkwSurvey\Domain\Model\SurveyResult;
+use RKW\RkwSurvey\Domain\Model\QuestionResult;
+use RKW\RkwSurvey\Utility\SurveyProgressUtility;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -108,6 +110,12 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      */
     protected $logger;
 
+    /**
+     * Expose the pageRenderer
+     *
+     * @var $pageRenderer
+     */
+    protected $pageRenderer;
 
     /**
      * action welcome
@@ -276,9 +284,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         $this->view->assign('tokenInput', $tokenInput);
     }
 
-
-
-
     /**
      * action createContact
      *
@@ -371,6 +376,41 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
 
         $this->view->assign('surveyResult', $surveyResult);
         $this->view->assign('tokenInput', $tokenInput);
+
+        if ($surveyResult->getSurvey()->getType() === 1) {
+
+            //  @todo: Das muss ausgelagert werden in die RkwGraphs! Allerdings muss auch ein Identifier übergeben werden, anhand dessen die RkwGraphs das Ergebnis render kann!
+            //  instantiate with object manager -> see feecalculator
+            $evaluator = GeneralUtility::makeInstance(Evaluator::class);
+            $evaluator->setSurveyResult($surveyResult);
+
+            $this->pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
+
+            // Inject necessary js libs
+            $this->pageRenderer->addJsFooterLibrary(
+                'ApexCharts', /* name */
+                'https://cdn.jsdelivr.net/npm/apexcharts',
+                'text/javascript', /* type */
+                false, /* compress*/
+                true, /* force on top */
+                '', /* allwrap */
+                true /* exlude from concatenation */
+            );
+
+            $chart = $evaluator->prepareChart();
+            $this->pageRenderer->addJsFooterInlineCode('chartScript', $evaluator->renderChart($chart), true);
+
+            $donuts = $evaluator->prepareDonuts();
+            $this->pageRenderer->addJsFooterInlineCode('donutScript', $evaluator->renderDonuts($donuts), true);
+
+            $bars = $evaluator->prepareBars();
+            $this->pageRenderer->addJsFooterInlineCode('barScript', $evaluator->renderBars($bars), true);
+
+            $this->view->assign('bars', $bars);
+            $this->view->assign('donuts', $donuts);
+
+        }
+
     }
 
 
@@ -537,4 +577,5 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         return $this->logger;
         //===
     }
+
 }
