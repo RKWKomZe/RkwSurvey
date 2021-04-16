@@ -15,7 +15,7 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Install\Updates\AbstractUpdate;
 
 /**
- * Migrates "tx_bmpdf2content_*" fields to "tx_rkwpdf2content_"
+ * Migrates "tx_rkwsurvey_domain_model_question.scale*" fields
  */
 class ScaleFieldsUpdater extends AbstractUpdate
 {
@@ -25,7 +25,7 @@ class ScaleFieldsUpdater extends AbstractUpdate
     /**
      * @var string
      */
-    protected $title = 'Updates "tx_rkwsurvey_domain_model_question" scale fields to use steps';
+    protected $title = 'Updates "' . self::TABLE . '" scale fields to use steps';
 
     /**
      * Checks whether updates are required.
