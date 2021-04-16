@@ -514,7 +514,8 @@ class Evaluator
                 ],
                 yaxis: {
                     min: 0,
-                    max: 10
+                    max: 10,
+                    decimalsInFloat: 0,
                 },
                 series: [
                     {
