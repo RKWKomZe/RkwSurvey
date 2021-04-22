@@ -21,6 +21,7 @@
             <f:then>
 
                 <h3>Gründungsbezogene Rahmenbedingungen</h3>
+                <p>Das nachfolgende Radar-Chart zeigt Ihre individuellen Bewertungen einzelner gründungsbezogener Rahmenbedingungen im Vergleich mit der Einschätzung der Experten, die für den Länderbericht Deutschland des Global Entrepreneurship Monitor (GEM) befragt werden. Die GEM-Experten beziehen sich auf den Gründungsstandort Deutschland.</p>
                 <div class="tiles-wrapper">
                     <div class="tiles flex-container flex-container--margin">
                         <div class="flex-item flex-basis-12">
@@ -36,6 +37,7 @@
                 </div>
 
                 <h3>Ausprägung der Elemente im Gründungsökosystem</h3>
+                <p>Das nachfolgende Säulendiagramm fasst die Bewertungen einzelner gründungsbezogener Rahmenbedingungen zu fünf übergeordneten Kategorien zusammen. Die Darstellung unterscheidet folgende Bewertungen (Säulen): Ihre persönliche Bewertung, die Bewertung für Ihre Region insgesamt und die Bewertung für alle 12 Regionen des Gründungsökosystem-Modellvorhabens.</p>
                 <f:for each="{bars}" as="comparison" iteration="iterBar" key="identifier">
                     <div class="tiles-wrapper">
                         <div class="tiles flex-container flex-container--margin">
@@ -63,6 +65,7 @@
                 </f:for>
 
                 <h3>Ausprägung der gründungsbezogenen Rahmenbedingungen</h3>
+                <p>Die nachfolgenden Kreisdiagramme vergleichen die Einschätzungen einzelner gründungsbezogenen Rahmenbedingungen für Ihre Region mit den Einschätzungen der GEM-Experten für den Gründungsstandort Deutschland. Die 11 Antwortmöglichkeiten auf einer Skala von 0 (vollkommen falsch) bis 10 (vollkommen wahr) sind in folgende 3 Kategorien zusammengefasst worden: trifft nicht zu (0-4), teils-teils (5), und trifft zu (6-10).</p>
                 <f:for each="{donuts}" as="donut" iteration="iterDonut" key="identifier">
                     <p>{donut.question}</p>
                     <div class="tiles-wrapper">
