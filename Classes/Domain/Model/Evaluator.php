@@ -160,9 +160,15 @@ class Evaluator
 
         foreach ($topics as $topic) {
 
-            if ($topic->getQuestions()->count() > 0) {
+            $questionsByTopic = $topic->getQuestions();
 
-                foreach ($topic->getQuestions() as $question) {
+            if ($questionsByTopic->count() > 0) {
+
+                foreach ($questionsByTopic as $question) {
+
+                    if ($question->getBenchmark() === false) {
+                        continue;
+                    }
 
                     $averageOnQuestion = [];
 
