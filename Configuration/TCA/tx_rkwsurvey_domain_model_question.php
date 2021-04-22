@@ -175,7 +175,7 @@ return [
                 'foreign_table' => 'tx_rkwsurvey_domain_model_topic',
                 'foreign_table_where' => 'AND tx_rkwsurvey_domain_model_topic.survey = ###REC_FIELD_survey###',
             ],
-            //  'displayCond' => 'FIELD:benchmark:=:1',
+            'displayCond' => 'USER:RKW\\RkwSurvey\\DisplayCond\\Question->useTopic',
         ],
 		'type' => [
 			'exclude' => false,

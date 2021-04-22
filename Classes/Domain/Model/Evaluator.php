@@ -2,9 +2,7 @@
 
 namespace RKW\RkwSurvey\Domain\Model;
 
-use Doctrine\Common\Util\Debug;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use RKW\RkwSurvey\Domain\Repository\QuestionRepository;
 use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
 use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
