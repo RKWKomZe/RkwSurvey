@@ -153,7 +153,7 @@ return [
                 'enableRichtext' => true,
             ],
 		],
-        'topics'           => [
+        'topics' => [
             'exclude' => false,
             'label'   => 'LLL:EXT:rkw_webcheck/Resources/Private/Language/locallang_db.xlf:tx_rkwwebcheck_domain_model_webcheck.topics',
             'config' => [

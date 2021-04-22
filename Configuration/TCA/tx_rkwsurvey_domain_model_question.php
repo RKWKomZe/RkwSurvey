@@ -17,7 +17,7 @@ return [
 			'starttime' => 'starttime',
 			'endtime' => 'endtime',
 		],
-		'searchFields' => 'required,group_by, topic,question,hint,short_name,type,text_consent,text_rejection,scale_from_points,scale_to_points,scale_step,answer_option,benchmark,benchmark_value, benchmark_weighting, survey,do_action,do_action_if,do_action_jump',
+		'searchFields' => 'required,group_by,topic,question,hint,short_name,type,text_consent,text_rejection,scale_from_points,scale_to_points,scale_step,answer_option,benchmark,benchmark_value, benchmark_weighting, survey,do_action,do_action_if,do_action_jump',
 		'iconfile' => 'EXT:rkw_survey/Resources/Public/Icons/tx_rkwsurvey_domain_model_question.gif'
 	],
 	'interface' => [
@@ -175,7 +175,7 @@ return [
                 'foreign_table' => 'tx_rkwsurvey_domain_model_topic',
                 'foreign_table_where' => 'AND tx_rkwsurvey_domain_model_topic.survey = ###REC_FIELD_survey###',
             ],
-            'displayCond' => 'FIELD:benchmark:=:1',
+            'displayCond' => 'USER:RKW\\RkwSurvey\\DisplayCond\\Question->useTopic',
         ],
 		'type' => [
 			'exclude' => false,
