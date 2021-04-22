@@ -2,9 +2,7 @@
 
 namespace RKW\RkwSurvey\Domain\Model;
 
-use Doctrine\Common\Util\Debug;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use RKW\RkwSurvey\Domain\Repository\QuestionRepository;
 use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
 use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
@@ -160,9 +158,15 @@ class Evaluator
 
         foreach ($topics as $topic) {
 
-            if ($topic->getQuestions()->count() > 0) {
+            $questionsByTopic = $topic->getQuestions();
 
-                foreach ($topic->getQuestions() as $question) {
+            if ($questionsByTopic->count() > 0) {
+
+                foreach ($questionsByTopic as $question) {
+
+                    if ($question->getBenchmark() === false) {
+                        continue;
+                    }
 
                     $averageOnQuestion = [];
 
@@ -310,7 +314,7 @@ class Evaluator
 //            $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'all_regions', $title = 'Alle 12 Regionen');
 
             //  Deutschland = GEM
-            $donuts[$slug]['data']['benchmark']['title'] = 'GEM-Expertenbefragung';
+            $donuts[$slug]['data']['benchmark']['title'] = 'GEM-Expertenbefragung Deutschland';
 
             if ($question->getBenchmark()) {
 
@@ -523,7 +527,7 @@ class Evaluator
                         data: ' . json_encode($chart['values']['individual']) . ',
                     },
                     {
-                        name: "GEM-Expertenbefragung (0 = schwach, 10 = stark)",
+                        name: "GEM-Expertenbefragung Deutschland (0 = schwach, 10 = stark)",
                         data: ' . json_encode($chart['values']['benchmark']) . ',
                     }
                 ],

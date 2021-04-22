@@ -14,7 +14,7 @@
         <f:for each="{surveyResult.survey.question}" as="question" iteration="iter">
             <f:if condition="{iter.index} == <f:count>{surveyResult.questionResult}</f:count>">
                 <f:if condition="{question.topic}">
-                    <h2 class="h2 h2--small flex-basis-9 h2--infoflag-space">{question.topic.name -> f:format.raw()}</h2>
+                    <h2 class="h2">{question.topic.name -> f:format.raw()}</h2>
                 </f:if>
             </f:if>
         </f:for>

@@ -65,7 +65,7 @@ return [
         ],
         */
         'hidden'           => [
-            'exclude' => true,
+            'exclude' => false,
             'label'   => 'LLL:EXT:lang/locallang_general.xlf:LGL.hidden',
             'config'  => [
                 'type'  => 'check',
@@ -77,7 +77,7 @@ return [
             ],
         ],
         'starttime'        => [
-            'exclude'   => true,
+            'exclude'   => false,
             //'l10n_mode' => 'mergeIfNotBlank',
             'label'     => 'LLL:EXT:lang/locallang_general.xlf:LGL.starttime',
             'config'    => [
@@ -92,7 +92,7 @@ return [
             ],
         ],
         'endtime'          => [
-            'exclude'   => true,
+            'exclude'   => false,
             //'l10n_mode' => 'mergeIfNotBlank',
             'label'     => 'LLL:EXT:lang/locallang_general.xlf:LGL.endtime',
             'config'    => [
