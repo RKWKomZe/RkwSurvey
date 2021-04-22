@@ -314,7 +314,7 @@ class Evaluator
 //            $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'all_regions', $title = 'Alle 12 Regionen');
 
             //  Deutschland = GEM
-            $donuts[$slug]['data']['benchmark']['title'] = 'GEM-Expertenbefragung';
+            $donuts[$slug]['data']['benchmark']['title'] = 'GEM-Expertenbefragung Deutschland';
 
             if ($question->getBenchmark()) {
 
@@ -527,7 +527,7 @@ class Evaluator
                         data: ' . json_encode($chart['values']['individual']) . ',
                     },
                     {
-                        name: "GEM-Expertenbefragung (0 = schwach, 10 = stark)",
+                        name: "GEM-Expertenbefragung Deutschland (0 = schwach, 10 = stark)",
                         data: ' . json_encode($chart['values']['benchmark']) . ',
                     }
                 ],
