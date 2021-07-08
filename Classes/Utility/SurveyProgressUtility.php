@@ -2,8 +2,8 @@
 
 namespace RKW\RkwSurvey\Utility;
 
-use \RKW\RkwSurvey\Domain\Model\SurveyResult;
-use \RKW\RkwSurvey\Domain\Model\QuestionResult;
+use RKW\RkwSurvey\Domain\Model\SurveyResult;
+use RKW\RkwSurvey\Domain\Model\QuestionResult;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -40,9 +40,10 @@ class SurveyProgressUtility implements \TYPO3\CMS\Core\SingletonInterface
     public static function handleJumpAction(SurveyResult $surveyResult, QuestionResult $newQuestionResult)
     {
         // optional, if set: Skip next question(s), if a condition take effect
+
         if (
             $newQuestionResult->getQuestion()->isDoAction()
-            && $newQuestionResult->getQuestion()->getDoActionIf() == intval($newQuestionResult->getAnswer())
+            && in_array(intval($newQuestionResult->getAnswer()), $newQuestionResult->getQuestion()->getDoActionIf())
         ) {
             // add (a) questions to jump and (b) already answered questions
             $newAnswerCount = $newQuestionResult->getQuestion()->getDoActionJump() + $surveyResult->getQuestionResult()->count();

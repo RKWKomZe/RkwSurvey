@@ -17,14 +17,14 @@ return [
 		],
         // do only make requestUpdate, if token-list should be shown on check
        // 'requestUpdate' => 'access_restricted',
-		'searchFields' => 'name,starttext,endtext,question,admin,access_restricted,token',
+		'searchFields' => 'name,starttext,endtext,topics,question,admin,access_restricted,token',
 		'iconfile' => 'EXT:rkw_survey/Resources/Public/Icons/tx_rkwsurvey_domain_model_survey.gif'
 	],
 	'interface' => [
-		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, starttext, endtext, question, admin, access_restricted, token',
+		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, type, starttext, endtext, topics, question, admin, access_restricted, token',
 	],
 	'types' => [
-		'1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, question, starttext, endtext, admin, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime, access_restricted'],
+		'1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, type, topics, question, starttext, endtext, admin, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime, access_restricted'],
 	],
 	'columns' => [
 		'sys_language_uid' => [
@@ -117,6 +117,20 @@ return [
 				'eval' => 'trim, required'
 			],
 		],
+        'type' => [
+            'exclude' => false,
+            'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_survey.type',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'items' => [
+                    ['LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_survey.type.default', 0],
+                    ['LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_survey.type.benchmark', 1],
+                ],
+                'default' => 0
+            ],
+            'onChange' => 'reload'
+        ],
 		'starttext' => [
 			'exclude' => false,
 			'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_survey.starttext',
@@ -139,6 +153,26 @@ return [
                 'enableRichtext' => true,
             ],
 		],
+        'topics' => [
+            'exclude' => false,
+            'label'   => 'LLL:EXT:rkw_webcheck/Resources/Private/Language/locallang_db.xlf:tx_rkwwebcheck_domain_model_webcheck.topics',
+            'config' => [
+                'type' => 'inline',
+                'foreign_table' => 'tx_rkwsurvey_domain_model_topic',
+                'foreign_field' => 'survey',
+                'foreign_sortby' => 'sorting',
+                'maxitems' => 9999,
+                'minitems' => 1,
+                'appearance' => [
+                    'collapseAll' => 1,
+                    'levelLinksPosition' => 'top',
+                    'showSynchronizationLink' => 1,
+                    'showPossibleLocalizationRecords' => 1,
+                    'showAllLocalizationLink' => 1
+                ],
+            ],
+            'displayCond' => 'FIELD:type:=:1',
+        ],
 		'question' => [
 			'exclude' => false,
 			'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_survey.question',

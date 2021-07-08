@@ -158,6 +158,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         $surveyName = strtolower(trim($surveyName)) . '.csv';
 
         $csv = fopen('php://output', 'w');
+        $separator = ';';
 
         header("Content-type: text/csv");
         header("Content-Disposition: attachment; filename=$surveyName");
@@ -172,7 +173,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         $answerTranslation = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answer', $this->extensionName);
 
         // Fill the CSV file with content
-        fputcsv($csv, array($surveyUidTranslation, $surveyResultUidTranslation, $QuestionResultUidTranslation, $questionTranslation, $answerOptionTranslation, $answerTranslation));
+        fputcsv($csv, array($surveyUidTranslation, $surveyResultUidTranslation, $QuestionResultUidTranslation, $questionTranslation, $answerOptionTranslation, $answerTranslation), $separator);
 
         /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult */
         foreach ($questionResultList as $questionResult) {
@@ -192,17 +193,21 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
 
                 $answerOption = '';
                 if (!$question->getAnswerOption()) {
-                    if ($question->getType() == 0) {
+                    if ($question->getType() == 0 || $question->getType() == 4) {
                         $answerOption = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.freetext', $this->extensionName);
                     }
                     if ($question->getType() == 3) {
-                        $answerOption = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.scaleMax', $this->extensionName) . $question->getScaleToPoints();
+                        $answerOption = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.scale', $this->extensionName, [
+                            $question->getScaleFromPoints(),
+                            $question->getScaleToPoints(),
+                            $question->getScaleStep()
+                        ]);
                     }
                 } else {
                     $answerOption = $question->getAnswerOption();
                 }
 
-                fputcsv($csv, array($surveyUid, $surveyResultUid, $questionResultUid, $question->getQuestion(), $answerOption, $questionResult->getAnswer()));
+                fputcsv($csv, array($surveyUid, $surveyResultUid, $questionResultUid, $question->getQuestion(), $answerOption, $questionResult->getAnswer()), $separator);
 
             } catch (\Exception $e) {
                 continue;

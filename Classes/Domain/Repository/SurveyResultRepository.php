@@ -14,7 +14,6 @@ namespace RKW\RkwSurvey\Domain\Repository;
  *
  * The TYPO3 project - inspiring people to share!
  */
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * SurveyResults
@@ -82,6 +81,47 @@ class SurveyResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 
         $constraints[] = $query->equals('survey', $survey);
         $constraints[] = $query->equals('finished', $finished);
+
+        // use given time, or just the survey's starttime
+        if ($startDate) {
+            $constraints[] = $query->greaterThanOrEqual('crdate', strtotime($startDate));
+        } else {
+            $constraints[] = $query->greaterThanOrEqual('crdate', $survey->getStarttime());
+        }
+        // always make a cut at survey's endtime!
+        if ($survey->getEndtime()) {
+            $constraints[] = $query->lessThanOrEqual('crdate', $survey->getEndtime());
+        }
+
+        // NOW: construct final query!
+        $query->matching($query->logicalAnd($constraints));
+
+        return $query->execute();
+        //====
+    }
+
+    /**
+     * findBySurveyAndQuestionAndAnswerAndFinished
+     *
+     * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
+     * @param \RKW\RkwSurvey\Domain\Model\Question $question
+     * @param mixed $answer
+     * @param integer $finished
+     * @param string $startDate
+     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface|array
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
+     */
+    public function findBySurveyAndQuestionAndAnswerAndFinished(\RKW\RkwSurvey\Domain\Model\Survey $survey, \RKW\RkwSurvey\Domain\Model\Question $question, $answer, $finished = 1, $startDate = '1970-01-01')
+    {
+        $query = $this->createQuery();
+        $query->getQuerySettings()->setRespectStoragePage(false);
+
+        $constraints = array();
+
+        $constraints[] = $query->equals('survey', $survey);
+        $constraints[] = $query->equals('finished', $finished);
+        $constraints[] = $query->equals('questionResult.question', $question);
+        $constraints[] = $query->equals('questionResult.answer', $answer);
 
         // use given time, or just the survey's starttime
         if ($startDate) {
