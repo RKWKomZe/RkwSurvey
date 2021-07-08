@@ -1,4 +1,4 @@
-plugin.tx_rkwsurvey_survey {
+plugin.tx_rkwsurvey {
 	view {
 		# cat=plugin.tx_rkwsurvey_survey/file; type=string; label=Path to template root (FE)
 		templateRootPath = EXT:rkw_survey/Resources/Private/Templates/
