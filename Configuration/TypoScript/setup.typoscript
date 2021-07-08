@@ -42,17 +42,17 @@ config.tx_extbase.persistence {
 	}
 }
 
-plugin.tx_rkwsurvey_survey {
+plugin.tx_rkwsurvey {
 	view {
 		templateRootPaths.0 = EXT:rkw_survey/Resources/Private/Templates/
-		templateRootPaths.1 = {$plugin.tx_rkwsurvey_survey.view.templateRootPath}
+		templateRootPaths.1 = {$plugin.tx_rkwsurvey.view.templateRootPath}
 		partialRootPaths.0 = EXT:rkw_survey/Resources/Private/Partials/
-		partialRootPaths.1 = {$plugin.tx_rkwsurvey_survey.view.partialRootPath}
+		partialRootPaths.1 = {$plugin.tx_rkwsurvey.view.partialRootPath}
 		layoutRootPaths.0 = EXT:rkw_survey/Resources/Private/Layouts/
-		layoutRootPaths.1 = {$plugin.tx_rkwsurvey_survey.view.layoutRootPath}
+		layoutRootPaths.1 = {$plugin.tx_rkwsurvey.view.layoutRootPath}
 	}
 	persistence {
-		storagePid = {$plugin.tx_rkwsurvey_survey.persistence.storagePid}
+		storagePid = {$plugin.tx_rkwsurvey.persistence.storagePid}
 		#recursive = 1
 	}
 	features {
@@ -63,8 +63,10 @@ plugin.tx_rkwsurvey_survey {
 	}
 
     settings {
-        showSurveyNameIntroExtro = {$plugin.tx_rkwsurvey_survey.settings.showSurveyNameIntroExtro}
-        showSurveyNameProgess = {$plugin.tx_rkwsurvey_survey.settings.showSurveyNameProgess}
+        showSurveyNameIntroExtro = {$plugin.tx_rkwsurvey.settings.showSurveyNameIntroExtro}
+        showSurveyNameProgess = {$plugin.tx_rkwsurvey.settings.showSurveyNameProgess}
+        includeCss = {$plugin.tx_rkwsurvey.settings.includeCss}
+        includeJQuery = {$plugin.tx_rkwsurvey.settings.includeJQuery}
     }
 }
 
@@ -85,11 +87,11 @@ module.tx_rkwsurvey_web_rkwsurveyevaluation {
 	}
 }
 
-module.tx_rkwsurvey_web_rkwsurveyevaluation.persistence < plugin.tx_rkwsurvey_survey.persistence
+module.tx_rkwsurvey_web_rkwsurveyevaluation.persistence < plugin.tx_rkwsurvey.persistence
 
 
 [globalVar = LIT:1 = {$plugin.tx_rkwsurvey.settings.includeCss}]
-    page.includeJSFooter.txRkwSurvey = EXT:rkw_survey/Resources/Public/Css/webcheck-2.0.css
+    page.includeCSS.txRkwSurvey = EXT:rkw_survey/Resources/Public/Css/webcheck-2.0.css
 [global]
 
 [!userFunc = TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('rkw_webcheck')]
