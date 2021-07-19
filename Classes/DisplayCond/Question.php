@@ -26,7 +26,12 @@ class Question
      */
     protected $surveyRepository;
 
-    public function __construct() {
+    /**
+     * Question constructor
+     * @return void
+     */
+    public function __construct()
+    {
 
         $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
 
@@ -35,11 +40,27 @@ class Question
         }
     }
 
-    public function useTopic(array $array) {
+    /**
+     * @param array $array
+     * @return bool
+     */
+    public function useTopic(array $array): bool
+    {
 
-        $survey = $this->surveyRepository->findByUid($array['record']['survey']);
+        /** @var \RKW\RkwSurvey\Domain\Model\Survey $survey */
+        $survey = $this->surveyRepository->findByIdentifier($array['record']['survey']);
 
-        return $survey->getTopics()->count() > 0;
+        if (
+            ($survey)
+            && ($survey->getType() == 1)
+            && ($survey->getTopics())
+            && ($survey->getTopics()->count())
+
+        ){
+            return true;
+        }
+
+        return false;
 
     }
 
