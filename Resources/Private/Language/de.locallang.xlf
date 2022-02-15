@@ -348,7 +348,7 @@
             </trans-unit>
             <trans-unit id="templates_email_contactAdmin.text1">
                 <source>A contact request was submitted for the for the survey "%s". Please get in touch with the contact person below. You can reply directly to this e-mail.</source>
-                <target>für die Umfrage "%s" wurde eine Kontaktanfrage übermittelt. Bitte treten Sie mit untenstehendem Ansprechpartner in Verbindung. Sie können direkt auf diese E-Mail antworten.</target>
+                <target>für die Umfrage "%s" wurde eine Kontaktanfrage übermittelt. Bitte treten Sie mit untenstehender Ansprechperson in Verbindung. Sie können direkt auf diese E-Mail antworten.</target>
             </trans-unit>
             <trans-unit id="templates_email_contactAdmin.text2">
                 <source>Contact</source>
