@@ -53,7 +53,7 @@
             </trans-unit>
             <trans-unit id="tx_rkwsurvey_domain_model_survey.access_restricted">
                 <source>Access Restricted</source>
-                <target>Zugriffsbeschränkt (Nutzer benötigen Token zur Teilnahme)</target>
+                <target>Zugriffsbeschränkt (Nutzende benötigen Token zur Teilnahme)</target>
             </trans-unit>
 
 
