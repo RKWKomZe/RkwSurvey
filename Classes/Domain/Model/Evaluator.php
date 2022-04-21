@@ -74,10 +74,16 @@ class Evaluator
     protected $labels = [];
 
     /**
-     *
+     * @var \RKW\RkwSurvey\Domain\Model\Question|null
      */
-    public function __construct()
+    protected $groupByQuestion = null;
+
+    /**
+     * @param SurveyResult $surveyResult
+     */
+    public function __construct(SurveyResult $surveyResult)
     {
+        $this->surveyResult = $surveyResult;
 
         $this->colors = [
             'me' => '#d63f11', // $color-primary
@@ -107,14 +113,27 @@ class Evaluator
         if (!$this->questionRepository) {
             $this->questionRepository = $objectManager->get(QuestionRepository::class);
         }
+
+        $this->setGroupedByQuestion();
+
     }
 
     /**
-     * @param SurveyResult $surveyResult
+     * @return void
      */
-    public function setSurveyResult(SurveyResult $surveyResult): void
+    protected function setGroupedByQuestion(): void
     {
-        $this->surveyResult = $surveyResult;
+        $survey = $this->surveyResult->getSurvey();
+
+        $this->groupByQuestion = $this->questionRepository->findOneByGroupedByAndSurvey($survey);
+    }
+
+    /**
+     * @return bool
+     */
+    public function containsGroupedByQuestion(): bool
+    {
+        return (bool)$this->groupByQuestion;
     }
 
     /**
@@ -125,13 +144,11 @@ class Evaluator
     {
         $survey = $this->surveyResult->getSurvey();
 
-        $groupByQuestion = $this->questionRepository->findOneByGroupedByAndSurvey($survey);
+        if ($this->groupByQuestion) {
 
-        if ($groupByQuestion) {
+            $myGroupByQuestionResult = $this->questionResultRepository->findByQuestionAndSurveyResult($this->groupByQuestion, $this->surveyResult);
 
-            $myGroupByQuestionResult = $this->questionResultRepository->findByQuestionAndSurveyResult($groupByQuestion, $this->surveyResult);
-
-            $surveyResults = $this->surveyResultRepository->findBySurveyAndQuestionAndAnswerAndFinished($survey, $groupByQuestion, $myGroupByQuestionResult->getAnswer(), $finished = 1);
+            $surveyResults = $this->surveyResultRepository->findBySurveyAndQuestionAndAnswerAndFinished($survey, $this->groupByQuestion, $myGroupByQuestionResult->getAnswer(), $finished = 1);
 
         } else {
 
@@ -153,13 +170,9 @@ class Evaluator
     public function getGroupByQuestionAnswer()
     {
 
-        $survey = $this->surveyResult->getSurvey();
+        if ($this->groupByQuestion) {
 
-        $question = $this->questionRepository->findOneByGroupedByAndSurvey($survey);
-
-        if ($question) {
-
-            $result = $this->questionResultRepository->findByQuestionAndSurveyResult($question, $this->surveyResult);
+            $result = $this->questionResultRepository->findByQuestionAndSurveyResult($this->groupByQuestion, $this->surveyResult);
 
             return $this->parseStringToArray($result->getQuestion()->getAnswerOption(), PHP_EOL)[((int) $result->getAnswer() - 1)];
 
@@ -222,7 +235,7 @@ class Evaluator
                     }
 
                     //  Was ist der Wert von "weiß ich nicht"? -> skipped = null
-                    $answers = array_filter($answers, function ($x) {
+                    $answers = array_filter($answers, static function ($x) {
                         return $x !== '';
                     });
 
@@ -601,15 +614,17 @@ class Evaluator
 
         foreach ($questionResults as $result) {
 
-            if ((int)$result->getAnswer() < 5) {
+            $answer = (int)$result->getAnswer();
+
+            if ($answer < 5) {
                 $evaluation[$key]['low'][] = $result;
             }
 
-            if ((int)$result->getAnswer() === 5) {
+            if ($answer === 5) {
                 $evaluation[$key]['neutral'][] = $result;
             }
 
-            if ((int)$result->getAnswer() > 5) {
+            if ($answer > 5) {
                 $evaluation[$key]['high'][] = $result;
             }
 

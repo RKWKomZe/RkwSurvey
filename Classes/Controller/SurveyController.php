@@ -381,8 +381,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
 
             //  @todo: Das muss ausgelagert werden in die RkwGraphs! Allerdings muss auch ein Identifier übergeben werden, anhand dessen die RkwGraphs das Ergebnis render kann!
             //  instantiate with object manager -> see feecalculator
-            $evaluator = GeneralUtility::makeInstance(Evaluator::class);
-            $evaluator->setSurveyResult($surveyResult);
+            $evaluator = GeneralUtility::makeInstance(Evaluator::class, $surveyResult);
 
             $this->pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
 
@@ -403,10 +402,15 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
             $donuts = $evaluator->prepareDonuts();
             $this->pageRenderer->addJsFooterInlineCode('donutScript', $evaluator->renderDonuts($donuts), true);
 
-//            $bars = $evaluator->prepareBars();
-//            $this->pageRenderer->addJsFooterInlineCode('barScript', $evaluator->renderBars($bars), true);
-//
-//            $this->view->assign('bars', $bars);
+            if ($evaluator->containsGroupedByQuestion()) {
+
+                $bars = $evaluator->prepareBars();
+                $this->pageRenderer->addJsFooterInlineCode('barScript', $evaluator->renderBars($bars), true);
+
+                $this->view->assign('bars', $bars);
+
+            }
+
             $this->view->assign('donuts', $donuts);
 
         }
