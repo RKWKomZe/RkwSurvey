@@ -403,10 +403,10 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
             $donuts = $evaluator->prepareDonuts();
             $this->pageRenderer->addJsFooterInlineCode('donutScript', $evaluator->renderDonuts($donuts), true);
 
-            $bars = $evaluator->prepareBars();
-            $this->pageRenderer->addJsFooterInlineCode('barScript', $evaluator->renderBars($bars), true);
-
-            $this->view->assign('bars', $bars);
+//            $bars = $evaluator->prepareBars();
+//            $this->pageRenderer->addJsFooterInlineCode('barScript', $evaluator->renderBars($bars), true);
+//
+//            $this->view->assign('bars', $bars);
             $this->view->assign('donuts', $donuts);
 
         }

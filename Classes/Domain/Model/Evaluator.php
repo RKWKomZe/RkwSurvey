@@ -73,6 +73,9 @@ class Evaluator
      */
     protected $labels = [];
 
+    /**
+     *
+     */
     public function __construct()
     {
 
@@ -120,10 +123,20 @@ class Evaluator
     public function getSurveyResultUidsGroupedByQuestion(): array
     {
         $survey = $this->surveyResult->getSurvey();
-        $groupByQuestion = $this->questionRepository->findOneByGroupedByAndSurvey($survey);
-        $myGroupByQuestionResult = $this->questionResultRepository->findByQuestionAndSurveyResult($groupByQuestion, $this->surveyResult);
 
-        $surveyResults = $this->surveyResultRepository->findBySurveyAndQuestionAndAnswerAndFinished($survey, $groupByQuestion, $myGroupByQuestionResult->getAnswer(), $finished = 1);
+        $groupByQuestion = $this->questionRepository->findOneByGroupedByAndSurvey($survey);
+
+        if ($groupByQuestion) {
+
+            $myGroupByQuestionResult = $this->questionResultRepository->findByQuestionAndSurveyResult($groupByQuestion, $this->surveyResult);
+
+            $surveyResults = $this->surveyResultRepository->findBySurveyAndQuestionAndAnswerAndFinished($survey, $groupByQuestion, $myGroupByQuestionResult->getAnswer(), $finished = 1);
+
+        } else {
+
+            $surveyResults = $this->surveyResultRepository->findBySurveyAndFinished($survey);
+
+        }
 
         $surveyResultUids = [];
         foreach ($surveyResults as $surveyResult) {
@@ -133,6 +146,9 @@ class Evaluator
         return $surveyResultUids;
     }
 
+    /**
+     * @return mixed|null
+     */
     public function getGroupByQuestionAnswer()
     {
 
@@ -140,10 +156,24 @@ class Evaluator
 
         $question = $this->questionRepository->findOneByGroupedByAndSurvey($survey);
 
-        $result = $this->questionResultRepository->findByQuestionAndSurveyResult($question, $this->surveyResult);
+        if ($question) {
 
-        return $this->parseStringToArray($result->getQuestion()->getAnswerOption(), PHP_EOL)[((int) $result->getAnswer() - 1)];
+            $result = $this->questionResultRepository->findByQuestionAndSurveyResult($question, $this->surveyResult);
 
+            return $this->parseStringToArray($result->getQuestion()->getAnswerOption(), PHP_EOL)[((int) $result->getAnswer() - 1)];
+
+        }
+
+        return null;
+
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getTitleByGroupByQuestionAnswer()
+    {
+        return ($this->getGroupByQuestionAnswer()) ? GeneralUtility::trimExplode('(', $this->getGroupByQuestionAnswer(), true)[0] : 'Ihre Region';
     }
 
     /**
@@ -287,7 +317,7 @@ class Evaluator
 
         $surveyQuestions = $this->surveyResult->getSurvey()->getQuestion();
 
-        $groupByTitle = GeneralUtility::trimExplode('(', $this->getGroupByQuestionAnswer(), true)[0];
+        $groupByTitle = $this->getTitleByGroupByQuestionAnswer();
 
         foreach ($surveyQuestions as $question) {
 
@@ -438,7 +468,7 @@ class Evaluator
                 'data' => array_values($this->getAverageResultByTopics($topics, $scope = 'my_values')),
             ],
             [
-                'name' => GeneralUtility::trimExplode('(', $this->getGroupByQuestionAnswer(), true)[0],
+                'name' => $this->getTitleByGroupByQuestionAnswer(),
                 'data' => array_values($this->getAverageResultByTopics($topics, $scope = 'single_region')),
             ],
             [
@@ -447,9 +477,7 @@ class Evaluator
             ]
         ];
 
-        $bars = $this->buildBar($topicNames, $title, $series, $bars);
-
-        return $bars;
+        return $this->buildBar($topicNames, $title, $series, $bars);
 
     }
 
@@ -483,15 +511,13 @@ class Evaluator
             }
         }
 
-        $chart = [
+        return [
             'labels' => $questionShortNames,
             'values' => [
                 'benchmark'  => $benchmarkValues,
                 'individual' => $individualValues,
             ],
         ];
-
-        return $chart;
     }
 
     /**
@@ -517,9 +543,9 @@ class Evaluator
                     \'' . $this->colors['gem'] . '\',
                 ],
                 yaxis: {
+                    decimalsInFloat: 0,
                     min: 0,
                     max: 10,
-                    decimalsInFloat: 0,
                 },
                 series: [
                     {
@@ -602,6 +628,11 @@ class Evaluator
         return $donuts;
     }
 
+    /**
+     * @param $string
+     * @param $separator
+     * @return string
+     */
     public function slugify($string, $separator = '-')
     {
 
@@ -666,7 +697,7 @@ class Evaluator
      * @param string $data
      * @param string $delimiter
      * @param bool   $checkFloat
-     * @return integer
+     * @return array
      */
     public function parseStringToArray($data, $delimiter = '|', $checkFloat = false)
     {
