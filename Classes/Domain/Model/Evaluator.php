@@ -119,6 +119,7 @@ class Evaluator
 
     /**
      * @return array
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
     public function getSurveyResultUidsGroupedByQuestion(): array
     {
@@ -180,8 +181,9 @@ class Evaluator
      * @param              $topics
      * @param null         $scope
      * @return array
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function getAverageResultByTopics($topics, $scope = null)
+    public function getAverageResultByTopics($topics, $scope = null): array
     {
 
         $averageOnTopic = [];
@@ -309,6 +311,7 @@ class Evaluator
 
     /**
      * @return array
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
     public function prepareDonuts(): array
     {
@@ -445,6 +448,7 @@ class Evaluator
 
     /**
      * @return array
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
     public function prepareBars(): array
     {
@@ -584,7 +588,7 @@ class Evaluator
      * @param string                                             $title
      * @return array                                             $donuts
      */
-    public function collectData(\TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $questionResults, array $donuts, string $slug, string $key = '', string $title): array
+    public function collectData(\TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $questionResults, array $donuts, string $slug, string $key, string $title): array
     {
         //  group the values
         $evaluation = [
@@ -612,7 +616,7 @@ class Evaluator
         }
 
         $donuts[$slug]['data'][$key]['title'] = $title;
-        $donuts[$slug]['data'][$key]['participations'] = (strlen($key) > 0) ? $questionResults->count() : '';
+        $donuts[$slug]['data'][$key]['participations'] = $questionResults->count();
 
         $donuts[$slug]['data'][$key]['evaluation']['series'] = [
             count($evaluation[$key]['low']) ?? 0,
@@ -630,20 +634,15 @@ class Evaluator
 
     /**
      * @param $string
-     * @param $separator
+     * @param string $separator
      * @return string
      */
-    public function slugify($string, $separator = '-')
+    public function slugify($string, string $separator = '-'): string
     {
 
         $slug = strtolower($string);
 
-        $slug = str_replace('ä', 'ae', $slug);
-        $slug = str_replace('ä', 'ae', $slug);
-        $slug = str_replace('ö', 'oe', $slug);
-        $slug = str_replace('ü', 'ue', $slug);
-        $slug = str_replace('ß', 'ss', $slug);
-        $slug = str_replace('/', $separator, $slug);
+        $slug = str_replace(['ä', 'ä', 'ö', 'ü', 'ß', '/'], ['ae', 'ae', 'oe', 'ue', 'ss', $separator], $slug);
 
         // Convert all dashes/underscores into separator
         $flip = $separator === '-' ? '_' : '-';
@@ -699,7 +698,7 @@ class Evaluator
      * @param bool   $checkFloat
      * @return array
      */
-    public function parseStringToArray($data, $delimiter = '|', $checkFloat = false)
+    public function parseStringToArray(string $data, string $delimiter = '|', bool $checkFloat = false): array
     {
 
         $parsedData = [];
