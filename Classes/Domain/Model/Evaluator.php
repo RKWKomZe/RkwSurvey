@@ -187,7 +187,7 @@ class Evaluator
      */
     public function getTitleByGroupByQuestionAnswer()
     {
-        return ($this->getGroupByQuestionAnswer()) ? GeneralUtility::trimExplode('(', $this->getGroupByQuestionAnswer(), true)[0] : 'Ihre Region';
+        return ($this->getGroupByQuestionAnswer()) ? GeneralUtility::trimExplode('(', $this->getGroupByQuestionAnswer(), true)[0] : 'Gründungsökosystem Braunschweig';
     }
 
     /**
@@ -333,8 +333,6 @@ class Evaluator
 
         $surveyQuestions = $this->surveyResult->getSurvey()->getQuestion();
 
-        $groupByTitle = $this->getTitleByGroupByQuestionAnswer();
-
         foreach ($surveyQuestions as $question) {
 
             //  use question only if it is of type scale
@@ -353,7 +351,7 @@ class Evaluator
             //  single_region
             $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
 
-            $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'single_region', $title = $groupByTitle);
+            $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'single_region', $title = $this->getTitleByGroupByQuestionAnswer());
 
 //            //    Ostdeutschland = all regions
 //            $questionResults = $this->questionResultRepository->findByQuestion($question);
