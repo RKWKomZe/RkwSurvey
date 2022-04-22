@@ -120,7 +120,7 @@ class RkwMailService implements \TYPO3\CMS\Core\SingletonInterface
                         'contactForm'  => $contactForm,
                         'backendUser'  => $backendUser,
                     ),
-                    'subject' => \RKW\RkwMailer\Helper\FrontendLocalization::translate(
+                    'subject' => \RKW\RkwMailer\Utility\FrontendLocalizationUtility::translate(
                         'rkwMailService.contactAdmin.subject',
                         'rkw_survey',
                         null,
@@ -134,7 +134,7 @@ class RkwMailService implements \TYPO3\CMS\Core\SingletonInterface
             }
 
             $mailService->getQueueMail()->setSubject(
-                \RKW\RkwMailer\Helper\FrontendLocalization::translate(
+                \RKW\RkwMailer\Utility\FrontendLocalizationUtility::translate(
                     'rkwMailService.contactAdmin.subject',
                     'rkw_survey',
                     null,
