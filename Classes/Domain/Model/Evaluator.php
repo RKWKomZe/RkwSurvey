@@ -73,8 +73,17 @@ class Evaluator
      */
     protected $labels = [];
 
-    public function __construct()
+    /**
+     * @var \RKW\RkwSurvey\Domain\Model\Question|null
+     */
+    protected $groupByQuestion = null;
+
+    /**
+     * @param SurveyResult $surveyResult
+     */
+    public function __construct(SurveyResult $surveyResult)
     {
+        $this->surveyResult = $surveyResult;
 
         $this->colors = [
             'me' => '#d63f11', // $color-primary
@@ -104,26 +113,48 @@ class Evaluator
         if (!$this->questionRepository) {
             $this->questionRepository = $objectManager->get(QuestionRepository::class);
         }
+
+        $this->setGroupedByQuestion();
+
     }
 
     /**
-     * @param SurveyResult $surveyResult
+     * @return void
      */
-    public function setSurveyResult(SurveyResult $surveyResult): void
+    protected function setGroupedByQuestion(): void
     {
-        $this->surveyResult = $surveyResult;
+        $survey = $this->surveyResult->getSurvey();
+
+        $this->groupByQuestion = $this->questionRepository->findOneByGroupedByAndSurvey($survey);
+    }
+
+    /**
+     * @return bool
+     */
+    public function containsGroupedByQuestion(): bool
+    {
+        return (bool)$this->groupByQuestion;
     }
 
     /**
      * @return array
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
     public function getSurveyResultUidsGroupedByQuestion(): array
     {
         $survey = $this->surveyResult->getSurvey();
-        $groupByQuestion = $this->questionRepository->findOneByGroupedByAndSurvey($survey);
-        $myGroupByQuestionResult = $this->questionResultRepository->findByQuestionAndSurveyResult($groupByQuestion, $this->surveyResult);
 
-        $surveyResults = $this->surveyResultRepository->findBySurveyAndQuestionAndAnswerAndFinished($survey, $groupByQuestion, $myGroupByQuestionResult->getAnswer(), $finished = 1);
+        if ($this->groupByQuestion) {
+
+            $myGroupByQuestionResult = $this->questionResultRepository->findByQuestionAndSurveyResult($this->groupByQuestion, $this->surveyResult);
+
+            $surveyResults = $this->surveyResultRepository->findBySurveyAndQuestionAndAnswerAndFinished($survey, $this->groupByQuestion, $myGroupByQuestionResult->getAnswer(), $finished = 1);
+
+        } else {
+
+            $surveyResults = $this->surveyResultRepository->findBySurveyAndFinished($survey);
+
+        }
 
         $surveyResultUids = [];
         foreach ($surveyResults as $surveyResult) {
@@ -133,25 +164,39 @@ class Evaluator
         return $surveyResultUids;
     }
 
+    /**
+     * @return mixed|null
+     */
     public function getGroupByQuestionAnswer()
     {
 
-        $survey = $this->surveyResult->getSurvey();
+        if ($this->groupByQuestion) {
 
-        $question = $this->questionRepository->findOneByGroupedByAndSurvey($survey);
+            $result = $this->questionResultRepository->findByQuestionAndSurveyResult($this->groupByQuestion, $this->surveyResult);
 
-        $result = $this->questionResultRepository->findByQuestionAndSurveyResult($question, $this->surveyResult);
+            return $this->parseStringToArray($result->getQuestion()->getAnswerOption(), PHP_EOL)[((int) $result->getAnswer() - 1)];
 
-        return $this->parseStringToArray($result->getQuestion()->getAnswerOption(), PHP_EOL)[((int) $result->getAnswer() - 1)];
+        }
 
+        return null;
+
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getTitleByGroupByQuestionAnswer()
+    {
+        return ($this->getGroupByQuestionAnswer()) ? GeneralUtility::trimExplode('(', $this->getGroupByQuestionAnswer(), true)[0] : 'Gründungsökosystem Braunschweig';
     }
 
     /**
      * @param              $topics
      * @param null         $scope
      * @return array
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function getAverageResultByTopics($topics, $scope = null)
+    public function getAverageResultByTopics($topics, $scope = null): array
     {
 
         $averageOnTopic = [];
@@ -190,7 +235,7 @@ class Evaluator
                     }
 
                     //  Was ist der Wert von "weiß ich nicht"? -> skipped = null
-                    $answers = array_filter($answers, function ($x) {
+                    $answers = array_filter($answers, static function ($x) {
                         return $x !== '';
                     });
 
@@ -279,6 +324,7 @@ class Evaluator
 
     /**
      * @return array
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
     public function prepareDonuts(): array
     {
@@ -286,8 +332,6 @@ class Evaluator
         $donuts = [];
 
         $surveyQuestions = $this->surveyResult->getSurvey()->getQuestion();
-
-        $groupByTitle = GeneralUtility::trimExplode('(', $this->getGroupByQuestionAnswer(), true)[0];
 
         foreach ($surveyQuestions as $question) {
 
@@ -307,7 +351,7 @@ class Evaluator
             //  single_region
             $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
 
-            $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'single_region', $title = $groupByTitle);
+            $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'single_region', $title = $this->getTitleByGroupByQuestionAnswer());
 
 //            //    Ostdeutschland = all regions
 //            $questionResults = $this->questionResultRepository->findByQuestion($question);
@@ -415,6 +459,7 @@ class Evaluator
 
     /**
      * @return array
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
     public function prepareBars(): array
     {
@@ -438,7 +483,7 @@ class Evaluator
                 'data' => array_values($this->getAverageResultByTopics($topics, $scope = 'my_values')),
             ],
             [
-                'name' => GeneralUtility::trimExplode('(', $this->getGroupByQuestionAnswer(), true)[0],
+                'name' => $this->getTitleByGroupByQuestionAnswer(),
                 'data' => array_values($this->getAverageResultByTopics($topics, $scope = 'single_region')),
             ],
             [
@@ -447,9 +492,7 @@ class Evaluator
             ]
         ];
 
-        $bars = $this->buildBar($topicNames, $title, $series, $bars);
-
-        return $bars;
+        return $this->buildBar($topicNames, $title, $series, $bars);
 
     }
 
@@ -483,15 +526,13 @@ class Evaluator
             }
         }
 
-        $chart = [
+        return [
             'labels' => $questionShortNames,
             'values' => [
                 'benchmark'  => $benchmarkValues,
                 'individual' => $individualValues,
             ],
         ];
-
-        return $chart;
     }
 
     /**
@@ -517,9 +558,9 @@ class Evaluator
                     \'' . $this->colors['gem'] . '\',
                 ],
                 yaxis: {
+                    decimalsInFloat: 0,
                     min: 0,
                     max: 10,
-                    decimalsInFloat: 0,
                 },
                 series: [
                     {
@@ -558,7 +599,7 @@ class Evaluator
      * @param string                                             $title
      * @return array                                             $donuts
      */
-    public function collectData(\TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $questionResults, array $donuts, string $slug, string $key = '', string $title): array
+    public function collectData(\TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $questionResults, array $donuts, string $slug, string $key, string $title): array
     {
         //  group the values
         $evaluation = [
@@ -571,22 +612,24 @@ class Evaluator
 
         foreach ($questionResults as $result) {
 
-            if ((int)$result->getAnswer() < 5) {
+            $answer = (int)$result->getAnswer();
+
+            if ($answer < 5) {
                 $evaluation[$key]['low'][] = $result;
             }
 
-            if ((int)$result->getAnswer() === 5) {
+            if ($answer === 5) {
                 $evaluation[$key]['neutral'][] = $result;
             }
 
-            if ((int)$result->getAnswer() > 5) {
+            if ($answer > 5) {
                 $evaluation[$key]['high'][] = $result;
             }
 
         }
 
         $donuts[$slug]['data'][$key]['title'] = $title;
-        $donuts[$slug]['data'][$key]['participations'] = (strlen($key) > 0) ? $questionResults->count() : '';
+        $donuts[$slug]['data'][$key]['participations'] = $questionResults->count();
 
         $donuts[$slug]['data'][$key]['evaluation']['series'] = [
             count($evaluation[$key]['low']) ?? 0,
@@ -602,17 +645,17 @@ class Evaluator
         return $donuts;
     }
 
-    public function slugify($string, $separator = '-')
+    /**
+     * @param $string
+     * @param string $separator
+     * @return string
+     */
+    public function slugify($string, string $separator = '-'): string
     {
 
         $slug = strtolower($string);
 
-        $slug = str_replace('ä', 'ae', $slug);
-        $slug = str_replace('ä', 'ae', $slug);
-        $slug = str_replace('ö', 'oe', $slug);
-        $slug = str_replace('ü', 'ue', $slug);
-        $slug = str_replace('ß', 'ss', $slug);
-        $slug = str_replace('/', $separator, $slug);
+        $slug = str_replace(['ä', 'ä', 'ö', 'ü', 'ß', '/'], ['ae', 'ae', 'oe', 'ue', 'ss', $separator], $slug);
 
         // Convert all dashes/underscores into separator
         $flip = $separator === '-' ? '_' : '-';
@@ -666,9 +709,9 @@ class Evaluator
      * @param string $data
      * @param string $delimiter
      * @param bool   $checkFloat
-     * @return integer
+     * @return array
      */
-    public function parseStringToArray($data, $delimiter = '|', $checkFloat = false)
+    public function parseStringToArray(string $data, string $delimiter = '|', bool $checkFloat = false): array
     {
 
         $parsedData = [];

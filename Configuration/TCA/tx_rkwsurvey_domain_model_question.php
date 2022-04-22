@@ -128,7 +128,8 @@ return [
                 'type' => 'check',
                 'default' => 0,
             ],
-            'displayCond' => 'FIELD:benchmark:=:1',
+//            'displayCond' => 'FIELD:benchmark:=:1',
+            'displayCond' => 'USER:RKW\\RkwSurvey\\DisplayCond\\Question->isGroupable',
         ],
 		'question' => [
 			'exclude' => false,
