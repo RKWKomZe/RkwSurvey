@@ -64,4 +64,26 @@ class Question
 
     }
 
+    /**
+     * @param array $array
+     * @return bool
+     */
+    public function isGroupable(array $array): bool
+    {
+
+        /** @var \RKW\RkwSurvey\Domain\Model\Survey $survey */
+        $survey = $this->surveyRepository->findByIdentifier($array['record']['survey']);
+
+        if (
+            ($survey)
+            && ($survey->getType() == 1)
+            && ($array['record']['type'][0] == 2)
+        ){
+            return true;
+        }
+
+        return false;
+
+    }
+
 }
