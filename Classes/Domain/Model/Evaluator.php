@@ -2,7 +2,7 @@
 
 namespace RKW\RkwSurvey\Domain\Model;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use RKW\RkwBasics\Utility\GeneralUtility;
 use RKW\RkwSurvey\Domain\Repository\QuestionRepository;
 use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
 use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
@@ -97,7 +97,7 @@ class Evaluator
                 'low' => \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.low', 'RkwSurvey'),
                 'neutral' => \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.neutral', 'RkwSurvey'),
                 'high' => \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.high', 'RkwSurvey'),
-            ]
+            ],
         ];
 
         $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
@@ -264,7 +264,7 @@ class Evaluator
         foreach ($charts as $identifier => $comparison) {
 
             $script .= '
-                
+
                 var options_' . $identifier . ' = {
                     chart: {
                         type: \'bar\'
@@ -294,7 +294,7 @@ class Evaluator
                         min: 0,
                         max: 10,
                         labels: {
-                            formatter: (value) => { 
+                            formatter: (value) => {
                                 if (value === 0) {
                                     return \'0 = schwach\'
                                 }
@@ -309,11 +309,11 @@ class Evaluator
                         categories: ' . json_encode($comparison['topics']) . ',
                     }
                 }
-                
+
                 var chart_' . $identifier . ' = new ApexCharts(document.querySelector(\'#' . $identifier . '\'), options_' . $identifier . ');
 
-                chart_' . $identifier . '.render(); 
-                
+                chart_' . $identifier . '.render();
+
             ';
 
         }
@@ -328,11 +328,11 @@ class Evaluator
      */
     public function prepareDonuts(): array
     {
-
         $donuts = [];
 
         $surveyQuestions = $this->surveyResult->getSurvey()->getQuestion();
 
+        /** @var Question $question */
         foreach ($surveyQuestions as $question) {
 
             //  use question only if it is of type scale
@@ -340,7 +340,7 @@ class Evaluator
                 continue;
             }
 
-            $slug = $this->slugify('donuts-' . $question->getQuestion(), '_');
+            $slug = GeneralUtility::slugify('donuts-' . $question->getQuestion(), '_');
 
             $donuts[$slug] = [
                 'question' => $question->getQuestion(),
@@ -440,11 +440,11 @@ class Evaluator
                                 enabled: false,
                             }
                         }
-                        
+
                         var chart_' . $identifier . ' = new ApexCharts(document.querySelector(\'#' . $identifier . '\'), options_' . $identifier . ');
-    
-                        chart_' . $identifier . '.render(); 
-                        
+
+                        chart_' . $identifier . '.render();
+
                     ';
 
                 }
@@ -489,7 +489,7 @@ class Evaluator
             [
                 'name' => 'Alle 12 Regionen',
                 'data' => array_values($this->getAverageResultByTopics($topics, $scope = null)),
-            ]
+            ],
         ];
 
         return $this->buildBar($topicNames, $title, $series, $bars);
@@ -548,7 +548,7 @@ class Evaluator
         }
 
         return '
-            
+
             var options = {
                 chart: {
                     type: \'radar\'
@@ -582,11 +582,11 @@ class Evaluator
                     }
                 }
             }
-            
+
             var chart = new ApexCharts(document.querySelector(\'#chart_' . $this->surveyResult->getUid() . '\'), options);
 
-            chart.render(); 
-                
+            chart.render();
+
         ';
 
     }
@@ -646,35 +646,6 @@ class Evaluator
     }
 
     /**
-     * @param $string
-     * @param string $separator
-     * @return string
-     */
-    public function slugify($string, string $separator = '-'): string
-    {
-
-        $slug = strtolower($string);
-
-        $slug = str_replace(['ä', 'ä', 'ö', 'ü', 'ß', '/'], ['ae', 'ae', 'oe', 'ue', 'ss', $separator], $slug);
-
-        // Convert all dashes/underscores into separator
-        $flip = $separator === '-' ? '_' : '-';
-
-        $slug = preg_replace('![' . preg_quote($flip) . ']+!u', $separator, $slug);
-
-        // Replace @ with the word 'at'
-        $slug = str_replace('@', $separator . 'at' . $separator, $slug);
-
-        // Remove all characters that are not the separator, letters, numbers, or whitespace.
-        $slug = preg_replace('![^' . preg_quote($separator) . '\pL\pN\s]+!u', '', strtolower($slug));
-
-        // Replace all separator characters and whitespace by a single separator
-        $slug = preg_replace('![' . preg_quote($separator) . '\s]+!u', $separator, $slug);
-
-        return trim($slug, $separator);
-    }
-
-    /**
      * @param array $data
      * @return float
      */
@@ -692,12 +663,12 @@ class Evaluator
      */
     protected function buildBar(array $topicNames, string $title, array $series, array $bars): array
     {
-        $slug = $this->slugify('bar-' . $title, '_');
+        $slug = GeneralUtility::slugify('bar-' . $title, '_');
 
         $bars[$slug] = [
             'topics' => $topicNames,
             'title'  => $title,
-            'series' => $series
+            'series' => $series,
         ];
 
         return $bars;
