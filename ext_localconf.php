@@ -36,8 +36,6 @@ call_user_func(
 			),
 		);
 
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/install']['update']['PagesFields']
-            = \RKW\RkwSurvey\Updates\ScaleFieldsUpdater::class;
 	},
 	$_EXTKEY
 );

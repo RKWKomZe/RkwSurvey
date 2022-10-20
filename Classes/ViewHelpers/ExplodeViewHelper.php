@@ -26,15 +26,32 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class ExplodeViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class ExplodeViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
 {
+
     /**
-     * @param string $string
-     * @param string $delimiter
+     * Initialize arguments.
+     *
+     * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
+     */
+    public function initializeArguments()
+    {
+        parent::initializeArguments();
+        $this->registerArgument('string', 'string', 'The string to explode', true);
+        $this->registerArgument('delimiter', 'string', 'The delimiter', false, '|');
+    }
+
+
+    /**
      * @return array
      */
-    public function render($string, $delimiter = '|')
+    public function render($string, $delimiter = '|'): array
     {
+        /** @var string $string */
+        $string = $this->arguments['string'];
+
+        /** @var string $delimiter */
+        $delimiter = $this->arguments['delimiter'];
 
         $items = GeneralUtility::trimExplode(PHP_EOL, $string, true);
 
@@ -43,6 +60,5 @@ class ExplodeViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHel
         }
 
         return array_filter($items);
-        //===
     }
 }

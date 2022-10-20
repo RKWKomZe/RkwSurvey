@@ -15,6 +15,8 @@ namespace RKW\RkwSurvey\ViewHelpers;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
+
 /**
  * Class FetchYearListViewHelper
  *
@@ -24,16 +26,32 @@ namespace RKW\RkwSurvey\ViewHelpers;
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class FetchYearListViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class FetchYearListViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
 {
+
+
+    /**
+     * Initialize arguments.
+     *
+     * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
+     */
+    public function initializeArguments()
+    {
+        parent::initializeArguments();
+        $this->registerArgument('surveyList', QueryResult::class, 'The list of surveys', true);
+    }
+
+
     /**
      * returns a associated array with "year => year"
      *
-     * @param \TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $surveyList
      * @return array
      */
-    public function render(\TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $surveyList)
+    public function render(): array
     {
+        /** @var \TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $surveyList */
+        $surveyList = $this->arguments['surveyList'];
+
         $yearList = array();
         /** @var \RKW\RkwSurvey\Domain\Model\Survey $survey */
         foreach ($surveyList as $survey) {

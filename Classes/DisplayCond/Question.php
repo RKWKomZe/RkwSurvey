@@ -22,7 +22,7 @@ class Question
      * surveyRepository
      *
      * @var \RKW\RkwSurvey\Domain\Repository\SurveyRepository
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected $surveyRepository;
 

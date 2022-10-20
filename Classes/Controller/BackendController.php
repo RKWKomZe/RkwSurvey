@@ -35,7 +35,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * surveyRepository
      *
      * @var \RKW\RkwSurvey\Domain\Repository\SurveyRepository
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected $surveyRepository;
 
@@ -43,7 +43,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * surveyResultRepository
      *
      * @var \RKW\RkwSurvey\Domain\Repository\SurveyResultRepository
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected $surveyResultRepository;
 
@@ -51,7 +51,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * questionResultRepository
      *
      * @var \RKW\RkwSurvey\Domain\Repository\QuestionResultRepository
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected $questionResultRepository;
 
@@ -59,7 +59,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * tokenRepository
      *
      * @var \RKW\RkwSurvey\Domain\Repository\TokenRepository
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected $tokenRepository;
 

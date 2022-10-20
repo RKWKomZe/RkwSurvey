@@ -45,7 +45,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * surveyRepository
      *
      * @var \RKW\RkwSurvey\Domain\Repository\SurveyRepository
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected $surveyRepository;
 
@@ -53,7 +53,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * surveyResultRepository
      *
      * @var \RKW\RkwSurvey\Domain\Repository\SurveyResultRepository
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected $surveyResultRepository;
 
@@ -61,7 +61,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * questionResultRepository
      *
      * @var \RKW\RkwSurvey\Domain\Repository\QuestionResultRepository
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected $questionResultRepository;
 
@@ -69,7 +69,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * tokenRepository
      *
      * @var \RKW\RkwSurvey\Domain\Repository\TokenRepository
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected $tokenRepository;
 
@@ -77,7 +77,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * questionResultValidator
      *
      * @var \RKW\RkwSurvey\Validation\QuestionResultValidator
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected $questionResultValidator;
 
@@ -85,7 +85,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * contactFormValidator
      *
      * @var \RKW\RkwSurvey\Validation\ContactFormValidator
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected $contactFormValidator;
 
@@ -93,7 +93,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * rkwMailService
      *
      * @var \RKW\RkwSurvey\Service\RkwMailService
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected $rkwMailService;
 
@@ -101,7 +101,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * persistenceManager
      *
      * @var \TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected $persistenceManager;
 
@@ -214,7 +214,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         // check access restriction
         $this->checkAccessRestriction($surveyResult, $tokenInput);
 
-        // Workaround: We have several problems if we're using @validate via PhpDocs.
+        // Workaround: We have several problems if we're using @TYPO3\CMS\Extbase\Annotation\Validatevia PhpDocs.
         $validatorRequest = false;
         if ($newQuestionResult) {
             $validatorRequest = $this->questionResultValidator->isValid($newQuestionResult);
@@ -232,7 +232,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                 /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $oldQuestionResult */
                 if ($oldQuestionResult = $this->questionResultRepository->findByQuestionAndSurveyResult($newQuestionResult->getQuestion(), $surveyResult)) {
 
-                    //@toDo: Why not remove the old one instead of returning an error
+                    //@todo Why not remove the old one instead of returning an error
                     $surveyResult->removeQuestionResult($oldQuestionResult);
                     $this->questionResultRepository->remove($oldQuestionResult);
 
@@ -290,8 +290,8 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @param \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult
      * @param array $contactForm
      * @param string $tokenInput
-     * @validate $contactForm \RKW\RkwSurvey\Validation\ContactFormValidator
      * @return void
+     * @TYPO3\CMS\Extbase\Annotation\Validate("RKW\RkwSurvey\Validation\ContactFormValidator", param="contactForm")
      * @throws \Exception
      * @throws \RKW\RkwMailer\Service\MailException
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
@@ -305,8 +305,8 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         // check access restriction
         $this->checkAccessRestriction($surveyResult, $tokenInput);
 
-        // @toDo: Actually we have no frontendUser for creating a useful privacy-entry
-        // \RKW\RkwRegistration\Tools\Privacy::addPrivacyData($this->request, $this->getFrontendUser(), $surveyResult, 'new survey contactForm');
+        // @todo Actually we have no frontendUser for creating a useful privacy-entry
+        // \RKW\RkwRegistration\DataProtection\PrivacyHandler::addPrivacyData($this->request, $this->getFrontendUser(), $surveyResult, 'new survey contactForm');
 
         // send contactForm data to flexForm user
         $this->rkwMailService->sendContactForm($surveyResult->getSurvey()->getAdmin(), $surveyResult, $contactForm);
@@ -379,7 +379,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
 
         if ($surveyResult->getSurvey()->getType() === 1) {
 
-            //  @todo: Das muss ausgelagert werden in die RkwGraphs! Allerdings muss auch ein Identifier übergeben werden, anhand dessen die RkwGraphs das Ergebnis render kann!
+            //  @todo Das muss ausgelagert werden in die RkwGraphs! Allerdings muss auch ein Identifier übergeben werden, anhand dessen die RkwGraphs das Ergebnis render kann!
             //  instantiate with object manager -> see feecalculator
             $evaluator = GeneralUtility::makeInstance(Evaluator::class, $surveyResult);
 

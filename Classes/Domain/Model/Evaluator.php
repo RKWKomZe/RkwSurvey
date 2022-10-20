@@ -43,7 +43,7 @@ class Evaluator
      * surveyResultRepository
      *
      * @var \RKW\RkwSurvey\Domain\Repository\SurveyResultRepository
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected $surveyResultRepository;
 
@@ -51,7 +51,7 @@ class Evaluator
      * questionResultRepository
      *
      * @var \RKW\RkwSurvey\Domain\Repository\QuestionResultRepository
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected $questionResultRepository;
 
@@ -59,7 +59,7 @@ class Evaluator
      * questionRepository
      *
      * @var \RKW\RkwSurvey\Domain\Repository\QuestionRepository
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected $questionRepository;
 
@@ -264,7 +264,7 @@ class Evaluator
         foreach ($charts as $identifier => $comparison) {
 
             $script .= '
-                
+
                 var options_' . $identifier . ' = {
                     chart: {
                         type: \'bar\'
@@ -294,7 +294,7 @@ class Evaluator
                         min: 0,
                         max: 10,
                         labels: {
-                            formatter: (value) => { 
+                            formatter: (value) => {
                                 if (value === 0) {
                                     return \'0 = schwach\'
                                 }
@@ -309,11 +309,11 @@ class Evaluator
                         categories: ' . json_encode($comparison['topics']) . ',
                     }
                 }
-                
+
                 var chart_' . $identifier . ' = new ApexCharts(document.querySelector(\'#' . $identifier . '\'), options_' . $identifier . ');
 
-                chart_' . $identifier . '.render(); 
-                
+                chart_' . $identifier . '.render();
+
             ';
 
         }
@@ -440,11 +440,11 @@ class Evaluator
                                 enabled: false,
                             }
                         }
-                        
+
                         var chart_' . $identifier . ' = new ApexCharts(document.querySelector(\'#' . $identifier . '\'), options_' . $identifier . ');
-    
-                        chart_' . $identifier . '.render(); 
-                        
+
+                        chart_' . $identifier . '.render();
+
                     ';
 
                 }
@@ -548,7 +548,7 @@ class Evaluator
         }
 
         return '
-            
+
             var options = {
                 chart: {
                     type: \'radar\'
@@ -582,11 +582,11 @@ class Evaluator
                     }
                 }
             }
-            
+
             var chart = new ApexCharts(document.querySelector(\'#chart_' . $this->surveyResult->getUid() . '\'), options);
 
-            chart.render(); 
-                
+            chart.render();
+
         ';
 
     }

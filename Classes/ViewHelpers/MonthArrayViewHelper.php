@@ -24,16 +24,15 @@ namespace RKW\RkwSurvey\ViewHelpers;
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class MonthArrayViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class MonthArrayViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
 {
     /**
      * returns a associated array with "1-12 => month"
      *
      * @return array
      */
-    public function render()
+    public function render(): array
     {
-
         $monthList = array();
         /** @var \RKW\RkwSurvey\Domain\Model\Survey $survey */
         for ($i = 1; $i <= 12; $i++) {
@@ -41,6 +40,5 @@ class MonthArrayViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractView
         }
 
         return $monthList;
-        //===
     }
 }

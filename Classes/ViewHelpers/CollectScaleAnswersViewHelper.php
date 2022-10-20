@@ -24,15 +24,32 @@ namespace RKW\RkwSurvey\ViewHelpers;
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class CollectScaleAnswersViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class CollectScaleAnswersViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
 {
+
     /**
-     * @param \RKW\RkwSurvey\Domain\Model\Question $question
-     * @param array $questionResultList
+     * Initialize arguments.
+     *
+     * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
+     */
+    public function initializeArguments()
+    {
+        parent::initializeArguments();
+        $this->registerArgument('question', Question::class, 'The question which answers should be searched for scaled answers', true);
+        $this->registerArgument('questionResultList', 'array', 'Array with given answers for questions', true);
+    }
+
+    /**
      * @return array
      */
-    public function render(\RKW\RkwSurvey\Domain\Model\Question $question, $questionResultList)
+    public function render(): array
     {
+        /** @var RKW\RkwSurvey\Domain\Model\Survey $question */
+        $question = $this->arguments['question'];
+
+        /** @var array $questionResultList */
+        $questionResultList = $this->arguments['questionResultList'];
+
         $collectedAnswers = array();
 
         // prefill key (they're maybe not selected)

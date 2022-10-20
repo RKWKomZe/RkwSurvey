@@ -34,6 +34,6 @@ class SurveyProgress extends \RKW\RkwSurvey\Utility\SurveyProgressUtility implem
      */
     public function __construct()
     {
-        \TYPO3\CMS\Core\Utility\GeneralUtility::deprecationLog(__CLASS__ . ' is deprecated and will be removed soon. Please use RKW\RkwSurvey\Utility\SurveyProgressUtility instead.');
+        trigger_error(__CLASS__ . ' is deprecated and will be removed soon. Please use RKW\RkwSurvey\Utility\SurveyProgressUtility instead.', E_USER_DEPRECATED);
     }
 }

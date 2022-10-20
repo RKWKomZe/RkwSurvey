@@ -26,19 +26,35 @@ use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class PassArrayToJSViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class PassArrayToJSViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
 {
+
+    /**
+     * Initialize arguments.
+     *
+     * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
+     */
+    public function initializeArguments()
+    {
+        parent::initializeArguments();
+        $this->registerArgument('data', 'array', 'Array with data', false, []);
+    }
+
     /**
      * pass data to js
      *
-     * @param array $data
-     * @return array
+     * @return string
      */
-    public function render($data = [])
+    public function render(): string
     {
-        return json_encode($data);
-//        return json_encode($data, JSON_UNESCAPED_UNICODE);
-        //===
+        /** @var array $data */
+        $data = $this->arguments['data'];
+
+        if ($result = json_encode($data)) {
+            return $result;
+        }
+
+        return '[]';
     }
 
 }
