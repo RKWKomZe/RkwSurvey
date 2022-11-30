@@ -24,7 +24,7 @@ use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
  * Evaluator
  *
  * @author Christian Dilger <c.dilger@addorange.de>
- * @copyright Rkw Kompetenzzentrum
+ * @copyright RKW Kompetenzzentrum
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */

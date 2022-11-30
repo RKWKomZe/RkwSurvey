@@ -28,7 +28,7 @@ use RKW\RkwSurvey\Utility\SurveyProgressUtility;
  *
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
- * @copyright Rkw Kompetenzzentrum
+ * @copyright RKW Kompetenzzentrum
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
@@ -306,7 +306,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         $this->checkAccessRestriction($surveyResult, $tokenInput);
 
         // @todo Actually we have no frontendUser for creating a useful privacy-entry
-        // \RKW\RkwRegistration\DataProtection\PrivacyHandler::addPrivacyData($this->request, $this->getFrontendUser(), $surveyResult, 'new survey contactForm');
+        // \RKW\RkwRegistration\DataProtection\ConsentHandler::add($this->request, $this->getFrontendUser(), $surveyResult, 'new survey contactForm');
 
         // send contactForm data to flexForm user
         $this->rkwMailService->sendContactForm($surveyResult->getSurvey()->getAdmin(), $surveyResult, $contactForm);
@@ -558,7 +558,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
 
         if (!$this->signalSlotDispatcher) {
             $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
-            $this->signalSlotDispatcher = $objectManager->get('TYPO3\\CMS\\Extbase\\SignalSlot\\Dispatcher');
+            $this->signalSlotDispatcher = $objectManager->get(TYPO3\CMS\Extbase\SignalSlot\Dispatcher::class);
         }
 
         return $this->signalSlotDispatcher;
