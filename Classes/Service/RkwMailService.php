@@ -2,7 +2,7 @@
 
 namespace RKW\RkwSurvey\Service;
 
-use RKW\RkwBasics\Utility\GeneralUtility as Common;
+use Madj2k\CoreExtended\Utility\GeneralUtility as Common;
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 use \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use \TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -160,7 +160,7 @@ class RkwMailService implements \TYPO3\CMS\Core\SingletonInterface
     protected function getSettings($which = ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS)
     {
 
-        return Common::getTyposcriptConfiguration('Rkwsurvey', $which);
+        return Common::getTypoScriptConfiguration('Rkwsurvey', $which);
         //===
     }
 }

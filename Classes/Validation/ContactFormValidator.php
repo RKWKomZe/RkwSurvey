@@ -2,7 +2,7 @@
 
 namespace RKW\RkwSurvey\Validation;
 
-use RKW\RkwBasics\Utility\GeneralUtility as Common;
+use Madj2k\CoreExtended\Utility\GeneralUtility as Common;
 use \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
@@ -109,7 +109,7 @@ class ContactFormValidator extends \TYPO3\CMS\Extbase\Validation\Validator\Abstr
     protected function getSettings($which = ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS)
     {
 
-        return Common::getTyposcriptConfiguration('Rkwsurvey', $which);
+        return Common::getTypoScriptConfiguration('Rkwsurvey', $which);
         //===
     }
 }
