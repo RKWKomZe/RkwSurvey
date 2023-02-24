@@ -1,10 +1,5 @@
 <?php
-
 namespace RKW\RkwSurvey\Validation;
-
-use \RKW\RkwBasics\Helper\Common;
-use \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -19,12 +14,15 @@ use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Madj2k\CoreExtended\Utility\GeneralUtility;
+use \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+
 /**
  * Class ContactFormValidator
  *
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
- * @copyright Rkw Kompetenzzentrum
+ * @copyright RKW Kompetenzzentrum
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
@@ -35,10 +33,10 @@ class ContactFormValidator extends \TYPO3\CMS\Extbase\Validation\Validator\Abstr
      * Is called directly in controller and not via PhpDocs. So it's looks not like always
      *
      * @var array $contactForm
-     * @return boolean|string
+     * @return bool
      * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
      */
-    public function isValid($contactForm)
+    public function isValid($contactForm): bool
     {
         $isValid = true;
         $settings = $this->getSettings();
@@ -95,7 +93,6 @@ class ContactFormValidator extends \TYPO3\CMS\Extbase\Validation\Validator\Abstr
         }
 
         return $isValid;
-        //===
     }
 
 
@@ -106,11 +103,9 @@ class ContactFormValidator extends \TYPO3\CMS\Extbase\Validation\Validator\Abstr
      * @return array
      * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
      */
-    protected function getSettings($which = ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS)
+    protected function getSettings(string $which = ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS): array
     {
-
-        return Common::getTyposcriptConfiguration('Rkwsurvey', $which);
-        //===
+        return GeneralUtility::getTypoScriptConfiguration('Rkwsurvey', $which);
     }
 }
 

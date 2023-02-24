@@ -163,8 +163,8 @@
                 <target>Upps! Während der Ausführung ist mit dem übergebenen Umfragecode wohl etwas schief gelaufen. Bitte wenden Sie sich an unseren Support.</target>
             </trans-unit>
             <trans-unit id="tx_rkwsurvey_controller_survey.contactSuccessful">
-                <source>Wohoo! Your request has been successfully sent. We will contact you shortly.</source>
-                <target>Wohoo! Ihre Anfrage wurde erfolgreich versendet. Wir melden uns in Kürze bei Ihnen.</target>
+                <source>Woohoo! Your request has been successfully sent. We will contact you shortly.</source>
+                <target>Woohoo! Ihre Anfrage wurde erfolgreich versendet. Wir melden uns in Kürze bei Ihnen.</target>
             </trans-unit>
 
 

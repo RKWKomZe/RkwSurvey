@@ -1,5 +1,4 @@
 <?php
-
 namespace RKW\RkwSurvey\Domain\Model;
 
 /*
@@ -15,6 +14,8 @@ namespace RKW\RkwSurvey\Domain\Model;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+
 /**
  * Class Topic
  *
@@ -27,69 +28,23 @@ namespace RKW\RkwSurvey\Domain\Model;
 class Topic extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 {
     /**
-     * name
-     *
-     * @var string
-     * @validate NotEmpty
-     */
-    protected $name;
-
-    /**
-     * shortName
-     *
      * @var string
      */
-    protected $shortName;
+    protected string $name = '';
+
 
     /**
-     * questions
-     *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\RKW\RkwSurvey\Domain\Model\Question>
-     * @cascade remove
+     * @var string
      */
-    protected $questions;
+    protected string $shortName = '';
+
 
     /**
-     * Returns the name
-     *
-     * @return string $name
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\RKW\RkwSurvey\Domain\Model\Question>|null
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Cascade("remove")
      */
-    public function getName()
-    {
-        return $this->name;
-    }
+    protected ?ObjectStorage $questions = null;
 
-    /**
-     * Sets the name
-     *
-     * @param string $name
-     * @return void
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * Returns the shortName
-     *
-     * @return string $shortName
-     */
-    public function getShortName()
-    {
-        return $this->shortName;
-    }
-
-    /**
-     * Sets the shortName
-     *
-     * @param string $shortName
-     * @return void
-     */
-    public function setShortName($shortName)
-    {
-        $this->shortName = $shortName;
-    }
 
     /**
      * __construct
@@ -99,6 +54,7 @@ class Topic extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         //Do not remove the next line: It would break the functionality
         $this->initStorageObjects();
     }
+
 
     /**
      * Initializes all ObjectStorage properties
@@ -113,13 +69,60 @@ class Topic extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         $this->questions = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
     }
 
+
+    /**
+     * Returns the name
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+
+    /**
+     * Sets the name
+     *
+     * @param string $name
+     * @return void
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+
+    /**
+     * Returns the shortName
+     *
+     * @return string
+     */
+    public function getShortName(): string
+    {
+        return $this->shortName;
+    }
+
+
+    /**
+     * Sets the shortName
+     *
+     * @param string $shortName
+     * @return void
+     */
+    public function setShortName(string $shortName): void
+    {
+        $this->shortName = $shortName;
+    }
+
+
     /**
      * Adds a Question
      *
      * @param \RKW\RkwSurvey\Domain\Model\Question $question
      * @return void
      */
-    public function addQuestion(\RKW\RkwSurvey\Domain\Model\Question $question)
+    public function addQuestion(Question $question): void
     {
         $this->questions->attach($question);
     }
@@ -130,20 +133,22 @@ class Topic extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param \RKW\RkwSurvey\Domain\Model\Question $questionToRemove The Question to be removed
      * @return void
      */
-    public function removeQuestion(\RKW\RkwSurvey\Domain\Model\Question $questionToRemove)
+    public function removeQuestion(Question $questionToRemove): void
     {
         $this->questions->detach($questionToRemove);
     }
 
+
     /**
      * Returns the questions
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\RKW\RkwSurvey\Domain\Model\Question> $questions
+     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\RKW\RkwSurvey\Domain\Model\Question>
      */
-    public function getQuestions()
+    public function getQuestions(): ObjectStorage
     {
         return $this->questions;
     }
+
 
     /**
      * Sets the questions
@@ -151,7 +156,7 @@ class Topic extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\RKW\RkwSurvey\Domain\Model\Question> $questions
      * @return void
      */
-    public function setQuestions($questions)
+    public function setQuestions(ObjectStorage $questions): void
     {
         $this->questions = $questions;
     }

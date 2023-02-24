@@ -1,5 +1,4 @@
 <?php
-
 namespace RKW\RkwSurvey\ViewHelpers;
 
 /*
@@ -15,30 +14,45 @@ namespace RKW\RkwSurvey\ViewHelpers;
  * The TYPO3 project - inspiring people to share!
  */
 
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
-
 /**
  * PassArrayToJSViewHelper
  *
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
- * @copyright Rkw Kompetenzzentrum
+ * @copyright RKW Kompetenzzentrum
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class PassArrayToJSViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class PassArrayToJSViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
 {
+
     /**
-     * pass data to js
+     * Initialize arguments.
      *
-     * @param array $data
-     * @return array
+     * @return void
+     * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
      */
-    public function render($data = [])
+    public function initializeArguments(): void
     {
-        return json_encode($data);
-//        return json_encode($data, JSON_UNESCAPED_UNICODE);
-        //===
+        parent::initializeArguments();
+        $this->registerArgument('data', 'array', 'Array with data', false, []);
+    }
+
+    /**
+     * Pass data to js
+     *
+     * @return string
+     */
+    public function render(): string
+    {
+        /** @var array $data */
+        $data = $this->arguments['data'];
+
+        if ($result = json_encode($data)) {
+            return $result;
+        }
+
+        return '[]';
     }
 
 }

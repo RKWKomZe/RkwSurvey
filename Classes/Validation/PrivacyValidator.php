@@ -1,8 +1,5 @@
 <?php
-
 namespace RKW\RkwSurvey\Validation;
-
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -22,7 +19,7 @@ use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
  *
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
- * @copyright Rkw Kompetenzzentrum
+ * @copyright RKW Kompetenzzentrum
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
@@ -33,9 +30,9 @@ class PrivacyValidator extends \TYPO3\CMS\Extbase\Validation\Validator\AbstractV
      * Is called directly in controller and not via PhpDocs. So it's looks not like always
      *
      * @var integer $privacy
-     * @return boolean|string
+     * @return boolean
      */
-    public function isValid($privacy)
+    public function isValid($privacy): bool
     {
         $isValid = true;
         if (!$privacy) {
@@ -51,7 +48,6 @@ class PrivacyValidator extends \TYPO3\CMS\Extbase\Validation\Validator\AbstractV
         }
 
         return $isValid;
-        //===
     }
 }
 

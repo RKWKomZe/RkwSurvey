@@ -1,10 +1,5 @@
 <?php
-
 namespace RKW\RkwSurvey\Controller;
-
-use \RKW\RkwSurvey\Domain\Model\Survey;
-use \TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -19,54 +14,59 @@ use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
  * The TYPO3 project - inspiring people to share!
  */
 
+use RKW\RkwSurvey\Domain\Model\Survey;
+use RKW\RkwSurvey\Domain\Model\Token;
+use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
+use RKW\RkwSurvey\Domain\Repository\SurveyRepository;
+use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
+use RKW\RkwSurvey\Domain\Repository\TokenRepository;
+use \TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * BackendController
  *
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
- * @copyright Rkw Kompetenzzentrum
+ * @copyright RKW Kompetenzzentrum
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
 class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 {
+
     /**
-     * surveyRepository
-     *
      * @var \RKW\RkwSurvey\Domain\Repository\SurveyRepository
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected $surveyRepository;
+    protected SurveyRepository $surveyRepository;
+
 
     /**
-     * surveyResultRepository
-     *
      * @var \RKW\RkwSurvey\Domain\Repository\SurveyResultRepository
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected $surveyResultRepository;
+    protected SurveyResultRepository $surveyResultRepository;
+
 
     /**
-     * questionResultRepository
-     *
      * @var \RKW\RkwSurvey\Domain\Repository\QuestionResultRepository
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected $questionResultRepository;
+    protected QuestionResultRepository $questionResultRepository;
+
 
     /**
-     * tokenRepository
-     *
      * @var \RKW\RkwSurvey\Domain\Repository\TokenRepository
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected $tokenRepository;
+    protected TokenRepository $tokenRepository;
+
 
     /**
      * initialize
      */
-    public function initializeAction()
+    public function initializeAction(): void
     {
         // By MF: There is no better way to implement a datepicker in a backend module
         // http://typo3.sascha-ende.de/docs/development/extensions-general/use-datepicker-in-own-backend-module/
@@ -82,7 +82,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * @return void
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function listAction()
+    public function listAction(): void
     {
         $this->view->assign('surveyList', $this->surveyRepository->findAllSorted());
     }
@@ -92,15 +92,15 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * action show
      * because extbase makes some trouble if some survey has a starttime in future, is disabled or something, just give the uid
      *
-     * @param int $survey
-     * @param string $starttime
+     * @param int $surveyUid
+     * @param int $starttime
      * @return void
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function showAction($survey, $starttime = null)
+    public function showAction(int $surveyUid, int $starttime = 0)
     {
         /** @var \RKW\RkwSurvey\Domain\Model\Survey $survey */
-        $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields(intval($survey));
+        $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields($surveyUid);
 
         $this->view->assign('starttime', $starttime);
         $this->view->assign('survey', $survey);
@@ -119,15 +119,15 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * action print
      * because extbase makes some trouble if some survey has a starttime in future, ist disabled or something, just give the uid
      *
-     * @param int $survey
-     * @param string $starttime
+     * @param int $surveyUid
+     * @param int $starttime
      * @return void
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function printAction($survey, $starttime = null)
+    public function printAction(int $surveyUid, int $starttime = 0): void
     {
         /** @var \RKW\RkwSurvey\Domain\Model\Survey $survey */
-        $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields(intval($survey));
+        $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields($surveyUid);
 
         $this->view->assign('survey', $survey);
         $this->view->assign('surveyResultList', $this->surveyResultRepository->findBySurvey($survey, $starttime));
@@ -141,15 +141,15 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * action csv
      * because extbase makes some trouble if some survey has a starttime in future, ist disabled or something, just give the uid
      *
-     * @param int $survey
-     * @param string $starttime
+     * @param int $surveyUid
+     * @param int $starttime
      * @return void
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function csvAction($survey, $starttime = null)
+    public function csvAction(int $surveyUid, int $starttime = 0): void
     {
         /** @var \RKW\RkwSurvey\Domain\Model\Survey $survey */
-        $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields(intval($survey));
+        $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields($surveyUid);
         $questionResultList = $this->questionResultRepository->findBySurveyOrderByQuestionAndType($survey, $starttime);
 
         // create a name for the file
@@ -165,15 +165,26 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         header("Pragma: no-cache");
 
         // column names
-        $surveyUidTranslation = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyUid', $this->extensionName);
-        $surveyResultUidTranslation = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultUid', $this->extensionName);
-        $QuestionResultUidTranslation = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionUid', $this->extensionName);
-        $questionTranslation = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.question', $this->extensionName);
-        $answerOptionTranslation = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answerOption', $this->extensionName);
-        $answerTranslation = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answer', $this->extensionName);
+        $surveyUidTranslation = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyUid', $this->extensionName);
+        $surveyResultUidTranslation = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultUid', $this->extensionName);
+        $questionResultUidTranslation = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionUid', $this->extensionName);
+        $questionTranslation = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.question', $this->extensionName);
+        $answerOptionTranslation = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answerOption', $this->extensionName);
+        $answerTranslation = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answer', $this->extensionName);
 
         // Fill the CSV file with content
-        fputcsv($csv, array($surveyUidTranslation, $surveyResultUidTranslation, $QuestionResultUidTranslation, $questionTranslation, $answerOptionTranslation, $answerTranslation), $separator);
+        fputcsv(
+            $csv,
+            [
+                $surveyUidTranslation,
+                $surveyResultUidTranslation,
+                $questionResultUidTranslation,
+                $questionTranslation,
+                $answerOptionTranslation,
+                $answerTranslation
+            ],
+            $separator
+        );
 
         /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult */
         foreach ($questionResultList as $questionResult) {
@@ -194,30 +205,40 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
                 $answerOption = '';
                 if (!$question->getAnswerOption()) {
                     if ($question->getType() == 0 || $question->getType() == 4) {
-                        $answerOption = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.freetext', $this->extensionName);
+                        $answerOption = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.freetext', $this->extensionName);
                     }
                     if ($question->getType() == 3) {
-                        $answerOption = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.scale', $this->extensionName, [
-                            $question->getScaleFromPoints(),
-                            $question->getScaleToPoints(),
-                            $question->getScaleStep()
-                        ]);
+                        $answerOption = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.scale', $this->extensionName,
+                            [
+                                $question->getScaleFromPoints(),
+                                $question->getScaleToPoints(),
+                                $question->getScaleStep()
+                            ]
+                        );
                     }
                 } else {
                     $answerOption = $question->getAnswerOption();
                 }
 
-                fputcsv($csv, array($surveyUid, $surveyResultUid, $questionResultUid, $question->getQuestion(), $answerOption, $questionResult->getAnswer()), $separator);
+                fputcsv(
+                    $csv,
+                    [
+                        $surveyUid,
+                        $surveyResultUid,
+                        $questionResultUid,
+                        $question->getQuestion(),
+                        $answerOption, $questionResult->getAnswer()
+                    ],
+                    $separator
+                );
 
             } catch (\Exception $e) {
                 continue;
-                //===
             }
         }
 
         fclose($csv);
         exit;
-        //===
     }
 
 
@@ -228,7 +249,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
      * @return void
      */
-    public function tokenListAction($survey)
+    public function tokenListAction(Survey $survey): void
     {
 
         // get all results of survey
@@ -245,7 +266,6 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         $this->view->assign('survey', $survey);
         $this->view->assign('surveyResultList', $surveyResultList);
         $this->view->assign('unusedTokens', $unusedTokens);
-
     }
 
 
@@ -261,7 +281,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
-    public function tokenCreateAction($survey, $number)
+    public function tokenCreateAction(Survey $survey, int $number): void
     {
         $tokenCountBefore = $survey->getToken()->count();
         do {
@@ -271,7 +291,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
             if (!$this->tokenRepository->findOneBySurveyAndName($survey, $newTokenName)) {
 
                 /** @var \RKW\RkwSurvey\Domain\Model\Token $token */
-                $token = GeneralUtility::makeInstance('RKW\\RkwSurvey\\Domain\\Model\\Token');
+                $token = GeneralUtility::makeInstance(Token::class);
                 $token->setName($newTokenName);
                 $token->setCruserId(intval($GLOBALS['BE_USER']->user['uid']));
                 $survey->addToken($token);
@@ -281,8 +301,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         } while (($tokenCountBefore + $number) > $survey->getToken()->count());
 
         $this->surveyRepository->update($survey);
-        $this->forward('tokenList', null, null, array('survey' => $survey));
-        //===
+        $this->forward('tokenList', null, null, ['survey' => $survey]);
     }
 
 
@@ -296,7 +315,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
-    public function tokenRemoveAction($survey)
+    public function tokenRemoveAction(Survey $survey): void
     {
 
         $tokenList = $this->tokenRepository->findBySurvey($survey);
@@ -307,25 +326,23 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
 
         $this->surveyRepository->update($survey);
         $this->forward('tokenList', null, null, array('survey' => $survey));
-        //===
     }
 
 
     /**
      * action tokenCsv
-     * because extbase makes some trouble if some survey has a starttime in future, ist disabled or something, just give the uid
+     * because extbase makes some trouble if some survey has a starttime in future, is disabled or something, just give the uid
      *
-     * @param int $survey
+     * @param int $surveyUid
      * @return void
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function tokenCsvAction($survey)
+    public function tokenCsvAction(int $surveyUid)
     {
         /** @var \RKW\RkwSurvey\Domain\Model\Survey $survey */
-        $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields(intval($survey));
+        $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields($surveyUid);
 
         // get all results of survey
-        $surveyResultList = $this->surveyResultRepository->findBySurveyWithToken(intval($survey));
+        $surveyResultList = $this->surveyResultRepository->findBySurveyWithToken($surveyUid);
 
         // build list of unused tokens
         /** @var \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult */
@@ -361,6 +378,5 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
 
         fclose($csv);
         exit;
-        //===
     }
 }
