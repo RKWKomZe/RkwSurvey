@@ -1,5 +1,4 @@
 <?php
-
 namespace RKW\RkwSurvey\ViewHelpers;
 
 /*
@@ -14,6 +13,9 @@ namespace RKW\RkwSurvey\ViewHelpers;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+use RKW\RkwSurvey\Domain\Model\Question;
+
 
 /**
  * Class CollectScaleAnswersViewHelper
@@ -30,21 +32,25 @@ class CollectScaleAnswersViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\Ab
     /**
      * Initialize arguments.
      *
+     * @return void
      * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('question', Question::class, 'The question which answers should be searched for scaled answers', true);
         $this->registerArgument('questionResultList', 'array', 'Array with given answers for questions', true);
     }
 
+
     /**
+     * Render
+     *
      * @return array
      */
     public function render(): array
     {
-        /** @var RKW\RkwSurvey\Domain\Model\Survey $question */
+        /** @var \RKW\RkwSurvey\Domain\Model\Question $question */
         $question = $this->arguments['question'];
 
         /** @var array $questionResultList */
@@ -70,7 +76,6 @@ class CollectScaleAnswersViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\Ab
         }
 
         return $collectedAnswers;
-        //===
     }
 
 

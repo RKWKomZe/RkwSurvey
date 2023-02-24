@@ -1,6 +1,6 @@
 <?php
-
 namespace RKW\RkwSurvey\Domain\Model;
+
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -26,42 +26,39 @@ namespace RKW\RkwSurvey\Domain\Model;
 class Token extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 {
     /**
-     * name
-     *
      * @var string
      */
-    protected $name = '';
+    protected string $name = '';
+
 
     /**
-     * used
-     *
-     * @var boolean
+     * @var bool
      */
-    protected $used = 0;
+    protected bool $used = false;
+
 
     /**
-     * cruserId
-     *
      * @var int
      */
-    protected $cruserId = 0;
+    protected int $cruserId = 0;
+
 
     /**
-     * survey
-     *
      * @var \RKW\RkwSurvey\Domain\Model\Survey
      */
-    protected $survey = null;
+    protected ?Survey $survey = null;
+
 
     /**
      * Returns the name
      *
-     * @return string $name
+     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
+
 
     /**
      * Sets the name
@@ -69,62 +66,68 @@ class Token extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param string $name
      * @return void
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
+
     /**
      * Returns the used
      *
-     * @return string $used
+     * @return bool
      */
-    public function getUsed()
+    public function getUsed(): bool
     {
         return $this->used;
     }
 
+
     /**
      * Sets the used
      *
-     * @param string $used
+     * @param bool $used
      * @return void
      */
-    public function setUsed($used)
+    public function setUsed(bool $used): void
     {
         $this->used = $used;
     }
 
+
     /**
      * Returns the cruserId
      *
-     * @return integer $cruserId
+     * @return int
      */
-    public function getCruserId()
+    public function getCruserId(): int
     {
         return $this->cruserId;
     }
 
+
     /**
      * Sets the cruserId
      *
-     * @param integer $cruserId
+     * @param int $cruserId
      * @return void
      */
-    public function setCruserId($cruserId)
+    public function setCruserId(int $cruserId): void
     {
         $this->cruserId = $cruserId;
     }
 
+
     /**
      * Returns the survey
      *
-     * @return \RKW\RkwSurvey\Domain\Model\Survey $survey
+     * @return \RKW\RkwSurvey\Domain\Model\Survey|null
      */
-    public function getSurvey()
+    public function getSurvey():? Survey
     {
         return $this->survey;
     }
+
 
     /**
      * Sets the survey
@@ -132,7 +135,7 @@ class Token extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
      * @return void
      */
-    public function setSurvey(\RKW\RkwSurvey\Domain\Model\Survey $survey)
+    public function setSurvey(Survey $survey): void
     {
         $this->survey = $survey;
     }

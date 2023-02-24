@@ -1,6 +1,6 @@
 <?php
-
 namespace RKW\RkwSurvey\ViewHelpers;
+
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -29,17 +29,21 @@ class CalcPercentageViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\Abstrac
     /**
      * Initialize arguments.
      *
+     * @return void
      * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('percentage', 'int', 'The base-value from which the percentage is to be calculated', true);
         $this->registerArgument('total', 'int', 'The current value', true);
     }
 
+
     /**
-     * @return string $string
+     * Render
+     *
+     * @return string
      */
     public function render(): string
     {

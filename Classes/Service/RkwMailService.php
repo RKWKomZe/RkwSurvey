@@ -1,13 +1,5 @@
 <?php
-
 namespace RKW\RkwSurvey\Service;
-
-use Madj2k\CoreExtended\Utility\GeneralUtility as Common;
-use \TYPO3\CMS\Core\Utility\GeneralUtility;
-use \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use \TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use \RKW\RkwSurvey\Domain\Model\SurveyResult;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -21,6 +13,12 @@ use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+use Madj2k\CoreExtended\Utility\GeneralUtility;
+use RKW\RkwMailer\Service\MailService;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use RKW\RkwSurvey\Domain\Model\SurveyResult;
 
 /**
  * RkwMailService
@@ -40,20 +38,20 @@ class RkwMailService implements \TYPO3\CMS\Core\SingletonInterface
      * @param \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult
      * @return void
      * @throws \Exception
-     * @throws \RKW\RkwMailer\Service\MailException
+     * @throws \RKW\RkwMailer\Exception
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      * @throws \TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException
      * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
      */
-    public function newSurveyAdmin(ObjectStorage $backendUserList, SurveyResult $surveyResult)
+    public function newSurveyAdmin(ObjectStorage $backendUserList, SurveyResult $surveyResult): void
     {
         // get settings
         $settings = $this->getSettings(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
         if ($settings['view']['templateRootPaths']) {
 
             /** @var \RKW\RkwMailer\Service\MailService $mailService */
-            $mailService = GeneralUtility::makeInstance('RKW\\RkwMailer\\Service\\MailService');
+            $mailService = GeneralUtility::makeInstance(MailService::class);
 
             /** @var \RKW\RkwSurvey\Domain\Model\BackendUser $backendUser */
             foreach ($backendUserList->toArray() as $backendUser) {
@@ -95,13 +93,13 @@ class RkwMailService implements \TYPO3\CMS\Core\SingletonInterface
      * @param array $contactForm
      * @return void
      * @throws \Exception
-     * @throws \RKW\RkwMailer\Service\MailException
+     * @throws \RKW\RkwMailer\Exception
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      * @throws \TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException
      * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
      */
-    public function sendContactForm(ObjectStorage $backendUserList, SurveyResult $surveyResult, $contactForm)
+    public function sendContactForm(ObjectStorage $backendUserList, SurveyResult $surveyResult, array $contactForm): void
     {
         // get settings
         $settings = $this->getSettings(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
@@ -109,7 +107,7 @@ class RkwMailService implements \TYPO3\CMS\Core\SingletonInterface
         if ($settings['view']['templateRootPaths']) {
 
             /** @var \RKW\RkwMailer\Service\MailService $mailService */
-            $mailService = GeneralUtility::makeInstance('RKW\\RkwMailer\\Service\\MailService');
+            $mailService = GeneralUtility::makeInstance(MailService::class);
 
             /** @var \RKW\RkwSurvey\Domain\Model\BackendUser $backendUser */
             foreach ($backendUserList as $backendUser) {
@@ -130,7 +128,7 @@ class RkwMailService implements \TYPO3\CMS\Core\SingletonInterface
             }
 
             if ($contactForm['email']) {
-                $mailService->getQueueMail()->setReplyAddress($contactForm['email']);
+                $mailService->getQueueMail()->setReplyToAddress($contactForm['email']);
             }
 
             $mailService->getQueueMail()->setSubject(
@@ -157,10 +155,8 @@ class RkwMailService implements \TYPO3\CMS\Core\SingletonInterface
      * @return array
      * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
      */
-    protected function getSettings($which = ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS)
+    protected function getSettings(string $which = ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS): array
     {
-
-        return Common::getTypoScriptConfiguration('Rkwsurvey', $which);
-        //===
+        return GeneralUtility::getTypoScriptConfiguration('Rkwsurvey', $which);
     }
 }

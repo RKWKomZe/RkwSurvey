@@ -1,7 +1,7 @@
 <?php
-
 namespace RKW\RkwSurvey\ViewHelpers;
 /*
+ *
  * This file is part of the TYPO3 CMS project.
  *
  * It is free software; you can redistribute it and/or modify it under
@@ -29,9 +29,10 @@ class PageCountViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractView
     /**
      * Initialize arguments.
      *
+     * @return void
      * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('questionResultList', 'array', 'Array with given answers for questions', true);
@@ -40,9 +41,9 @@ class PageCountViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractView
 
 
     /**
-     * gets count of already answered questions and adds 1
+     * Gets count of already answered questions and adds 1
      *
-     * @return integer
+     * @return int
      */
     public function render(): int
     {

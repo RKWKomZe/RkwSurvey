@@ -1,5 +1,4 @@
 <?php
-
 namespace RKW\RkwSurvey\ViewHelpers;
 
 /*
@@ -14,8 +13,6 @@ namespace RKW\RkwSurvey\ViewHelpers;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * PassArrayToJSViewHelper
@@ -32,16 +29,17 @@ class PassArrayToJSViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\Abstract
     /**
      * Initialize arguments.
      *
+     * @return void
      * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('data', 'array', 'Array with data', false, []);
     }
 
     /**
-     * pass data to js
+     * Pass data to js
      *
      * @return string
      */

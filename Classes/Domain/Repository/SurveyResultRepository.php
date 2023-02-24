@@ -67,7 +67,7 @@ class SurveyResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      * findBySurveyAndFinished
      *
      * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
-     * @param integer $finished
+     * @param int $finished
      * @param string $startDate
      * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface|array
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
@@ -106,7 +106,7 @@ class SurveyResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
      * @param \RKW\RkwSurvey\Domain\Model\Question $question
      * @param mixed $answer
-     * @param integer $finished
+     * @param int $finished
      * @param string $startDate
      * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface|array
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
@@ -171,7 +171,7 @@ class SurveyResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      * findBySurveyAndFinishedWithToken
      *
      * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
-     * @param integer $finished
+     * @param int $finished
      * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface|array
      */
     public function findBySurveyAndFinishedWithToken(\RKW\RkwSurvey\Domain\Model\Survey $survey, $finished = 1)

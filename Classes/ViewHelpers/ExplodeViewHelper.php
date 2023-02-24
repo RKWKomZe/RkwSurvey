@@ -1,5 +1,4 @@
 <?php
-
 namespace RKW\RkwSurvey\ViewHelpers;
 
 /*
@@ -32,9 +31,10 @@ class ExplodeViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHe
     /**
      * Initialize arguments.
      *
+     * @return void
      * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('string', 'string', 'The string to explode', true);
@@ -43,9 +43,11 @@ class ExplodeViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHe
 
 
     /**
+     * Render
+     *
      * @return array
      */
-    public function render($string, $delimiter = '|'): array
+    public function render(): array
     {
         /** @var string $string */
         $string = $this->arguments['string'];

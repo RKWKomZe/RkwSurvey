@@ -1,6 +1,6 @@
 <?php
-
 namespace RKW\RkwSurvey\Validation;
+
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -53,8 +53,7 @@ class QuestionResultValidator extends \TYPO3\CMS\Extbase\Validation\Validator\Ab
             $isValid = false;
         }
 
-        return $isValid ? $isValid : $message;
-        //===
+        return $isValid ?: $message;
     }
 }
 

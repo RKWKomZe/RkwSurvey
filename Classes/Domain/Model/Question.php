@@ -29,156 +29,137 @@ use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
  */
 class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 {
+
     /**
-     * question
-     *
      * @var string
      */
-    protected $question = '';
+    protected string $question = '';
+
 
     /**
-     * shortName
-     *
      * @var string
      */
-    protected $shortName = '';
+    protected string $shortName = '';
+
 
     /**
-     * hint
-     *
      * @var string
      */
-    protected $hint = '';
+    protected string $hint = '';
+
 
     /**
-     * required
-     *
-     * @var boolean
+     * @var bool
      */
-    protected $required = 1;
+    protected bool $required = true;
+
 
     /**
-     * group_by
-     *
-     * @var boolean
+     * @var bool
      */
-    protected $groupBy = 0;
+    protected bool $groupBy = false;
+
 
     /**
-     * type
-     *
-     * @var integer
+     * @var int
      */
-    protected $type = 0;
+    protected int $type = 0;
+
 
     /**
-     * textConsent
-     *
      * @var string
      */
-    protected $textConsent = '';
+    protected string $textConsent = '';
+
 
     /**
-     * textRejection
-     *
      * @var string
      */
-    protected $textRejection = '';
+    protected string $textRejection = '';
+
 
     /**
-     * scaleFromPoints
-     *
-     * @var integer
+     * @var int
      */
-    protected $scaleFromPoints = 0;
+    protected int $scaleFromPoints = 0;
+
 
     /**
-     * scaleToPoints
-     *
-     * @var integer
+     * @var int
      */
-    protected $scaleToPoints = 0;
+    protected int $scaleToPoints = 0;
+
 
     /**
-     * scaleStep
-     *
-     * @var integer
+     * @var int
      */
-    protected $scaleStep = 0;
+    protected int $scaleStep = 0;
+
 
     /**
-     * required
-     *
-     * @var boolean
+     * @var bool
      */
-    protected $benchmark = 0;
+    protected bool $benchmark = false;
+
 
     /**
-     * benchmarkValue
-     *
      * @var float
      */
-    protected $benchmarkValue = 0.0;
+    protected float $benchmarkValue = 0.0;
+
 
     /**
-     * benchmarkWeighting
-     *
      * @var string
      */
-    protected $benchmarkWeighting = '';
+    protected string $benchmarkWeighting = '';
 
 
     /**
-     * answerOption
-     *
      * @var string
      */
-    protected $answerOption = '';
+    protected string $answerOption = '';
+
 
     /**
-     * doAction
-     *
-     * @var boolean
+     * @var bool
      */
-    protected $doAction = 0;
+    protected bool $doAction = false;
+
 
     /**
-     * doActionIf
-     *
      * @var string
      */
-    protected $doActionIf = '0';
+    protected string $doActionIf = '0';
+
 
     /**
-     * doActionJump
-     *
-     * @var integer
+     * @var int
      */
-    protected $doActionJump = 1;
+    protected int $doActionJump = 1;
+
 
     /**
-     * survey
-     *
-     * @var \RKW\RkwSurvey\Domain\Model\Survey
+     * @var \RKW\RkwSurvey\Domain\Model\Survey|null
      */
-    protected $survey = null;
+    protected ?Survey $survey = null;
+
 
     /**
-     * topic
-     *
-     * @var \RKW\RkwSurvey\Domain\Model\Topic
+     * @var \RKW\RkwSurvey\Domain\Model\Topic|null
      */
-    protected $topic = null;
+    protected ?Topic $topic = null;
+
 
     /**
      * Returns the question
      *
      * @return string $question
      */
-    public function getQuestion()
+    public function getQuestion(): string
     {
         return $this->question;
     }
+
 
     /**
      * Sets the question
@@ -186,20 +167,22 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param string $question
      * @return void
      */
-    public function setQuestion($question)
+    public function setQuestion(string $question): void
     {
         $this->question = $question;
     }
 
+
     /**
      * Returns the shortName
      *
-     * @return string $shortName
+     * @return string
      */
-    public function getShortName()
+    public function getShortName(): string
     {
         return $this->shortName;
     }
+
 
     /**
      * Sets the shortName
@@ -207,20 +190,22 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param string $shortName
      * @return void
      */
-    public function setShortName($shortName)
+    public function setShortName(string $shortName): void
     {
         $this->shortName = $shortName;
     }
 
+
     /**
      * Returns the hint
      *
-     * @return string $hint
+     * @return string
      */
-    public function getHint()
+    public function getHint(): string
     {
         return $this->hint;
     }
+
 
     /**
      * Sets the hint
@@ -228,17 +213,18 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param string $hint
      * @return void
      */
-    public function setHint($hint)
+    public function setHint(string $hint): void
     {
         $this->hint = $hint;
     }
 
+
     /**
      * Returns the required
      *
-     * @return boolean $required
+     * @return bool
      */
-    public function getRequired()
+    public function getRequired(): bool
     {
         return $this->required;
     }
@@ -246,33 +232,36 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Sets the required
      *
-     * @param boolean $required
+     * @param bool $required
      * @return void
      */
-    public function setRequired($required)
+    public function setRequired(bool $required): void
     {
         $this->required = $required;
     }
 
+
     /**
      * Returns the required
      *
-     * @return boolean $required
+     * @return bool
      */
-    public function isRequired()
+    public function isRequired(): bool
     {
         return $this->required;
     }
 
+
     /**
      * Returns the groupBy
      *
-     * @return boolean $groupBy
+     * @return boolean
      */
-    public function getGroupBy()
+    public function getGroupBy(): bool
     {
         return $this->groupBy;
     }
+
 
     /**
      * Sets the groupBy
@@ -280,7 +269,7 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param bool $groupBy
      * @return void
      */
-    public function setGroupBy($groupBy)
+    public function setGroupBy(bool $groupBy): void
     {
         $this->groupBy = $groupBy;
     }
@@ -289,12 +278,13 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Returns the type
      *
-     * @return int $type
+     * @return int
      */
-    public function getType()
+    public function getType(): int
     {
         return $this->type;
     }
+
 
     /**
      * Sets the type
@@ -302,20 +292,22 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param int $type
      * @return void
      */
-    public function setType($type)
+    public function setType(int $type): void
     {
         $this->type = $type;
     }
 
+
     /**
      * Returns the textConsent
      *
-     * @return string $textConsent
+     * @return string
      */
-    public function getTextConsent()
+    public function getTextConsent(): string
     {
         return $this->textConsent;
     }
+
 
     /**
      * Sets the textConsent
@@ -323,20 +315,22 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param string $textConsent
      * @return void
      */
-    public function setTextConsent($textConsent)
+    public function setTextConsent(string $textConsent): void
     {
         $this->textConsent = $textConsent;
     }
 
+
     /**
      * Returns the textRejection
      *
-     * @return string $textRejection
+     * @return string
      */
-    public function getTextRejection()
+    public function getTextRejection(): string
     {
         return $this->textRejection;
     }
+
 
     /**
      * Sets the textRejection
@@ -344,20 +338,22 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param string $textRejection
      * @return void
      */
-    public function setTextRejection($textRejection)
+    public function setTextRejection(string $textRejection): void
     {
         $this->textRejection = $textRejection;
     }
 
+
     /**
      * Returns the scaleFromPoints
      *
-     * @return int $scaleFromPoints
+     * @return int
      */
-    public function getScaleFromPoints()
+    public function getScaleFromPoints(): int
     {
         return $this->scaleFromPoints;
     }
+
 
     /**
      * Sets the scaleFromPoints
@@ -365,20 +361,22 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param int $scaleFromPoints
      * @return void
      */
-    public function setScaleFromPoints($scaleFromPoints)
+    public function setScaleFromPoints(int $scaleFromPoints): void
     {
         $this->scaleFromPoints = $scaleFromPoints;
     }
 
+
     /**
      * Returns the scaleToPoints
      *
-     * @return int $scaleToPoints
+     * @return int
      */
-    public function getScaleToPoints()
+    public function getScaleToPoints(): int
     {
         return $this->scaleToPoints;
     }
+
 
     /**
      * Sets the scaleToPoints
@@ -386,41 +384,45 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param int $scaleToPoints
      * @return void
      */
-    public function setScaleToPoints($scaleToPoints)
+    public function setScaleToPoints(int $scaleToPoints): void
     {
         $this->scaleToPoints = $scaleToPoints;
     }
 
+
     /**
      * Returns the benchmark
      *
-     * @return boolean $benchmark
+     * @return bool
      */
-    public function getBenchmark()
+    public function getBenchmark(): bool
     {
         return $this->benchmark;
     }
 
+
     /**
      * Sets the benchmark
      *
-     * @param boolean $required
+     * @param bool $benchmark
      * @return void
      */
-    public function setBenchmark($benchmark)
+    public function setBenchmark(bool $benchmark): void
     {
         $this->benchmark = $benchmark;
     }
 
+
     /**
      * Returns the scaleStep
      *
-     * @return int $scaleStep
+     * @return int
      */
-    public function getScaleStep()
+    public function getScaleStep(): int
     {
         return $this->scaleStep;
     }
+
 
     /**
      * Sets the scaleStep
@@ -428,20 +430,22 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param int $scaleStep
      * @return void
      */
-    public function setScaleStep($scaleStep)
+    public function setScaleStep(int $scaleStep): void
     {
         $this->scaleStep = $scaleStep;
     }
 
+
     /**
      * Returns the benchmarkValue
      *
-     * @return int $benchmarkValue
+     * @return float
      */
-    public function getBenchmarkValue()
+    public function getBenchmarkValue(): float
     {
         return $this->benchmarkValue;
     }
+
 
     /**
      * Sets the benchmarkValue
@@ -449,20 +453,22 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param float $benchmarkValue
      * @return void
      */
-    public function setBenchmarkValue($benchmarkValue)
+    public function setBenchmarkValue(float $benchmarkValue): void
     {
         $this->benchmarkValue = $benchmarkValue;
     }
 
+
     /**
      * Returns the benchmarkWeighting
      *
-     * @return string $benchmarkWeighting
+     * @return string
      */
-    public function getBenchmarkWeighting()
+    public function getBenchmarkWeighting(): string
     {
         return $this->benchmarkWeighting;
     }
+
 
     /**
      * Sets the benchmarkWeighting
@@ -470,7 +476,7 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param string $benchmarkWeighting
      * @return void
      */
-    public function setBenchmarkWeighting($benchmarkWeighting)
+    public function setBenchmarkWeighting(string $benchmarkWeighting): void
     {
         $this->benchmarkWeighting = $benchmarkWeighting;
     }
@@ -479,85 +485,93 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Returns the answerOption
      *
-     * @return int $answerOption
+     * @return string
      */
-    public function getAnswerOption()
+    public function getAnswerOption(): string
     {
         return $this->answerOption;
     }
 
+
     /**
      * Sets the answerOption
      *
-     * @param int $answerOption
+     * @param string $answerOption
      * @return void
      */
-    public function setAnswerOption($answerOption)
+    public function setAnswerOption(string $answerOption): void
     {
         $this->answerOption = $answerOption;
     }
 
+
     /**
      * Returns the doAction
      *
-     * @return boolean $doAction
+     * @return bool
      */
-    public function getDoAction()
+    public function getDoAction(): bool
     {
         return $this->doAction;
     }
+
 
     /**
      * Sets the doAction
      *
-     * @param boolean $doAction
+     * @param bool $doAction
      * @return void
      */
-    public function setDoAction($doAction)
+    public function setDoAction(bool $doAction): void
     {
         $this->doAction = $doAction;
     }
 
+
     /**
      * Returns the doAction
      *
-     * @return boolean $doAction
+     * @return bool
      */
-    public function isDoAction()
+    public function isDoAction(): bool
     {
         return $this->doAction;
     }
 
+
     /**
      * Returns the doActionIf
      *
-     * @return array $doActionIf
+     * @return array
      */
-    public function getDoActionIf()
+    public function getDoActionIf(): array
     {
         return array_map('intval', GeneralUtility::trimExplode(',', $this->doActionIf));
     }
 
+
     /**
      * Sets the doActionIf
      *
-     * @param int $doActionIf
+     * @param string $doActionIf
      * @return void
      */
-    public function setDoActionIf($doActionIf)
+    public function setDoActionIf(string $doActionIf): void
     {
         $this->doActionIf = $doActionIf;
     }
 
+
     /**
      * Returns the doActionJump
      *
-     * @return int $doActionJump
+     * @return int
      */
-    public function getDoActionJump()
+    public function getDoActionJump(): int
     {
         return $this->doActionJump;
     }
+
 
     /**
      * Sets the doActionJump
@@ -565,20 +579,22 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param int $doActionJump
      * @return void
      */
-    public function setDoActionJump($doActionJump)
+    public function setDoActionJump(int $doActionJump): void
     {
         $this->doActionJump = $doActionJump;
     }
 
+
     /**
      * Returns the survey
      *
-     * @return \RKW\RkwSurvey\Domain\Model\Survey $survey
+     * @return \RKW\RkwSurvey\Domain\Model\Survey|null
      */
-    public function getSurvey()
+    public function getSurvey():? Survey
     {
         return $this->survey;
     }
+
 
     /**
      * Sets the survey
@@ -586,20 +602,22 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
      * @return void
      */
-    public function setSurvey(\RKW\RkwSurvey\Domain\Model\Survey $survey)
+    public function setSurvey(Survey $survey): void
     {
         $this->survey = $survey;
     }
+
 
     /**
      * Returns the topic
      *
      * @return \RKW\RkwSurvey\Domain\Model\Topic $topic
      */
-    public function getTopic()
+    public function getTopic():? Topic
     {
         return $this->topic;
     }
+
 
     /**
      * Sets the topic
@@ -607,17 +625,18 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param \RKW\RkwSurvey\Domain\Model\Topic $topic
      * @return void
      */
-    public function setTopic(\RKW\RkwSurvey\Domain\Model\Topic $topic)
+    public function setTopic(Topic $topic): void
     {
         $this->topic = $topic;
     }
+
 
     /**
      * Returns the range for scaled questions
      *
      * @return array
      */
-    public function getScale()
+    public function getScale(): array
     {
         return range($this->scaleFromPoints, $this->scaleToPoints, $this->scaleStep);
     }

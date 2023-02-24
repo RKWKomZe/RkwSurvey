@@ -1,5 +1,4 @@
 <?php
-
 namespace RKW\RkwSurvey\ViewHelpers;
 
 /*
@@ -30,9 +29,10 @@ class LoopViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelpe
     /**
      * Initialize arguments.
      *
+     * @return void
      * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('number', 'int', 'The number of elements to insert into the array', true);
@@ -40,6 +40,8 @@ class LoopViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelpe
 
 
     /**
+     * Render
+     *
      * @return array
      */
     public function render(): array

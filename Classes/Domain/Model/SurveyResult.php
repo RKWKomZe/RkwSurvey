@@ -1,5 +1,4 @@
 <?php
-
 namespace RKW\RkwSurvey\Domain\Model;
 
 /*
@@ -15,6 +14,8 @@ namespace RKW\RkwSurvey\Domain\Model;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+
 
 /**
  * SurveyResult
@@ -28,37 +29,34 @@ namespace RKW\RkwSurvey\Domain\Model;
 class SurveyResult extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 {
     /**
-     * @var integer
+     * @var int
      */
-    protected $crdate;
+    protected int $crdate = 0;
+
 
     /**
-     * finished
-     *
-     * @var boolean
+     * @var bool
      */
-    protected $finished = false;
+    protected bool $finished = false;
+
 
     /**
-     * token
-     *
-     * @var \RKW\RkwSurvey\Domain\Model\Token
+     * @var \RKW\RkwSurvey\Domain\Model\Token|null
      */
-    protected $token = null;
+    protected ?Token $token = null;
+
 
     /**
-     * survey
-     *
-     * @var \RKW\RkwSurvey\Domain\Model\Survey
+     * @var \RKW\RkwSurvey\Domain\Model\Survey|null
      */
-    protected $survey = null;
+    protected ?Survey $survey = null;
+
 
     /**
-     * questionResult
-     *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\RKW\RkwSurvey\Domain\Model\QuestionResult>
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\RKW\RkwSurvey\Domain\Model\QuestionResult>|null
      */
-    protected $questionResult = null;
+    protected ?ObjectStorage $questionResult = null;
+
 
     /**
      * __construct
@@ -68,6 +66,7 @@ class SurveyResult extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         // Do not remove the next line: It would break the functionality
         $this->initStorageObjects();
     }
+
 
     /**
      * Initializes all ObjectStorage properties
@@ -82,27 +81,29 @@ class SurveyResult extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         $this->questionResult = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
     }
 
+
     /**
      * Returns the crdate value
      *
-     * @return integer
+     * @return int
      * @api
      */
-    public function getCrdate()
+    public function getCrdate(): int
     {
         return $this->crdate;
-        //===
     }
+
 
     /**
      * Returns the finished
      *
-     * @return boolean $finished
+     * @return bool
      */
-    public function getFinished()
+    public function getFinished(): bool
     {
         return $this->finished;
     }
+
 
     /**
      * Sets the finished
@@ -110,30 +111,33 @@ class SurveyResult extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param boolean $finished
      * @return void
      */
-    public function setFinished($finished)
+    public function setFinished(bool $finished): void
     {
         $this->finished = $finished;
     }
 
+
     /**
      * Returns the finished
      *
-     * @return boolean $finished
+     * @return bool
      */
-    public function isFinished()
+    public function isFinished(): bool
     {
         return $this->finished;
     }
 
+
     /**
      * Returns the token
      *
-     * @return \RKW\RkwSurvey\Domain\Model\Token $token
+     * @return \RKW\RkwSurvey\Domain\Model\Token
      */
-    public function getToken()
+    public function getToken():? Token
     {
         return $this->token;
     }
+
 
     /**
      * Sets the token
@@ -141,20 +145,22 @@ class SurveyResult extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param \RKW\RkwSurvey\Domain\Model\Token $token
      * @return void
      */
-    public function setToken(\RKW\RkwSurvey\Domain\Model\Token $token)
+    public function setToken(Token $token): void
     {
         $this->token = $token;
     }
 
+
     /**
      * Returns the survey
      *
-     * @return \RKW\RkwSurvey\Domain\Model\Survey $survey
+     * @return \RKW\RkwSurvey\Domain\Model\Survey
      */
-    public function getSurvey()
+    public function getSurvey():? Survey
     {
         return $this->survey;
     }
+
 
     /**
      * Sets the survey
@@ -162,10 +168,11 @@ class SurveyResult extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
      * @return void
      */
-    public function setSurvey(\RKW\RkwSurvey\Domain\Model\Survey $survey)
+    public function setSurvey(Survey $survey): void
     {
         $this->survey = $survey;
     }
+
 
     /**
      * Adds a QuestionResult
@@ -173,10 +180,11 @@ class SurveyResult extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param \RKW\RkwSurvey\Domain\Model\QuestionResult $questionResultToRemove
      * @return void
      */
-    public function addQuestionResult(\RKW\RkwSurvey\Domain\Model\QuestionResult $questionResultToRemove)
+    public function addQuestionResult(QuestionResult $questionResultToRemove): void
     {
         $this->questionResult->attach($questionResultToRemove);
     }
+
 
     /**
      * Removes a QuestionResult
@@ -184,20 +192,22 @@ class SurveyResult extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param \RKW\RkwSurvey\Domain\Model\QuestionResult $questionResultToRemove The Question to be removed
      * @return void
      */
-    public function removeQuestionResult(\RKW\RkwSurvey\Domain\Model\QuestionResult $questionResultToRemove)
+    public function removeQuestionResult(QuestionResult $questionResultToRemove)
     {
         $this->questionResult->detach($questionResultToRemove);
     }
+
 
     /**
      * Returns the questionResult
      *
      * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\RKW\RkwSurvey\Domain\Model\QuestionResult> $questionResult
      */
-    public function getQuestionResult()
+    public function getQuestionResult(): ObjectStorage
     {
         return $this->questionResult;
     }
+
 
     /**
      * Sets the questionResult
@@ -205,15 +215,16 @@ class SurveyResult extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage $questionResult
      * @return void
      */
-    public function setQuestionResult(\RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult)
+    public function setQuestionResult(ObjectStorage $questionResult): void
     {
         $this->questionResult = $questionResult;
     }
 
+
     /**
      * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage
      */
-    public function getBenchmarkQuestionResults()
+    public function getBenchmarkQuestionResults(): ObjectStorage
     {
         $benchmarkQuestionResults = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         foreach ($this->getQuestionResult() as $questionResult) {

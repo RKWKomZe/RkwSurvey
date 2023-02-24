@@ -29,7 +29,7 @@ class SurveyRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
     /**
      * findAllSorted
      *
-     * @param integer $year
+     * @param int $year
      * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface|array
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */

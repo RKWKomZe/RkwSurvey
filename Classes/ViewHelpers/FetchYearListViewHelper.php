@@ -1,5 +1,4 @@
 <?php
-
 namespace RKW\RkwSurvey\ViewHelpers;
 
 /*
@@ -33,9 +32,10 @@ class FetchYearListViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\Abstract
     /**
      * Initialize arguments.
      *
+     * @return void
      * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('surveyList', QueryResult::class, 'The list of surveys', true);
@@ -43,7 +43,7 @@ class FetchYearListViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\Abstract
 
 
     /**
-     * returns a associated array with "year => year"
+     * returns an associated array with "year => year"
      *
      * @return array
      */
@@ -60,6 +60,5 @@ class FetchYearListViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\Abstract
         ksort($yearList);
 
         return $yearList;
-        //===
     }
 }

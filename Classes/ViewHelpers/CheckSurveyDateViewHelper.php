@@ -1,5 +1,4 @@
 <?php
-
 namespace RKW\RkwSurvey\ViewHelpers;
 
 /*
@@ -32,20 +31,22 @@ class CheckSurveyDateViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\Abstra
     /**
      * Initialize arguments.
      *
+     * @return void
      * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('survey', Survey::class, 'The survey to check', true);
     }
+
 
     /**
      * check if we want to show this survey
      *
      * @return null|string
      */
-    public function render(): ?string
+    public function render():? string
     {
         /** @var \RKW\RkwSurvey\Domain\Model\Survey $survey */
         $survey = $this->arguments['survey'];

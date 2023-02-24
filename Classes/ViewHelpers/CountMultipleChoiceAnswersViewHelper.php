@@ -1,5 +1,4 @@
 <?php
-
 namespace RKW\RkwSurvey\ViewHelpers;
 
 /*
@@ -14,6 +13,8 @@ namespace RKW\RkwSurvey\ViewHelpers;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+use RKW\RkwSurvey\Domain\Model\Question;
 
 /**
  * Class CountMultipleChoiceAnswersViewHelper
@@ -30,25 +31,33 @@ class CountMultipleChoiceAnswersViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHe
     /**
      * Initialize arguments.
      *
+     * @return void
      * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('question', Question::class, 'The question which answers should be searched for multiple-choice answers', true);
         $this->registerArgument('questionResultList', 'array', 'Array with given answers for questions', true);
+        $this->registerArgument('answerToCount', 'string', 'The answer to count.', true);
+
     }
 
     /**
-     * @return array
+     * Render
+     *
+     * @return int
      */
-    public function render(): array
+    public function render(): int
     {
-        /** @var RKW\RkwSurvey\Domain\Model\Survey $question */
+        /** @var \RKW\RkwSurvey\Domain\Model\Question $question */
         $question = $this->arguments['question'];
 
         /** @var array $questionResultList */
         $questionResultList = $this->arguments['questionResultList'];
+
+        /** @var string answerToCount */
+        $answerToCount = $this->arguments['answerToCount'];
 
         $countTotal = 0;
         /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult */

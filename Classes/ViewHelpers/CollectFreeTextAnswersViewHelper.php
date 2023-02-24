@@ -1,6 +1,6 @@
 <?php
-
 namespace RKW\RkwSurvey\ViewHelpers;
+
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -14,7 +14,6 @@ namespace RKW\RkwSurvey\ViewHelpers;
  * The TYPO3 project - inspiring people to share!
  */
 
-use RKW\RkwSurvey\Domain\Model\Survey;
 
 /**
  * Class CollectFreeTextAnswersViewHelper
@@ -30,9 +29,10 @@ class CollectFreeTextAnswersViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper
     /**
      * Initialize arguments.
      *
+     * @return void
      * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('question', Question::class, 'The question which answers should be searched for free-text-answers', true);
@@ -41,11 +41,13 @@ class CollectFreeTextAnswersViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper
 
 
     /**
+     * Render
+     *
      * @return array
      */
-    public function render()
+    public function render(): array
     {
-        /** @var RKW\RkwSurvey\Domain\Model\Survey $question */
+        /** @var \RKW\RkwSurvey\Domain\Model\Survey $question */
         $question = $this->arguments['question'];
 
         /** @var array $questionResultList */

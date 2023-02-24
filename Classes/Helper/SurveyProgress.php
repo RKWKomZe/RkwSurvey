@@ -1,9 +1,5 @@
 <?php
-
 namespace RKW\RkwSurvey\Helper;
-
-use \RKW\RkwSurvey\Domain\Model\SurveyResult;
-use \RKW\RkwSurvey\Domain\Model\QuestionResult;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -34,6 +30,9 @@ class SurveyProgress extends \RKW\RkwSurvey\Utility\SurveyProgressUtility implem
      */
     public function __construct()
     {
-        trigger_error(__CLASS__ . ' is deprecated and will be removed soon. Please use RKW\RkwSurvey\Utility\SurveyProgressUtility instead.', E_USER_DEPRECATED);
+        trigger_error(__CLASS__ . ' is deprecated and will be removed soon. '.
+            'Please use RKW\RkwSurvey\Utility\SurveyProgressUtility instead.',
+            E_USER_DEPRECATED
+        );
     }
 }

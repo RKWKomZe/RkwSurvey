@@ -1,5 +1,4 @@
 <?php
-
 namespace RKW\RkwSurvey\ViewHelpers;
 
 /*
@@ -15,6 +14,8 @@ namespace RKW\RkwSurvey\ViewHelpers;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+
 /**
  * Class MonthArrayViewHelper
  *
@@ -26,17 +27,17 @@ namespace RKW\RkwSurvey\ViewHelpers;
  */
 class MonthArrayViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
 {
+
     /**
-     * returns a associated array with "1-12 => month"
+     * returns an associated array with "1-12 => month"
      *
      * @return array
      */
     public function render(): array
     {
         $monthList = array();
-        /** @var \RKW\RkwSurvey\Domain\Model\Survey $survey */
         for ($i = 1; $i <= 12; $i++) {
-            $monthList[$i] = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('viewHelper_mothArray.month' . $i, 'rkw_survey');
+            $monthList[$i] = LocalizationUtility::translate('viewHelper_mothArray.month' . $i, 'rkw_survey');
         }
 
         return $monthList;

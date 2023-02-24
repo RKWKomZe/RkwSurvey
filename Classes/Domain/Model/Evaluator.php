@@ -1,11 +1,5 @@
 <?php
-
 namespace RKW\RkwSurvey\Domain\Model;
-
-use Madj2k\CoreExtended\Utility\GeneralUtility;
-use RKW\RkwSurvey\Domain\Repository\QuestionRepository;
-use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
-use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -20,6 +14,15 @@ use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Madj2k\CoreExtended\Utility\GeneralUtility;
+use RKW\RkwSurvey\Domain\Repository\QuestionRepository;
+use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
+use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+
 /**
  * Evaluator
  *
@@ -28,63 +31,64 @@ use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-
 class Evaluator
 {
 
-    /**
-     * surveyResult
-     *
-     * @var \RKW\RkwSurvey\Domain\Model\SurveyResult
-     */
-    protected $surveyResult;
 
     /**
-     * surveyResultRepository
-     *
      * @var \RKW\RkwSurvey\Domain\Repository\SurveyResultRepository
      * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected $surveyResultRepository;
+    protected SurveyResultRepository $surveyResultRepository;
+
 
     /**
-     * questionResultRepository
-     *
      * @var \RKW\RkwSurvey\Domain\Repository\QuestionResultRepository
      * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected $questionResultRepository;
+    protected QuestionResultRepository $questionResultRepository;
+
 
     /**
-     * questionRepository
-     *
      * @var \RKW\RkwSurvey\Domain\Repository\QuestionRepository
      * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected $questionRepository;
+    protected QuestionRepository $questionRepository;
+
 
     /**
      * @var array
      */
-    protected $colors = [];
+    protected array $colors = [];
+
 
     /**
      * @var array
      */
-    protected $labels = [];
+    protected array $labels = [];
+
+
+    /**
+     * @var \RKW\RkwSurvey\Domain\Model\SurveyResult|null
+     */
+    protected ?SurveyResult $surveyResult = null;
+
 
     /**
      * @var \RKW\RkwSurvey\Domain\Model\Question|null
      */
-    protected $groupByQuestion = null;
+    protected ?Question $groupByQuestion = null;
+
 
     /**
+     * Constructor
+     *
      * @param SurveyResult $surveyResult
+     *  @todo class should only be used via objectManager. Thus manually loading of repositories should not be needed.
      */
     public function __construct(SurveyResult $surveyResult)
     {
         $this->surveyResult = $surveyResult;
-
         $this->colors = [
             'me' => '#d63f11', // $color-primary
             'my-region' => '#792400', //    #009fee' - $color-blue
@@ -94,66 +98,84 @@ class Evaluator
 
         $this->labels = [
             'weighting' => [
-                'low' => \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.low', 'RkwSurvey'),
-                'neutral' => \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.neutral', 'RkwSurvey'),
-                'high' => \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.high', 'RkwSurvey'),
+                'low' => LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.low', 'RkwSurvey'),
+                'neutral' => LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.neutral', 'RkwSurvey'),
+                'high' => LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.high', 'RkwSurvey'),
             ],
         ];
 
-        $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+        /** @var \TYPO3\CMS\Extbase\Object\ObjectManager $objectManager */
+        $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class);
 
         if (!$this->surveyResultRepository) {
             $this->surveyResultRepository = $objectManager->get(SurveyResultRepository::class);
+            trigger_error(__CLASS__ . ': Please use the ObjectManager to load this class.', E_USER_DEPRECATED);
         }
 
         if (!$this->questionResultRepository) {
             $this->questionResultRepository = $objectManager->get(QuestionResultRepository::class);
+            trigger_error(__CLASS__ . ': Please use the ObjectManager to load this class.', E_USER_DEPRECATED);
         }
 
         if (!$this->questionRepository) {
             $this->questionRepository = $objectManager->get(QuestionRepository::class);
+            trigger_error(__CLASS__ . ': Please use the ObjectManager to load this class.', E_USER_DEPRECATED);
         }
 
         $this->setGroupedByQuestion();
-
     }
 
+
     /**
+     * setGroupedByQuestion
+     *
      * @return void
+     *  @todo this is method should not be part of a model
      */
     protected function setGroupedByQuestion(): void
     {
         $survey = $this->surveyResult->getSurvey();
-
         $this->groupByQuestion = $this->questionRepository->findOneByGroupedByAndSurvey($survey);
     }
 
+
     /**
+     * containsGroupedByQuestion
+     *
      * @return bool
+     *  @todo this is method should not be part of a model
      */
     public function containsGroupedByQuestion(): bool
     {
-        return (bool)$this->groupByQuestion;
+        return (bool) $this->groupByQuestion;
     }
 
+
     /**
+     * getSurveyResultUidsGroupedByQuestion
+     *
      * @return array
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
+     *  @todo this is method should not be part of a model
      */
     public function getSurveyResultUidsGroupedByQuestion(): array
     {
         $survey = $this->surveyResult->getSurvey();
-
         if ($this->groupByQuestion) {
+            $myGroupByQuestionResult = $this->questionResultRepository->findByQuestionAndSurveyResult(
+                $this->groupByQuestion,
+                $this->surveyResult
+            );
 
-            $myGroupByQuestionResult = $this->questionResultRepository->findByQuestionAndSurveyResult($this->groupByQuestion, $this->surveyResult);
-
-            $surveyResults = $this->surveyResultRepository->findBySurveyAndQuestionAndAnswerAndFinished($survey, $this->groupByQuestion, $myGroupByQuestionResult->getAnswer(), $finished = 1);
+            $surveyResults = $this->surveyResultRepository->findBySurveyAndQuestionAndAnswerAndFinished(
+                $survey,
+                $this->groupByQuestion,
+                $myGroupByQuestionResult->getAnswer(),
+                $finished = 1
+            );
 
         } else {
-
             $surveyResults = $this->surveyResultRepository->findBySurveyAndFinished($survey);
-
         }
 
         $surveyResultUids = [];
@@ -164,37 +186,57 @@ class Evaluator
         return $surveyResultUids;
     }
 
+
     /**
+     * getGroupByQuestionAnswer
+     *
      * @return mixed|null
+     *  @todo mixed return type is evil
+     *  @todo this is method should not be part of a model
      */
     public function getGroupByQuestionAnswer()
     {
 
         if ($this->groupByQuestion) {
 
-            $result = $this->questionResultRepository->findByQuestionAndSurveyResult($this->groupByQuestion, $this->surveyResult);
+            $result = $this->questionResultRepository->findByQuestionAndSurveyResult(
+                $this->groupByQuestion,
+                $this->surveyResult
+            );
 
-            return $this->parseStringToArray($result->getQuestion()->getAnswerOption(), PHP_EOL)[((int) $result->getAnswer() - 1)];
+            /**  @todo this is barely readable */
+            return $this->parseStringToArray(
+                $result->getQuestion()->getAnswerOption(),
+                PHP_EOL
+            )[((int) $result->getAnswer() - 1)];
 
         }
-
         return null;
 
     }
 
+
     /**
      * @return mixed|string
+     *  @todo mixed return type is evil; Gründungsökosystem Braunschweig - seriously?
+     *  @todo this is method should not be part of a model
      */
     public function getTitleByGroupByQuestionAnswer()
     {
-        return ($this->getGroupByQuestionAnswer()) ? GeneralUtility::trimExplode('(', $this->getGroupByQuestionAnswer(), true)[0] : 'Gründungsökosystem Braunschweig';
+        return ($this->getGroupByQuestionAnswer())
+            ? GeneralUtility::trimExplode('(', $this->getGroupByQuestionAnswer(), true)[0]
+            : 'Gründungsökosystem Braunschweig';
     }
 
+
     /**
-     * @param              $topics
+     *
+     * @param $topics
      * @param null         $scope
      * @return array
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
+     *  @todo parameter-type not defined. What is topics? QueryResultInterface? ObjectStorage?
+     *  @todo this is method should not be part of a model. Maybe a ViewHelper!
      */
     public function getAverageResultByTopics($topics, $scope = null): array
     {
@@ -243,6 +285,7 @@ class Evaluator
 
                 }
 
+                /**  @todo: $averageOnQuestion may be undefined here  */
                 $averageOnTopic[$topic->getUid()] = $this->getAverage($averageOnQuestion);
 
             }
@@ -253,8 +296,12 @@ class Evaluator
     }
 
     /**
-     * @param array        $charts
+     * renderBars
+     *
+     * @param array $charts
      * @return string
+     *  @todo this is method should not be part of a model. Maybe a ViewHelper!
+     *  @todo do not mix frontend-stuff with PHP. This is no WordPress ;-) Use a partial/template. Maybe with StandaloneView
      */
     public function renderBars(array $charts): string
     {
@@ -322,9 +369,13 @@ class Evaluator
 
     }
 
+
     /**
+     * prepareDonuts
+     *
      * @return array
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
+     *  @todo this is method should not be part of a model.  Maybe a ViewHelper!
      */
     public function prepareDonuts(): array
     {
@@ -357,12 +408,14 @@ class Evaluator
 //            $questionResults = $this->questionResultRepository->findByQuestion($question);
 //            $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'all_regions', $title = 'Alle 12 Regionen');
 
+            /**  @todo no hard-coded texts in PHP! */
             //  Deutschland = GEM
             $donuts[$slug]['data']['benchmark']['title'] = 'GEM-Expertenbefragung Deutschland';
 
             if ($question->getBenchmark()) {
 
                 //  get benchmark from question = GEM
+                /**  @todo line too long */
                 $donuts[$slug]['data']['benchmark']['evaluation']['series'] = $this->parseStringToArray($question->getBenchmarkWeighting(), $delimiter = '|', $checkFloat = true);
                 $donuts[$slug]['data']['benchmark']['evaluation']['labels'] = [
                     $this->labels['weighting']['low'],
@@ -381,9 +434,14 @@ class Evaluator
         return $donuts;
     }
 
+
     /**
-     * @param array        $charts
+     * renderDonuts
+     *
+     * @param array $charts
      * @return string
+     *  @todo this is method should not be part of a model. Maybe a ViewHelper!
+     *  @todo do not mix frontend-stuff with PHP. This is no WordPress ;-) Use a partial/template. Maybe with StandaloneView
      */
     public function renderDonuts(array $charts): string
     {
@@ -454,16 +512,20 @@ class Evaluator
         }
 
         return $script;
-
     }
 
+
     /**
+     * prepareBars
+     *
      * @return array
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
+     *  @todo this is method should not be part of a model. Maybe a ViewHelper!
      */
     public function prepareBars(): array
     {
 
+        /**  @todo no german comments please  */
         //  get the topics -> muss dynamisch über Zuordnung im Fragebogen zu Themen erfolgen
         $topics = $this->surveyResult->getSurvey()->getTopics();
 
@@ -496,8 +558,12 @@ class Evaluator
 
     }
 
+
     /**
+     * prepareChart
+     *
      * @return array
+     *  @todo this is method should not be part of a model. Maybe a ViewHelper!
      */
     public function prepareChart(): array
     {
@@ -519,6 +585,7 @@ class Evaluator
             $individualValues[] = (int)$result->getAnswer();
         }
 
+        /**  @todo no german comments please  */
         //  mit 0 auffüllen, wenn bisher weniger Antworten als Labels Fragen zur Verfügung stehen
         if (($fill = count($benchmarkValues) - count($individualValues)) > 0) {
             for ($i = 1; $i === $fill; $i++) {
@@ -535,9 +602,14 @@ class Evaluator
         ];
     }
 
+
     /**
-     * @param array        $chart
+     * renderChart
+     *
+     * @param array $chart
      * @return string
+     *  @todo do not mix frontend-stuff with PHP. This is no WordPress ;-) Use a partial/template. Maybe with StandaloneView
+     *  @todo this is method should not be part of a model. Maybe a ViewHelper!
      */
     public function renderChart(array $chart): string
     {
@@ -588,19 +660,25 @@ class Evaluator
             chart.render();
 
         ';
-
     }
+
 
     /**
      * @param \TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $questionResults
-     * @param array                                              $donuts
-     * @param string                                             $slug
-     * @param string                                             $key
-     * @param string                                             $title
-     * @return array                                             $donuts
+     * @param array $donuts
+     * @param string $slug
+     * @param string $key
+     * @param string $title
+     * @return array $donuts
+     *  @todo this is method should not be part of a model. Maybe a ViewHelper!
      */
-    public function collectData(\TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $questionResults, array $donuts, string $slug, string $key, string $title): array
-    {
+    public function collectData(
+        QueryResultInterface $questionResults,
+        array $donuts,
+        string $slug,
+        string $key,
+        string $title
+    ): array  {
         //  group the values
         $evaluation = [
             $key   => [
@@ -645,21 +723,29 @@ class Evaluator
         return $donuts;
     }
 
+
     /**
+     * getAverage
+     *
      * @param array $data
      * @return float
+     *  @todo this is method should not be part of a model. Maybe a ViewHelper!
      */
     protected function getAverage(array $data): float
     {
         return array_sum($data) / count($data);
     }
 
+
     /**
+     * buildBar
+     *
      * @param array  $topicNames
      * @param string $title
      * @param array  $series
      * @param array $bars
      * @return array
+     *   @todo this is method should not be part of a model. Maybe a ViewHelper!
      */
     protected function buildBar(array $topicNames, string $title, array $series, array $bars): array
     {
@@ -674,6 +760,7 @@ class Evaluator
         return $bars;
     }
 
+
     /**
      * Parses strings to arrays
      *
@@ -681,6 +768,7 @@ class Evaluator
      * @param string $delimiter
      * @param bool   $checkFloat
      * @return array
+     *  @todo this is method should not be part of a model. Maybe a ViewHelper!
      */
     public function parseStringToArray(string $data, string $delimiter = '|', bool $checkFloat = false): array
     {
@@ -697,11 +785,9 @@ class Evaluator
 
         if (count($parsedData) < 1) {
             $parsedData = [];
-            //===
         }
 
         return $parsedData;
-        //===
     }
 
 }
