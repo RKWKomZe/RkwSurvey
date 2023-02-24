@@ -1,5 +1,4 @@
 <?php
-
 namespace RKW\RkwSurvey\ViewHelpers;
 
 /*
@@ -20,19 +19,36 @@ namespace RKW\RkwSurvey\ViewHelpers;
  *
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
- * @copyright Rkw Kompetenzzentrum
+ * @copyright RKW Kompetenzzentrum
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class LoopViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class LoopViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
 {
+
     /**
-     * @param integer $number
+     * Initialize arguments.
+     *
+     * @return void
+     * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
+     */
+    public function initializeArguments(): void
+    {
+        parent::initializeArguments();
+        $this->registerArgument('number', 'int', 'The number of elements to insert into the array', true);
+    }
+
+
+    /**
+     * Render
+     *
      * @return array
      */
-    public function render($number)
+    public function render(): array
     {
+        /** @var int $number */
+        $number = $this->arguments['number'];
+
         return array_fill(0, $number, '');
-        //===
     }
 }

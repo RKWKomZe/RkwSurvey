@@ -1,30 +1,39 @@
 <?php
-
 namespace RKW\RkwSurvey\DisplayCond;
-
-use RKW\RkwSurvey\Domain\Repository\SurveyRepository;
-
-/**
- * This file is part of the "RkwSurvey" Extension for TYPO3 CMS.
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
  */
 
+use RKW\RkwSurvey\Domain\Repository\SurveyRepository;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
- * Checks display conditions on TCA
+ *  Question
+ *
+ * @author Maximilian Fäßler <maximilian@faesslerweb.de>
+ * @copyright RKW Kompetenzzentrum
+ * @package RKW_RkwSurvey
+ * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
 class Question
 {
 
     /**
-     * surveyRepository
-     *
      * @var \RKW\RkwSurvey\Domain\Repository\SurveyRepository
-     * @inject
+     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected $surveyRepository;
+    protected SurveyRepository $surveyRepository;
+
 
     /**
      * Question constructor
@@ -33,12 +42,14 @@ class Question
     public function __construct()
     {
 
-        $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+        /** @var \TYPO3\CMS\Extbase\Object\ObjectManager $objectManager */
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
 
         if (!$this->surveyRepository) {
             $this->surveyRepository = $objectManager->get(SurveyRepository::class);
         }
     }
+
 
     /**
      * @param array $array
@@ -64,6 +75,7 @@ class Question
 
     }
 
+
     /**
      * @param array $array
      * @return bool
@@ -83,7 +95,6 @@ class Question
         }
 
         return false;
-
     }
 
 }

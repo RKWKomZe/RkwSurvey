@@ -1,5 +1,4 @@
 <?php
-
 namespace RKW\RkwSurvey\ViewHelpers;
 
 /*
@@ -15,24 +14,48 @@ namespace RKW\RkwSurvey\ViewHelpers;
  * The TYPO3 project - inspiring people to share!
  */
 
+use RKW\RkwSurvey\Domain\Model\Question;
+
+
 /**
  * Class CollectScaleAnswersViewHelper
  *
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
- * @copyright Rkw Kompetenzzentrum
+ * @copyright RKW Kompetenzzentrum
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class CollectScaleAnswersViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class CollectScaleAnswersViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
 {
+
     /**
-     * @param \RKW\RkwSurvey\Domain\Model\Question $question
-     * @param array $questionResultList
+     * Initialize arguments.
+     *
+     * @return void
+     * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
+     */
+    public function initializeArguments(): void
+    {
+        parent::initializeArguments();
+        $this->registerArgument('question', Question::class, 'The question which answers should be searched for scaled answers', true);
+        $this->registerArgument('questionResultList', 'array', 'Array with given answers for questions', true);
+    }
+
+
+    /**
+     * Render
+     *
      * @return array
      */
-    public function render(\RKW\RkwSurvey\Domain\Model\Question $question, $questionResultList)
+    public function render(): array
     {
+        /** @var \RKW\RkwSurvey\Domain\Model\Question $question */
+        $question = $this->arguments['question'];
+
+        /** @var array $questionResultList */
+        $questionResultList = $this->arguments['questionResultList'];
+
         $collectedAnswers = array();
 
         // prefill key (they're maybe not selected)
@@ -53,7 +76,6 @@ class CollectScaleAnswersViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\Abs
         }
 
         return $collectedAnswers;
-        //===
     }
 
 

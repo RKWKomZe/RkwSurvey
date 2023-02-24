@@ -1,7 +1,7 @@
 <?php
-
 namespace RKW\RkwSurvey\ViewHelpers;
 /*
+ *
  * This file is part of the TYPO3 CMS project.
  *
  * It is free software; you can redistribute it and/or modify it under
@@ -19,23 +19,41 @@ namespace RKW\RkwSurvey\ViewHelpers;
  *
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
- * @copyright Rkw Kompetenzzentrum
+ * @copyright RKW Kompetenzzentrum
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class PageCountViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class PageCountViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
 {
+
     /**
-     * gets count of already answered questions and adds 1
+     * Initialize arguments.
      *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage $questionResultList
-     * @param int $start
-     * @return integer
+     * @return void
+     * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
      */
-    public function render($questionResultList, $start = 1)
+    public function initializeArguments(): void
     {
+        parent::initializeArguments();
+        $this->registerArgument('questionResultList', 'array', 'Array with given answers for questions', true);
+        $this->registerArgument('start', 'int', 'Page number to start from', false, 1);
+    }
+
+
+    /**
+     * Gets count of already answered questions and adds 1
+     *
+     * @return int
+     */
+    public function render(): int
+    {
+        /** @var array $questionResultList */
+        $questionResultList = $this->arguments['questionResultList'];
+
+        /** @var int $start */
+        $start = $this->arguments['start'];
+
         return count($questionResultList) + $start;
-        //===
     }
 
 }

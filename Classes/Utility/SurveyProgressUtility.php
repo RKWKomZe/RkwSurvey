@@ -1,9 +1,5 @@
 <?php
-
 namespace RKW\RkwSurvey\Utility;
-
-use RKW\RkwSurvey\Domain\Model\SurveyResult;
-use RKW\RkwSurvey\Domain\Model\QuestionResult;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -18,12 +14,16 @@ use RKW\RkwSurvey\Domain\Model\QuestionResult;
  * The TYPO3 project - inspiring people to share!
  */
 
+use RKW\RkwSurvey\Domain\Model\SurveyResult;
+use RKW\RkwSurvey\Domain\Model\QuestionResult;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * SurveyProgress
  *
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
- * @copyright Rkw Kompetenzzentrum
+ * @copyright RKW Kompetenzzentrum
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
@@ -37,10 +37,9 @@ class SurveyProgressUtility implements \TYPO3\CMS\Core\SingletonInterface
      * @param \RKW\RkwSurvey\Domain\Model\QuestionResult $newQuestionResult
      * @return void
      */
-    public static function handleJumpAction(SurveyResult $surveyResult, QuestionResult $newQuestionResult)
+    public static function handleJumpAction(SurveyResult $surveyResult, QuestionResult $newQuestionResult): void
     {
         // optional, if set: Skip next question(s), if a condition take effect
-
         if (
             $newQuestionResult->getQuestion()->isDoAction()
             && in_array(intval($newQuestionResult->getAnswer()), $newQuestionResult->getQuestion()->getDoActionIf())
@@ -61,7 +60,7 @@ class SurveyProgressUtility implements \TYPO3\CMS\Core\SingletonInterface
 
                 if ($newAnswerCount > $surveyResult->getQuestionResult()->count()) {
                     /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult */
-                    $questionResult = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('RKW\\RkwSurvey\\Domain\\Model\\QuestionResult');
+                    $questionResult = GeneralUtility::makeInstance(QuestionResult::class);
                     $questionResult->setSkipped(true);
                     $questionResult->setQuestion($question);
                     $questionResult->setSurveyResult($surveyResult);

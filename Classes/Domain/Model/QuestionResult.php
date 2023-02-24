@@ -1,5 +1,4 @@
 <?php
-
 namespace RKW\RkwSurvey\Domain\Model;
 
 /*
@@ -20,50 +19,47 @@ namespace RKW\RkwSurvey\Domain\Model;
  *
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
- * @copyright Rkw Kompetenzzentrum
+ * @copyright RKW Kompetenzzentrum
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
 class QuestionResult extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 {
+
     /**
-     * answer
-     *
      * @var string
      */
-    protected $answer = '';
+    protected string $answer = '';
+
 
     /**
-     * surveyResult
-     *
-     * @var \RKW\RkwSurvey\Domain\Model\SurveyResult
+     * @var \RKW\RkwSurvey\Domain\Model\SurveyResult|null
      */
-    protected $surveyResult = null;
+    protected ?SurveyResult $surveyResult = null;
+
 
     /**
-     * question
-     *
-     * @var \RKW\RkwSurvey\Domain\Model\Question
+     * @var \RKW\RkwSurvey\Domain\Model\Question|null
      */
-    protected $question = null;
+    protected ?Question $question = null;
+
 
     /**
-     * skipped
-     *
-     * @var boolean
+     * @var bool
      */
-    protected $skipped = 0;
+    protected bool $skipped = false;
 
 
     /**
      * Returns the answer
      *
-     * @return string $answer
+     * @return string
      */
-    public function getAnswer()
+    public function getAnswer(): string
     {
         return $this->answer;
     }
+
 
     /**
      * Sets the answer
@@ -71,20 +67,22 @@ class QuestionResult extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param string $answer
      * @return void
      */
-    public function setAnswer($answer)
+    public function setAnswer(string $answer): void
     {
         $this->answer = $answer;
     }
 
+
     /**
      * Returns the surveyResult
      *
-     * @return \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult
+     * @return \RKW\RkwSurvey\Domain\Model\SurveyResult|null
      */
-    public function getSurveyResult()
+    public function getSurveyResult():? SurveyResult
     {
         return $this->surveyResult;
     }
+
 
     /**
      * Sets the surveyResult
@@ -92,20 +90,22 @@ class QuestionResult extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult
      * @return void
      */
-    public function setSurveyResult(\RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult)
+    public function setSurveyResult(SurveyResult $surveyResult): void
     {
         $this->surveyResult = $surveyResult;
     }
 
+
     /**
      * Returns the question
      *
-     * @return \RKW\RkwSurvey\Domain\Model\Question $question
+     * @return \RKW\RkwSurvey\Domain\Model\Question|null
      */
-    public function getQuestion()
+    public function getQuestion():? Question
     {
         return $this->question;
     }
+
 
     /**
      * Sets the question
@@ -113,20 +113,22 @@ class QuestionResult extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param \RKW\RkwSurvey\Domain\Model\Question $question
      * @return void
      */
-    public function setQuestion(\RKW\RkwSurvey\Domain\Model\Question $question)
+    public function setQuestion(Question $question)
     {
         $this->question = $question;
     }
 
+
     /**
      * Returns the skipped
      *
-     * @return boolean $skipped
+     * @return bool $skipped
      */
-    public function getSkipped()
+    public function getSkipped(): bool
     {
         return $this->skipped;
     }
+
 
     /**
      * Sets the skipped
@@ -134,17 +136,18 @@ class QuestionResult extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param boolean $skipped
      * @return void
      */
-    public function setSkipped($skipped)
+    public function setSkipped(bool $skipped): void
     {
         $this->skipped = $skipped;
     }
 
+
     /**
      * Returns the skipped
      *
-     * @return boolean $skipped
+     * @return bool
      */
-    public function isSkipped()
+    public function isSkipped(): bool
     {
         return $this->skipped;
     }

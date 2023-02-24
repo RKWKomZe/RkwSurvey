@@ -20,7 +20,7 @@ namespace RKW\RkwSurvey\Domain\Repository;
  *
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
- * @copyright Rkw Kompetenzzentrum
+ * @copyright RKW Kompetenzzentrum
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
@@ -29,7 +29,7 @@ class SurveyRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
     /**
      * findAllSorted
      *
-     * @param integer $year
+     * @param int $year
      * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface|array
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */

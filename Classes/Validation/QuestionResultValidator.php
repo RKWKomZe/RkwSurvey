@@ -1,6 +1,6 @@
 <?php
-
 namespace RKW\RkwSurvey\Validation;
+
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -19,7 +19,7 @@ namespace RKW\RkwSurvey\Validation;
  *
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
- * @copyright Rkw Kompetenzzentrum
+ * @copyright RKW Kompetenzzentrum
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
@@ -53,8 +53,7 @@ class QuestionResultValidator extends \TYPO3\CMS\Extbase\Validation\Validator\Ab
             $isValid = false;
         }
 
-        return $isValid ? $isValid : $message;
-        //===
+        return $isValid ?: $message;
     }
 }
 
