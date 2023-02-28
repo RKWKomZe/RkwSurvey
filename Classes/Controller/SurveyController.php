@@ -318,7 +318,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @return void
      * @TYPO3\CMS\Extbase\Annotation\Validate("RKW\RkwSurvey\Validation\ContactFormValidator", param="contactForm")
      * @throws \Exception
-     * @throws \RKW\RkwMailer\Service\MailException
+     * @throws \Madj2k\Postmaster\Service\MailException
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
@@ -331,7 +331,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         $this->checkAccessRestriction($surveyResult, $tokenInput);
 
         // @todo Actually we have no frontendUser for creating a useful privacy-entry
-        // \RKW\RkwRegistration\DataProtection\ConsentHandler::add($this->request, $this->getFrontendUser(), $surveyResult, 'new survey contactForm');
+        // \Madj2k\FeRegister\DataProtection\ConsentHandler::add($this->request, $this->getFrontendUser(), $surveyResult, 'new survey contactForm');
 
         // send contactForm data to flexForm user
         $this->rkwMailService->sendContactForm($surveyResult->getSurvey()->getAdmin(), $surveyResult, $contactForm);
@@ -359,7 +359,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @param string $tokenInput
      * @return void
      * @throws \Exception
-     * @throws \RKW\RkwMailer\Exception
+     * @throws \Madj2k\Postmaster\Exception
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      * @throws \TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException

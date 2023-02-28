@@ -6,7 +6,7 @@ config.tx_extbase.persistence {
 
 	classes {
 
-        RKW\RkwRegistration\Domain\Model\BackendUser {
+        Madj2k\FeRegister\Domain\Model\BackendUser {
             subclasses {
                 Tx_RkwSurvey_BackendUser = RKW\RkwSurvey\Domain\Model\BackendUser
             }

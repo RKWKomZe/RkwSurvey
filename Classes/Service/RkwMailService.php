@@ -15,7 +15,7 @@ namespace RKW\RkwSurvey\Service;
  */
 
 use Madj2k\CoreExtended\Utility\GeneralUtility;
-use RKW\RkwMailer\Service\MailService;
+use Madj2k\Postmaster\Service\MailService;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use RKW\RkwSurvey\Domain\Model\SurveyResult;
@@ -38,7 +38,7 @@ class RkwMailService implements \TYPO3\CMS\Core\SingletonInterface
      * @param \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult
      * @return void
      * @throws \Exception
-     * @throws \RKW\RkwMailer\Exception
+     * @throws \Madj2k\Postmaster\Exception
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      * @throws \TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException
@@ -50,7 +50,7 @@ class RkwMailService implements \TYPO3\CMS\Core\SingletonInterface
         $settings = $this->getSettings(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
         if ($settings['view']['templateRootPaths']) {
 
-            /** @var \RKW\RkwMailer\Service\MailService $mailService */
+            /** @var \Madj2k\Postmaster\Service\MailService $mailService */
             $mailService = GeneralUtility::makeInstance(MailService::class);
 
             /** @var \RKW\RkwSurvey\Domain\Model\BackendUser $backendUser */
@@ -60,7 +60,7 @@ class RkwMailService implements \TYPO3\CMS\Core\SingletonInterface
                         'surveyResult' => $surveyResult,
                         'backendUser'  => $backendUser,
                     ),
-                    'subject' => \RKW\RkwMailer\Utility\FrontendLocalizationUtility::translate(
+                    'subject' => \Madj2k\Postmaster\Utility\FrontendLocalizationUtility::translate(
                         'rkwMailService.newSurveyAdmin.subject',
                         'rkw_survey',
                         null,
@@ -70,7 +70,7 @@ class RkwMailService implements \TYPO3\CMS\Core\SingletonInterface
             }
 
             $mailService->getQueueMail()->setSubject(
-                \RKW\RkwMailer\Utility\FrontendLocalizationUtility::translate(
+                \Madj2k\Postmaster\Utility\FrontendLocalizationUtility::translate(
                     'rkwMailService.newSurveyAdmin.subject',
                     'rkw_survey',
                     null,
@@ -93,7 +93,7 @@ class RkwMailService implements \TYPO3\CMS\Core\SingletonInterface
      * @param array $contactForm
      * @return void
      * @throws \Exception
-     * @throws \RKW\RkwMailer\Exception
+     * @throws \Madj2k\Postmaster\Exception
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      * @throws \TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException
@@ -106,7 +106,7 @@ class RkwMailService implements \TYPO3\CMS\Core\SingletonInterface
 
         if ($settings['view']['templateRootPaths']) {
 
-            /** @var \RKW\RkwMailer\Service\MailService $mailService */
+            /** @var \Madj2k\Postmaster\Service\MailService $mailService */
             $mailService = GeneralUtility::makeInstance(MailService::class);
 
             /** @var \RKW\RkwSurvey\Domain\Model\BackendUser $backendUser */
@@ -118,7 +118,7 @@ class RkwMailService implements \TYPO3\CMS\Core\SingletonInterface
                         'contactForm'  => $contactForm,
                         'backendUser'  => $backendUser,
                     ),
-                    'subject' => \RKW\RkwMailer\Utility\FrontendLocalizationUtility::translate(
+                    'subject' => \Madj2k\Postmaster\Utility\FrontendLocalizationUtility::translate(
                         'rkwMailService.contactAdmin.subject',
                         'rkw_survey',
                         null,
@@ -132,7 +132,7 @@ class RkwMailService implements \TYPO3\CMS\Core\SingletonInterface
             }
 
             $mailService->getQueueMail()->setSubject(
-                \RKW\RkwMailer\Utility\FrontendLocalizationUtility::translate(
+                \Madj2k\Postmaster\Utility\FrontendLocalizationUtility::translate(
                     'rkwMailService.contactAdmin.subject',
                     'rkw_survey',
                     null,
