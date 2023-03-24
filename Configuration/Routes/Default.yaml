@@ -1,0 +1,19 @@
+routeEnhancers:
+  RkwSurvey:
+    type: Extbase
+    namespace: 'tx_rkwsurvey_survey'
+    routes:
+      - routePath: '/rkw-survey/start/{survey}'
+        _controller: 'Survey::start'
+      - routePath: '/rkw-survey/progress/{surveyResult}'
+        _controller: 'Survey::progress'
+      - routePath: '/rkw-survey/result/{surveyResult}'
+        _controller: 'Survey::result'
+      - routePath: '/rkw-survey/newcontact/{surveyResult}'
+        _controller: 'Survey::newContact'
+      - routePath: '/rkw-survey/createcontact/{surveyResult}'
+        _controller: 'Survey::createContact'
+    defaultController: 'Survey::welcome'
+    requirements:
+      survey: '[0-9]{1,10}'
+      surveyResult: '[0-9]{1,10}'

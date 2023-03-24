@@ -317,8 +317,9 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @param string $tokenInput
      * @return void
      * @TYPO3\CMS\Extbase\Annotation\Validate("RKW\RkwSurvey\Validation\ContactFormValidator", param="contactForm")
+     * @TYPO3\CMS\Extbase\Annotation\Validate("Madj2k\FeRegister\Validation\Consent\PrivacyValidator", param="contactForm")
      * @throws \Exception
-     * @throws \Madj2k\Postmaster\Service\MailException
+     * @throws \Madj2k\Postmaster\Exception
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException

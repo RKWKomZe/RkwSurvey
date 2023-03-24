@@ -1,21 +1,24 @@
-{namespace vh=Madj2k\Postmaster\ViewHelpers}
-<f:layout name="Email/{mailType}" />
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:postmaster="http://typo3.org/ns/Madj2k/Postmaster/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+    <f:layout name="Email/{mailType}" />
 
-<!-- PLAINTEXT -->
-<f:section name="Plaintext">
-<vh:frontend.translate key="templates_email_newSurveyAdmin.headline" languageKey="{backendUser.lang}" extensionName="rkwSurvey" arguments="{0 : backendUser.realName}" />
+    <!-- PLAINTEXT -->
+    <f:section name="Plaintext"><postmaster:email.plaintextLineBreaks>
+        <postmaster:email.translate key="templates_email_newSurveyAdmin.headline" languageKey="{queueRecipient.languageCode}" extensionName="rkwSurvey" arguments="{0 : backendUser.realName}" />
+        
+        <postmaster:email.translate key="templates_email_newSurveyAdmin.text1" languageKey="{queueRecipient.languageCode}" extensionName="rkwSurvey" />\n\n
+        
+        - {surveyResult.survey.name}\n\n
+        
+        <postmaster:email.translate key="templates_email_newSurveyAdmin.text2" languageKey="{queueRecipient.languageCode}" extensionName="rkwSurvey"  />
+    </postmaster:email.plaintextLineBreaks></f:section>
 
-<vh:frontend.translate key="templates_email_newSurveyAdmin.text1" languageKey="{backendUser.lang}" extensionName="rkwSurvey" />
-
-- {surveyResult.survey.name}
-
-<vh:frontend.translate key="templates_email_newSurveyAdmin.text2" languageKey="{backendUser.lang}" extensionName="rkwSurvey"  />
-</f:section>
-
-<!-- HTML -->
-<f:section name="Html">
-	<h1><vh:frontend.translate key="templates_email_newSurveyAdmin.headline" languageKey="{backendUser.lang}" extensionName="rkwSurvey" arguments="{0 : backendUser.realName}" /></h1>
-	<p><vh:frontend.translate key="templates_email_newSurveyAdmin.text1" languageKey="{backendUser.lang}" extensionName="rkwSurvey"  /></p>
-	<p><em>{surveyResult.survey.name}</em></p>
-	<p><vh:frontend.translate key="templates_email_newSurveyAdmin.text2" languageKey="{backendUser.lang}" extensionName="rkwSurvey"  /></p>
-</f:section>
+    <!-- HTML -->
+    <f:section name="Html">
+        <h1><postmaster:email.translate key="templates_email_newSurveyAdmin.headline" languageKey="{queueRecipient.languageCode}" extensionName="rkwSurvey" arguments="{0 : backendUser.realName}" /></h1>
+        <p><postmaster:email.translate key="templates_email_newSurveyAdmin.text1" languageKey="{queueRecipient.languageCode}" extensionName="rkwSurvey"  /></p>
+        <p><em>{surveyResult.survey.name}</em></p>
+        <p><postmaster:email.translate key="templates_email_newSurveyAdmin.text2" languageKey="{queueRecipient.languageCode}" extensionName="rkwSurvey"  /></p>
+    </f:section>
+</html>

@@ -1,29 +1,33 @@
-{namespace vh=Madj2k\Postmaster\ViewHelpers}
-<f:layout name="Email/{mailType}" />
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:postmaster="http://typo3.org/ns/Madj2k/Postmaster/ViewHelpers"
+      data-namespace-typo3-fluid="true">
 
-<!-- PLAINTEXT -->
-<f:section name="Plaintext">
-<vh:frontend.translate key="templates_email_contactAdmin.headline" languageKey="{backendUser.lang}" extensionName="rkwSurvey" arguments="{0 : backendUser.realName}" />
+    <f:layout name="Email/{mailType}" />
 
-<vh:frontend.translate key="templates_email_contactAdmin.text1" languageKey="{backendUser.lang}" extensionName="rkwSurvey" arguments="{0 : surveyResult.survey.name}"/>
-
-<vh:frontend.translate key="templates_email_contactAdmin.text2" languageKey="{backendUser.lang}" extensionName="rkwSurvey"  />
-<vh:frontend.translate key="partials_survey_contactForm.gender.I.{contactForm.gender}" languageKey="{backendUser.lang}" extensionName="rkwSurvey" /> {contactForm.firstName} {contactForm.lastName}
-<f:if condition="{contactForm.company}">{contactForm.company}
-</f:if><f:if condition="{contactForm.email}">{contactForm.email}
-</f:if><f:if condition="{contactForm.phone}">{contactForm.phone}</f:if>
-</f:section>
+    <!-- PLAINTEXT -->
+    <f:section name="Plaintext"><postmaster:email.plaintextLineBreaks>
+        <postmaster:email.translate key="templates_email_contactAdmin.headline" languageKey="{queueRecipient.languageCode}" extensionName="rkwSurvey" arguments="{0 : backendUser.realName}" />\n\n
+        
+        <postmaster:email.translate key="templates_email_contactAdmin.text1" languageKey="{queueRecipient.languageCode}" extensionName="rkwSurvey" arguments="{0 : surveyResult.survey.name}"/>\n\n
+        
+        <postmaster:email.translate key="templates_email_contactAdmin.text2" languageKey="{queueRecipient.languageCode}" extensionName="rkwSurvey"  />\n\n
+        <f:if condition="{contactForm.gender} != 99"><postmaster:email.translate key="partials_survey_contactForm.gender.I.{contactForm.gender}" languageKey="{queueRecipient.languageCode}" extensionName="rkwSurvey" /></f:if><f:if condition="{contactForm.firstName}"> {contactForm.firstName}</f:if><f:if condition="{contactForm.lastName}"> {contactForm.lastName}</f:if>\n
+        <f:if condition="{contactForm.company}">{contactForm.company}\n</f:if>
+        <f:if condition="{contactForm.email}">{contactForm.email}\n</f:if>
+        <f:if condition="{contactForm.phone}">{contactForm.phone}\n</f:if>
+    </postmaster:email.plaintextLineBreaks></f:section>
 
 <!-- HTML -->
-<f:section name="Html">
-	<h1><vh:frontend.translate key="templates_email_contactAdmin.headline" languageKey="{backendUser.lang}" extensionName="rkwSurvey" arguments="{0 : backendUser.realName}" /></h1>
-	<p><vh:frontend.translate key="templates_email_contactAdmin.text1" languageKey="{backendUser.lang}" extensionName="rkwSurvey"  arguments="{0 : surveyResult.survey.name}"/></p>
-
-	<h2><vh:frontend.translate key="templates_email_contactAdmin.text2" languageKey="{backendUser.lang}" extensionName="rkwSurvey"  /></h2>
-    <p>
-        <vh:frontend.translate key="partials_survey_contactForm.gender.I.{contactForm.gender}" languageKey="{backendUser.lang}" extensionName="rkwSurvey" /> {contactForm.firstName} {contactForm.lastName}<br/>
-        <f:if condition="{contactForm.company}">{contactForm.company}<br/></f:if>
-        <f:if condition="{contactForm.email}">{contactForm.email}<br/></f:if>
-        <f:if condition="{contactForm.phone}">{contactForm.phone}</f:if>
-    </p>
-</f:section>
+    <f:section name="Html">
+        <h1><postmaster:email.translate key="templates_email_contactAdmin.headline" languageKey="{queueRecipient.languageCode}" extensionName="rkwSurvey" arguments="{0 : backendUser.realName}" /></h1>
+        <p><postmaster:email.translate key="templates_email_contactAdmin.text1" languageKey="{queueRecipient.languageCode}" extensionName="rkwSurvey"  arguments="{0 : surveyResult.survey.name}"/></p>
+    
+        <h2><postmaster:email.translate key="templates_email_contactAdmin.text2" languageKey="{queueRecipient.languageCode}" extensionName="rkwSurvey"  /></h2>
+        <p>
+            <f:if condition="{contactForm.gender} != 99"><postmaster:email.translate key="partials_survey_contactForm.gender.I.{contactForm.gender}" languageKey="{queueRecipient.languageCode}" extensionName="rkwSurvey" /></f:if><f:if condition="{contactForm.firstName}"> {contactForm.firstName}</f:if><f:if condition="{contactForm.lastName}"> {contactForm.lastName}</f:if><br/>
+            <f:if condition="{contactForm.company}">{contactForm.company}<br/></f:if>
+            <f:if condition="{contactForm.email}">{contactForm.email}<br/></f:if>
+            <f:if condition="{contactForm.phone}">{contactForm.phone}</f:if>
+        </p>
+    </f:section>
+</html>

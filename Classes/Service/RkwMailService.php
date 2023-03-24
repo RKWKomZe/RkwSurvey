@@ -15,7 +15,8 @@ namespace RKW\RkwSurvey\Service;
  */
 
 use Madj2k\CoreExtended\Utility\GeneralUtility;
-use Madj2k\Postmaster\Service\MailService;
+use Madj2k\Postmaster\Mail\MailMassage;
+use Madj2k\Postmaster\Mail\MailMessage;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use RKW\RkwSurvey\Domain\Model\SurveyResult;
@@ -50,8 +51,8 @@ class RkwMailService implements \TYPO3\CMS\Core\SingletonInterface
         $settings = $this->getSettings(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
         if ($settings['view']['templateRootPaths']) {
 
-            /** @var \Madj2k\Postmaster\Service\MailService $mailService */
-            $mailService = GeneralUtility::makeInstance(MailService::class);
+            /** @var \Madj2k\Postmaster\Mail\MailMessage $mailService */
+            $mailService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(MailMessage::class);
 
             /** @var \RKW\RkwSurvey\Domain\Model\BackendUser $backendUser */
             foreach ($backendUserList->toArray() as $backendUser) {
@@ -106,8 +107,8 @@ class RkwMailService implements \TYPO3\CMS\Core\SingletonInterface
 
         if ($settings['view']['templateRootPaths']) {
 
-            /** @var \Madj2k\Postmaster\Service\MailService $mailService */
-            $mailService = GeneralUtility::makeInstance(MailService::class);
+            /** @var \Madj2k\Postmaster\Mail\MailMessage $mailService */
+            $mailService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(MailMessage::class);
 
             /** @var \RKW\RkwSurvey\Domain\Model\BackendUser $backendUser */
             foreach ($backendUserList as $backendUser) {

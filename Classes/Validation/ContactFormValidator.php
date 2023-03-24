@@ -79,19 +79,6 @@ class ContactFormValidator extends \TYPO3\CMS\Extbase\Validation\Validator\Abstr
             }
         }
 
-        // Check privacy
-        if (!$contactForm['privacy']) {
-            $this->result->addError(
-                new \TYPO3\CMS\Extbase\Error\Error(
-                    \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
-                        'contactFormValidator.privacy',
-                        'rkw_survey'
-                    ), 1541170767
-                )
-            );
-            $isValid = false;
-        }
-
         return $isValid;
     }
 

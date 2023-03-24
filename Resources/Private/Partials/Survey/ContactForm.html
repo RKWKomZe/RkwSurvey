@@ -143,17 +143,7 @@
                     </div>
                 </f:if>
 
-                <div class="form__field">
-                    <f:form.checkbox
-                        class="checkbox"
-                        id="survey"
-                        property="privacy"
-                        value="1"
-                    />
-                    <label for="survey" class="checkbox-label">
-                        <feRegister:privacyText textVersion="survey"/>
-                    </label>
-                </div>
+                <feRegister:consent type="privacy" key="survey" />
 
                 <button type="submit" class="btn btn--primary" name="final">
                     <span>
