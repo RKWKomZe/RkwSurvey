@@ -44,12 +44,21 @@ config.tx_extbase.persistence {
 
 plugin.tx_rkwsurvey {
 	view {
-		templateRootPaths.0 = EXT:rkw_survey/Resources/Private/Templates/
-		templateRootPaths.1 = {$plugin.tx_rkwsurvey.view.templateRootPath}
-		partialRootPaths.0 = EXT:rkw_survey/Resources/Private/Partials/
-		partialRootPaths.1 = {$plugin.tx_rkwsurvey.view.partialRootPath}
-		layoutRootPaths.0 = EXT:rkw_survey/Resources/Private/Layouts/
-		layoutRootPaths.1 = {$plugin.tx_rkwsurvey.view.layoutRootPath}
+		templateRootPaths {
+		    0 = EXT:rkw_survey/Resources/Private/Templates/
+		    1 = {$plugin.tx_rkwsurvey.view.templateRootPath}
+		}
+
+		partialRootPaths{
+		    0 = EXT:rkw_survey/Resources/Private/Partials/
+		    1 = {$plugin.tx_rkwsurvey.view.partialRootPath}
+		    2 = {$plugin.tx_coreextended.view.partialRootPath}
+		}
+
+		layoutRootPaths{
+		    0 = EXT:rkw_survey/Resources/Private/Layouts/
+		    1 = {$plugin.tx_rkwsurvey.view.layoutRootPath}
+		}
 	}
 	persistence {
 		storagePid = {$plugin.tx_rkwsurvey.persistence.storagePid}
@@ -90,14 +99,14 @@ module.tx_rkwsurvey_web_rkwsurveyevaluation {
 module.tx_rkwsurvey_web_rkwsurveyevaluation.persistence < plugin.tx_rkwsurvey.persistence
 
 
-[globalVar = LIT:1 = {$plugin.tx_rkwsurvey.settings.includeCss}]
+[{$plugin.tx_rkwsurvey.settings.includeCss} == 1]
     page.includeCSS.txRkwSurvey = EXT:rkw_survey/Resources/Public/Css/webcheck-2.0.css
-[global]
+[END]
 
-[!userFunc = TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('rkw_webcheck')]
+[! extensionLoaded('rkw_webcheck')]
     page.includeJSFooter.txRkwSurvey = EXT:rkw_survey/Resources/Public/Scripts/webcheck-2.0.js
-[global]
+[END]
 
-[!userFunc = TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('rkw_webcheck')] && [globalVar = LIT:1 = {$plugin.tx_rkwsurvey.settings.includeJQuery}]
+[! extensionLoaded('rkw_webcheck') && {$plugin.tx_rkwsurvey.settings.includeJQuery} == 1]
 	page.includeJSFooterlibs.txRkwSurvey  = EXT:rkw_survey/Resources/Public/Scripts/jquery-3.4.1.min.js
-[global]
+[END]
