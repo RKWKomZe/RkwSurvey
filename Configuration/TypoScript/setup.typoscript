@@ -87,12 +87,22 @@ module.tx_rkwsurvey_web_rkwsurveyevaluation {
 		storagePid = {$module.tx_rkwsurvey_evaluation.persistence.storagePid}
 	}
 	view {
-		templateRootPaths.0 = EXT:rkw_survey/Resources/Private/Backend/Templates/
-		templateRootPaths.1 = {$module.tx_rkwsurvey_evaluation.view.templateRootPath}
-		partialRootPaths.0 = EXT:rkw_survey/Resources/Private/Backend/Partials/
-		partialRootPaths.1 = {$module.tx_rkwsurvey_evaluation.view.partialRootPath}
-		layoutRootPaths.0 = EXT:rkw_survey/Resources/Private/Backend/Layouts/
-		layoutRootPaths.1 = {$module.tx_rkwsurvey_evaluation.view.layoutRootPath}
+
+        templateRootPaths {
+            0 = EXT:rkw_survey/Resources/Private/Backend/Templates/
+            1 = {$module.tx_rkwsurvey_evaluation.view.templateRootPath}
+        }
+
+        partialRootPaths{
+            0 = EXT:rkw_survey/Resources/Private/Backend/Partials/
+            1 = {$module.tx_rkwsurvey_evaluation.view.partialRootPath}
+            2 = {$plugin.tx_coreextended.view.partialRootPath}
+        }
+
+        layoutRootPaths{
+            0 = EXT:rkw_survey/Resources/Private/Backend/Layouts/
+            1 = {$module.tx_rkwsurvey_evaluation.view.layoutRootPath}
+        }
 	}
 }
 
