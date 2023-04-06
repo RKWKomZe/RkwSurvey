@@ -1,65 +1,58 @@
-<f:layout name="Default" />
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
 
-This Template is responsible for creating a table of domain objects.
-
-If you modify this template, do not forget to change the overwrite settings
-in /Configuration/ExtensionBuilder/settings.yaml:
-  Resources:
-    Private:
-      Templates:
-        List.html: keep
-
-Otherwise your changes will be overwritten the next time you save the extension in the extension builder
-
-<f:section name="content">
-    <f:render partial="FlashMessages" arguments="{_all}" />
-
-    <f:link.action action="show" arguments="{survey: survey.uid}">
-        <f:translate key="templates_backend_tokenlist.backToDetailview" extensionName="RkwSurvey" />
-    </f:link.action>
-    <h1><f:translate key="templates_backend_tokenlist.tokenManagement" extensionName="RkwSurvey" />: {survey.name}</h1>
-
-    <f:form action="tokenCreate" arguments="{survey: survey.uid}">
-        <f:form.textfield id="number" name="number" type="number" value="50" additionalAttributes="{step: '10'}" />
-        <f:form.submit value="<f:translate key='templates_backend_tokenlist.generate' extensionName='RkwSurvey' />" />
-    </f:form>
-
-    <f:if condition="{survey.token}">
-        <f:then>
-
-            <f:form action="tokenCsv" arguments="{survey: survey.uid}">
-                <f:form.submit value="<f:translate key='templates_backend_tokenlist.csv' extensionName='RkwSurvey' />" />
-            </f:form>
-
-            <f:form action="tokenRemove" arguments="{survey: survey.uid}">
-                <f:form.submit value="<f:translate key='templates_backend_tokenlist.delete' extensionName='RkwSurvey' />" />
-            </f:form>
-
-            <h2><f:translate key="templates_backend_tokenlist.usage" extensionName="RkwSurvey" /></h2>
-            https://www.example.com/link/to/survey/<strong><span style="color:green">?token=<span style="color:red">ABCDEF</span></span></strong>
-
-
-            <h2><f:translate key="templates_backend_tokenlist.unusedTokens" extensionName="RkwSurvey" /> (<f:count>{unusedTokens}</f:count>/<f:count>{survey.token}</f:count>):</h2>
-            <ul>
-                <f:for each="{unusedTokens}" as="token">
-                    <li>{token.name}</li>
-                </f:for>
-            </ul>
-
-            <h2><f:translate key="templates_backend_tokenlist.usedTokens" extensionName="RkwSurvey" /> (<f:count>{surveyResultList}</f:count>/<f:count>{survey.token}</f:count>):</h2>
-            <ul>
-                <f:for each="{surveyResultList}" as="surveyResult">
-                    <li>
-                        {surveyResult.token.name} (<f:translate key="templates_backend_tokenlist.at" extensionName="RkwSurvey" /> <f:format.date format="d.m.Y H:i">{surveyResult.crdate}</f:format.date> <f:translate key='templates_backend_tokenlist.clock' extensionName='RkwSurvey' />)
-                        <f:if condition="{surveyResult.finished}"><f:else>(<f:translate key="templates_backend_tokenlist.notFinished" extensionName='RkwSurvey' />)</f:else></f:if>
-                    </li>
-                </f:for>
-            </ul>
-        </f:then>
-        <f:else>
-            <f:translate key="templates_backend_tokenlist.noTokens" extensionName="RkwSurvey" />
-        </f:else>
-    </f:if>
-
-
-</f:section>
+    <f:layout name="Default" />
+    
+    <f:section name="content">
+        <f:render partial="FlashMessages" arguments="{_all}" />
+    
+        <f:link.action action="show" arguments="{survey: survey.uid}">
+            <f:translate key="templates_backend_tokenlist.backToDetailview" extensionName="RkwSurvey" />
+        </f:link.action>
+        <h1><f:translate key="templates_backend_tokenlist.tokenManagement" extensionName="RkwSurvey" />: {survey.name}</h1>
+    
+        <f:form action="tokenCreate" arguments="{survey: survey.uid}">
+            <f:form.textfield id="number" name="number" type="number" value="50" additionalAttributes="{step: '10'}" />
+            <f:form.submit value="<f:translate key='templates_backend_tokenlist.generate' extensionName='RkwSurvey' />" />
+        </f:form>
+    
+        <f:if condition="{survey.token}">
+            <f:then>
+    
+                <f:form action="tokenCsv" arguments="{survey: survey.uid}">
+                    <f:form.submit value="<f:translate key='templates_backend_tokenlist.csv' extensionName='RkwSurvey' />" />
+                </f:form>
+    
+                <f:form action="tokenRemove" arguments="{survey: survey.uid}">
+                    <f:form.submit value="<f:translate key='templates_backend_tokenlist.delete' extensionName='RkwSurvey' />" />
+                </f:form>
+    
+                <h2><f:translate key="templates_backend_tokenlist.usage" extensionName="RkwSurvey" /></h2>
+                https://www.example.com/link/to/survey/<strong><span style="color:green">?token=<span style="color:red">ABCDEF</span></span></strong>
+    
+    
+                <h2><f:translate key="templates_backend_tokenlist.unusedTokens" extensionName="RkwSurvey" /> (<f:count>{unusedTokens}</f:count>/<f:count>{survey.token}</f:count>):</h2>
+                <ul>
+                    <f:for each="{unusedTokens}" as="token">
+                        <li>{token.name}</li>
+                    </f:for>
+                </ul>
+    
+                <h2><f:translate key="templates_backend_tokenlist.usedTokens" extensionName="RkwSurvey" /> (<f:count>{surveyResultList}</f:count>/<f:count>{survey.token}</f:count>):</h2>
+                <ul>
+                    <f:for each="{surveyResultList}" as="surveyResult">
+                        <li>
+                            {surveyResult.token.name} (<f:translate key="templates_backend_tokenlist.at" extensionName="RkwSurvey" /> <f:format.date format="d.m.Y H:i">{surveyResult.crdate}</f:format.date> <f:translate key='templates_backend_tokenlist.clock' extensionName='RkwSurvey' />)
+                            <f:if condition="{surveyResult.finished}"><f:else>(<f:translate key="templates_backend_tokenlist.notFinished" extensionName='RkwSurvey' />)</f:else></f:if>
+                        </li>
+                    </f:for>
+                </ul>
+            </f:then>
+            <f:else>
+                <f:translate key="templates_backend_tokenlist.noTokens" extensionName="RkwSurvey" />
+            </f:else>
+        </f:if>
+    
+    
+    </f:section>
+</html>
