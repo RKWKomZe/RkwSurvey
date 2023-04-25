@@ -134,9 +134,15 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
             $tokenInput = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('token');
         }
 
+        $selectedSurvey = null;
+
+        if ($this->settings['selectedSurvey']) {
+            $selectedSurvey = $this->surveyRepository->findByIdentifierIgnoreEnableFields(intval($this->settings['selectedSurvey']));
+        }
+
         $this->view->assignMultiple(
             array(
-                'survey'     => $survey ? $survey : $this->surveyRepository->findByIdentifierIgnoreEnableFields(intval($this->settings['selectedSurvey'])),
+                'survey'     => $survey ? $survey : $selectedSurvey,
                 'tokenInput' => $tokenInput,
             )
         );

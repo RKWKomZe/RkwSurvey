@@ -200,10 +200,15 @@
 			<trans-unit id="flexform.survey.survey_options">
 				<source>Options</source>
 			</trans-unit>
+			<trans-unit id="flexform.survey.selectSurvey">
+				<source>Select survey</source>
+			</trans-unit>
+			<trans-unit id="flexform.survey.selectSurvey.description">
+				<source>Select survey description</source>
+			</trans-unit>
 			<trans-unit id="flexform.survey.survey">
 				<source>Show Survey</source>
 			</trans-unit>
-
 			<trans-unit id="flexform.survey.contact_options">
                 <source>Contact options</source>
             </trans-unit>

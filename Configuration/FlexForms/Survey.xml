@@ -10,6 +10,21 @@
                 </TCEforms>
                 <type>array</type>
                 <el>
+                    <settings.selectSurvey>
+                        <label>
+                            LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.selectSurvey
+                        </label>
+                        <config>
+                            <type>check</type>
+                            <default>1</default>
+                            <items type="array">
+                                <numIndex index="0" type="array">
+                                    <numIndex index="0">LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:flexform.survey.selectSurvey.description</numIndex>
+                                </numIndex>
+                            </items>
+                        </config>
+                        <onChange>reload</onChange>
+                    </settings.selectSurvey>
                     <settings.selectedSurvey>
                         <TCEforms>
                             <label>
@@ -25,6 +40,7 @@
                                     AND tx_rkwsurvey_domain_model_survey.deleted = 0 AND tx_rkwsurvey_domain_model_survey.hidden = 0 ORDER BY tx_rkwsurvey_domain_model_survey.name
                                 </foreign_table_where>
                             </config>
+                            <displayCond>FIELD:settings.selectSurvey:REQ:TRUE</displayCond>
                         </TCEforms>
                     </settings.selectedSurvey>
                 </el>

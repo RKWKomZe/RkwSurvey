@@ -269,6 +269,14 @@
 				<source>Options</source>
 				<target>Optionen</target>
 			</trans-unit>
+			<trans-unit id="flexform.survey.selectSurvey">
+				<source>Select survey</source>
+				<target>Umfrage auswählen</target>
+			</trans-unit>
+			<trans-unit id="flexform.survey.selectSurvey.description">
+				<source>Select survey description</source>
+				<target>Umfrage explizit auswählen - falls nicht aktiviert, wird die Umfrage per Url erwartet</target>
+			</trans-unit>
 			<trans-unit id="flexform.survey.survey">
 				<source>Show Survey</source>
 				<target>Zeige Umfrage</target>
