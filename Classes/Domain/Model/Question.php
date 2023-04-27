@@ -619,6 +619,6 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      */
     public function getScale()
     {
-        return range($this->scaleFromPoints, $this->scaleToPoints, $this->scaleStep);
+        return range($this->scaleFromPoints, $this->scaleToPoints, $this->scaleStep == 0 ? 1 : $this->scaleStep);
     }
 }

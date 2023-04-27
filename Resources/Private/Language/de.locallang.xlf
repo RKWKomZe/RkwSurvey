@@ -37,6 +37,23 @@
 			</trans-unit>
 
 
+            <trans-unit id="tx_rkwsurvey_domain_model_questioncontainer">
+                <source>RKW Survey: Question container</source>
+                <target>RKW Survey: Container für Fragen</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_questioncontainer.name">
+                <source>Title</source>
+                <target>Titel (optional)</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_questioncontainer.description">
+                <source>Description</source>
+                <target>Beschreibung</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_questioncontainer.question">
+                <source>Question</source>
+                <target>Frage</target>
+            </trans-unit>
+
 
 			<trans-unit id="tx_rkwsurvey_domain_model_question">
 				<source>RKW Survey: Question</source>
