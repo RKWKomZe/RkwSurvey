@@ -2,6 +2,8 @@
 
 namespace RKW\RkwSurvey\Controller;
 
+use Doctrine\Common\Util\Debug;
+use RKW\RkwSurvey\Domain\Model\QuestionResultContainer;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use RKW\RkwSurvey\Domain\Model\Survey;
 use RKW\RkwSurvey\Domain\Model\Evaluator;
@@ -9,6 +11,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use RKW\RkwSurvey\Domain\Model\SurveyResult;
 use RKW\RkwSurvey\Domain\Model\QuestionResult;
 use RKW\RkwSurvey\Utility\SurveyProgressUtility;
+use TYPO3\CMS\Extbase\Mvc\Exception\StopActionException;
+use TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException;
+use TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -184,13 +190,16 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      */
     public function initializeProgressAction()
     {
-        if ($this->request->hasArgument('newQuestionResult')) {
-            $newQuestionResult = $this->request->getArgument('newQuestionResult');
 
-            if (is_array($newQuestionResult['answer'])) {
-                $newQuestionResult['answer'] = implode(',', array_keys(array_filter($newQuestionResult['answer'])));
-                $this->request->setArgument('newQuestionResult', $newQuestionResult);
+        if ($this->request->hasArgument('newQuestionResultContainer')) {
+            $newQuestionResultContainer = $this->request->getArgument('newQuestionResultContainer');
+
+            foreach ($newQuestionResultContainer['questionResult'] as $key => $newQuestionResult) {
+                if (is_array($newQuestionResult['answer'])) {
+                    $newQuestionResultContainer['questionResult'][$key]['answer'] = implode(',', array_keys(array_filter($newQuestionResult['answer'])));
+                }
             }
+            $this->request->setArgument('newQuestionResultContainer', $newQuestionResultContainer);
         }
     }
 
@@ -199,59 +208,70 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * action progress
      * This action calls itself until all questions are answered
      *
-     * @param \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult
+     * @param SurveyResult $surveyResult
      * @param string $extensionSuffix
      * @param string $tokenInput
-     * @param \RKW\RkwSurvey\Domain\Model\QuestionResult $newQuestionResult
+     * @param QuestionResultContainer $newQuestionResultArray
      * @return void
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * @throws StopActionException
+     * @throws IllegalObjectTypeException
+     * @throws UnknownObjectException
      */
-    public function progressAction(SurveyResult $surveyResult, $extensionSuffix = null, $tokenInput = null, QuestionResult $newQuestionResult = null)
+    public function progressAction(
+        SurveyResult $surveyResult,
+        string $extensionSuffix = null,
+        string $tokenInput = null,
+        QuestionResultContainer $newQuestionResultContainer = null)
     {
+
         // check access restriction
         $this->checkAccessRestriction($surveyResult, $tokenInput);
 
-        // Workaround: We have several problems if we're using @validate via PhpDocs.
-        $validatorRequest = false;
-        if ($newQuestionResult) {
-            $validatorRequest = $this->questionResultValidator->isValid($newQuestionResult);
-        }
+        if($newQuestionResultContainer instanceof QuestionResultContainer) {
 
-        if (is_string($validatorRequest)) {
-            // set error message to user
-            $this->view->assign('errorMessage', $validatorRequest);
+            $validatorRequest = false;
+            /** @var QuestionResult $newQuestionResult */
+            foreach ($newQuestionResultContainer->getQuestionResult() as $newQuestionResult) {
 
-        } elseif ($validatorRequest === true) {
+                // Workaround: We have several problems if we're using @validate via PhpDocs.
+                $validatorRequest = $this->questionResultValidator->isValid($newQuestionResult);
 
-            // continue with question result
-            if ($newQuestionResult) {
-                // for secure - check if question is already answered (prevents browser-hopping anomalies)
-                /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $oldQuestionResult */
-                if ($oldQuestionResult = $this->questionResultRepository->findByQuestionAndSurveyResult($newQuestionResult->getQuestion(), $surveyResult)) {
+                if (is_string($validatorRequest)) {
+                    // set error message to user
+                    $this->view->assign('errorMessage', $validatorRequest);
 
-                    //@toDo: Why not remove the old one instead of returning an error
-                    $surveyResult->removeQuestionResult($oldQuestionResult);
-                    $this->questionResultRepository->remove($oldQuestionResult);
+                } elseif ($validatorRequest === true) {
 
-                    /*
-                     $this->addFlashMessage(
-                        \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_survey.alreadyAnswered', $this->extensionName),
-                        '',
-                        \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
-                    );
-                    $this->redirect('welcome', null, null, array('survey' => $surveyResult->getSurvey()));
-                    //===
-                    */
+                    // continue with question result
+                    if ($newQuestionResult) {
+                        // for secure - check if question is already answered (prevents browser-hopping anomalies)
+                        /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $oldQuestionResult */
+                        if ($oldQuestionResult = $this->questionResultRepository->findByQuestionAndSurveyResult($newQuestionResult->getQuestion(), $surveyResult)) {
+
+                            //@toDo: Why not remove the old one instead of returning an error
+                            $surveyResult->removeQuestionResult($oldQuestionResult);
+                            $this->questionResultRepository->remove($oldQuestionResult);
+
+                            /*
+                             $this->addFlashMessage(
+                                \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_survey.alreadyAnswered', $this->extensionName),
+                                '',
+                                \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
+                            );
+                            $this->redirect('welcome', null, null, array('survey' => $surveyResult->getSurvey()));
+                            //===
+                            */
+                        }
+
+                        $surveyResult->addQuestionResult($newQuestionResult);
+                        // @toDo: Add container jump
+                        SurveyProgressUtility::handleJumpAction($surveyResult, $newQuestionResult);
+                        $this->surveyResultRepository->update($surveyResult);
+                    }
                 }
-
-                $surveyResult->addQuestionResult($newQuestionResult);
-                SurveyProgressUtility::handleJumpAction($surveyResult, $newQuestionResult);
-                $this->surveyResultRepository->update($surveyResult);
             }
         }
+
 
         // if all questions are answered, finalize it!
         if (count($surveyResult->getQuestionResult()) === count($surveyResult->getSurvey()->getQuestion())) {

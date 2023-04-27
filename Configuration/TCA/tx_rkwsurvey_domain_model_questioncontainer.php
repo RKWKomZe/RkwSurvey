@@ -151,7 +151,7 @@ return [
                 'foreign_table' => 'tx_rkwsurvey_domain_model_question',
                 'foreign_field' => 'question_container',
                 'foreign_sortby' => 'sorting',
-                'maxitems' => 9999,
+                'maxitems' => 10,
                 'minitems' => 1,
                 'appearance' => [
                     'collapseAll' => 1,

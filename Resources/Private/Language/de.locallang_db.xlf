@@ -267,6 +267,33 @@
             </trans-unit>
 
 
+
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresultcontainer">
+				<source>RKW Survey: Question Result Container</source>
+				<target>RKW Survey: Antwort Container</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresultcontainer.answer_multiple">
+				<source>Answer Multiple</source>
+				<target>Multiple choice Antwort</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresultcontainer.answer_free">
+				<source>Answer Free</source>
+				<target>Freitext Antwort</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresultcontainer.survey_result">
+				<source>Survey Result</source>
+				<target>Umfrageergebnis</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresultcontainer.question">
+				<source>Question</source>
+				<target>Frage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresultcontainer.skipped">
+				<source>Question was skipped automatically</source>
+				<target>Frage wurde automatisch übersprungen</target>
+			</trans-unit>
+
+
             <trans-unit id="tx_rkwsurvey_domain_model_token">
                 <source>RKW Survey: Token</source>
                 <target>RKW Survey: Token</target>
