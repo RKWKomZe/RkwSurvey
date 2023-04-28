@@ -167,13 +167,14 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         // column names
         $surveyUidTranslation = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyUid', $this->extensionName);
         $surveyResultUidTranslation = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultUid', $this->extensionName);
+        $surveyResultTagsTranslation = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultTags', $this->extensionName);
         $QuestionResultUidTranslation = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionUid', $this->extensionName);
         $questionTranslation = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.question', $this->extensionName);
         $answerOptionTranslation = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answerOption', $this->extensionName);
         $answerTranslation = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answer', $this->extensionName);
 
         // Fill the CSV file with content
-        fputcsv($csv, array($surveyUidTranslation, $surveyResultUidTranslation, $QuestionResultUidTranslation, $questionTranslation, $answerOptionTranslation, $answerTranslation), $separator);
+        fputcsv($csv, array($surveyUidTranslation, $surveyResultUidTranslation, $surveyResultTagsTranslation, $QuestionResultUidTranslation, $questionTranslation, $answerOptionTranslation, $answerTranslation), $separator);
 
         /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult */
         foreach ($questionResultList as $questionResult) {
@@ -189,6 +190,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
                 $question = $questionResult->getQuestion();
                 $surveyUid = $survey->getUid();
                 $surveyResultUid = $questionResult->getSurveyResult()->getUid();
+                $surveyResultTags = $questionResult->getSurveyResult()->getTags();
                 $questionResultUid = $questionResult->getUid();
 
                 $answerOption = '';
@@ -207,7 +209,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
                     $answerOption = $question->getAnswerOption();
                 }
 
-                fputcsv($csv, array($surveyUid, $surveyResultUid, $questionResultUid, $question->getQuestion(), $answerOption, $questionResult->getAnswer()), $separator);
+                fputcsv($csv, array($surveyUid, $surveyResultUid, $surveyResultTags, $questionResultUid, $question->getQuestion(), $answerOption, $questionResult->getAnswer()), $separator);
 
             } catch (\Exception $e) {
                 continue;

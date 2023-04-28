@@ -136,6 +136,9 @@
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.surveyResultUid">
 				<source>Survey Result Uid</source>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.surveyResultTags">
+				<source>Survey Result tags</source>
+			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.questionUid">
 				<source>Question Uid</source>
 			</trans-unit>

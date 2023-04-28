@@ -205,6 +205,10 @@
                 <source>Token</source>
                 <target>Token</target>
             </trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_surveyresult.tags">
+                <source>Tags</source>
+                <target>Tags</target>
+            </trans-unit>
 
 
 			<trans-unit id="tx_rkwsurvey_domain_model_questionresult">
