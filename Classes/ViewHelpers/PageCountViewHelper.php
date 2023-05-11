@@ -14,6 +14,11 @@ namespace RKW\RkwSurvey\ViewHelpers;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Doctrine\Common\Util\Debug;
+use RKW\RkwSurvey\Domain\Model\QuestionContainer;
+use RKW\RkwSurvey\Domain\Model\SurveyResult;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+
 /**
  * PageCountViewHelper
  *
@@ -28,14 +33,14 @@ class PageCountViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewH
     /**
      * gets count of already answered questions and adds 1
      *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage $questionResultList
+     * @param SurveyResult $surveyResult
      * @param int $start
      * @return integer
      */
-    public function render($questionResultList, $start = 1)
+    public function render(SurveyResult $surveyResult, $start = 1)
     {
-        return count($questionResultList) + $start;
-        //===
+
+        return $surveyResult->getQuestionResult()->count() + $start;
     }
 
 }

@@ -7,9 +7,10 @@
             <f:form.radio
                 id="answer{iterAnswer.cycle}"
                 class="radio"
-                name="answer"
-                property="answer"
+                name="questionResult.{iter.index}.answer"
+                property="questionResult.{iter.index}.answer"
                 value="{iterAnswer.cycle}"
+                checked="<rkw:getFormFieldValue questionResultContainer='{prevResultContainer}' containerIter='{iter.index}' questionIter='{iterAnswer.cycle}' />"
             />
             <label class="radio-label radio-label--webcheck answer" for="answer{iterAnswer.cycle}">
                 {answerOption}

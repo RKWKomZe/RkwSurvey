@@ -8,16 +8,16 @@
         <div class="steps">
             <span>
                 <f:translate key='partials_survey_footer.progress' extensionName='RkwSurvey' />:
-                <rkw:calcPercentage percentage='<rkw:pageCount questionResultList="{surveyResult.questionResult}" start="0" />' total='<f:count>{surveyResult.survey.question}</f:count>' />
+                <rkw:calcPercentage percentage='<rkw:pageCount surveyResult="{surveyResult}" start="0" />' total='{surveyResult.survey.questionCountTotal}' />
 
                  <f:comment>
                     <!-- old "Frage 1/4" pagination -->
-                    <f:translate key='partials_survey_footer.question' extensionName='RkwSurvey' /> <rkw:pageCount questionResultList='{surveyResult.questionResult}' /> / <f:count>{surveyResult.survey.question}</f:count>
+                    <f:translate key='partials_survey_footer.question' extensionName='RkwSurvey' /> <rkw:pageCount surveyResult='{surveyResult}' /> / {surveyResult.survey.questionCountTotal}
                 </f:comment>
             </span>
         </div>
 
-        <f:if condition="<f:count>{surveyResult.survey.question}</f:count> == <rkw:pageCount questionResultList='{surveyResult.questionResult}' />">
+        <f:if condition="<rkw:isLastStep surveyResult='{surveyResult}' />">
             <f:then>
                 <f:form.submit class="btn btn--primary" value="<f:translate key='partials_survey_footer.finish' extensionName='RkwSurvey' />" />
             </f:then>

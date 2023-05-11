@@ -31,17 +31,44 @@
 
         <div class="contentbox contentbox--gray contentbox--webcheck webcheck" id="tx-rkwsurvey-head">
             <!-- Use 'arguments="{surveyResult: surveyResult, extensionSuffix: extensionSuffix}"' for separate SignalSlot -->
-            <f:form action="progress" name="newQuestionResult" id="check-head" object="{newQuestionResult}" arguments="{surveyResult: surveyResult}" noCacheHash="true" class="webcheck__form" section="tx-rkwsurvey-head">
+            <f:form action="progress" name="newQuestionResultContainer" id="check-head" object="{newQuestionResultContainer}" arguments="{surveyResult: surveyResult}" noCacheHash="true" class="webcheck__form" section="tx-rkwsurvey-head">
                 <f:form.hidden name="surveyResult" property="surveyResult" value="{surveyResult}" />
                 <f:form.hidden name="tokenInput" value="{tokenInput}" />
 
                 <!-- question -->
-                <f:for each="{surveyResult.survey.question}" as="question" iteration="iter">
-                    <f:if condition="{iter.index} == <f:count>{surveyResult.questionResult}</f:count>">
-                        <f:form.hidden name="question" property="question" value="{question}" />
-                        <f:render partial="Survey/Question" arguments="{_all}" />
-                    </f:if>
-                </f:for>
+                <f:if condition="{surveyResult.survey.type} == 2">
+                    <f:then>
+                        <f:comment><!-- container with multiple questions --></f:comment>
+                        <f:for each="{surveyQuestionContainerArray}" as="container" iteration="containerIter">
+                            <f:if condition="<rkw:isCurrentContainer surveyResult='{surveyResult}' questionContainerToCheck='{container}' />">
+                                <f:if condition="{container.hideNameFe}">
+                                    <f:else>
+                                        <h5>{container.name}</h5>
+                                    </f:else>
+                                </f:if>
+
+                                <f:if condition="{container.description}">
+                                    <f:format.html parseFuncTSPath="lib.parseFunc_RTE">{container.description}</f:format.html>
+                                </f:if>
+
+                                <f:for each="{container.question}" as="question" iteration="iter">
+                                    <f:form.hidden name="questionResult.{iter.index}.question" property="questionResult.{iter.index}.question" value="{question}" />
+                                    <f:render partial="Survey/Question" arguments="{_all}" />
+                                </f:for>
+                            </f:if>
+                        </f:for>
+                    </f:then>
+                    <f:else>
+                        <f:comment><!-- single question as its own step --></f:comment>
+                        <f:for each="{surveyResult.survey.question}" as="question" iteration="iter">
+                            <f:if condition="{iter.index} == <f:count>{surveyResult.questionResult}</f:count>">
+                                <f:form.hidden name="questionResult.{iter.index}.question" property="questionResult.{iter.index}.question" value="{question}" />
+                                <f:render partial="Survey/Question" arguments="{_all}" />
+                            </f:if>
+                        </f:for>
+                    </f:else>
+                </f:if>
+
 
                 <!-- footer -->
                 <f:render partial="Survey/Footer" arguments="{_all}" />
