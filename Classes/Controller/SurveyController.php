@@ -283,9 +283,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                     $surveyResult->addQuestionResult($questionResultToAdd);
                 }
             } else {
-
-                DebuggerUtility::var_dump($questionHasErrorArray);
-
                 // give back the given questionContainer to re-fill given formfields
                 $this->view->assign('prevResultContainer', $newQuestionResultContainer);
                 $this->view->assign('questionHasErrorArray', $questionHasErrorArray);
