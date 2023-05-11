@@ -110,7 +110,8 @@ class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 
         $constraints = array();
 
-        $constraints[] = $query->equals('question.survey', $survey);
+        //$constraints[] = $query->equals('question.survey', $survey);
+        $constraints[] = $query->equals('surveyResult.survey', $survey);
         $constraints[] = $query->logicalAnd(
             $query->logicalNot(
                 $query->equals('surveyResult.uid', null)

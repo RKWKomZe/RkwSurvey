@@ -194,12 +194,14 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         if ($this->request->hasArgument('newQuestionResultContainer')) {
             $newQuestionResultContainer = $this->request->getArgument('newQuestionResultContainer');
 
-            foreach ($newQuestionResultContainer['questionResult'] as $key => $newQuestionResult) {
-                if (is_array($newQuestionResult['answer'])) {
-                    $newQuestionResultContainer['questionResult'][$key]['answer'] = implode(',', array_keys(array_filter($newQuestionResult['answer'])));
+            if (key_exists('questionResult', $newQuestionResultContainer)) {
+                foreach ($newQuestionResultContainer['questionResult'] as $key => $newQuestionResult) {
+                    if (is_array($newQuestionResult['answer'])) {
+                        $newQuestionResultContainer['questionResult'][$key]['answer'] = implode(',', array_keys(array_filter($newQuestionResult['answer'])));
+                    }
                 }
+                $this->request->setArgument('newQuestionResultContainer', $newQuestionResultContainer);
             }
-            $this->request->setArgument('newQuestionResultContainer', $newQuestionResultContainer);
         }
     }
 
@@ -227,11 +229,12 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         // check access restriction
         $this->checkAccessRestriction($surveyResult, $tokenInput);
 
-        if($newQuestionResultContainer instanceof QuestionResultContainer) {
+        if ($newQuestionResultContainer instanceof QuestionResultContainer) {
 
-            $validatorRequest = false;
+            $formErrorDetected = false;
+            $questionResultToAddList = [];
             /** @var QuestionResult $newQuestionResult */
-            foreach ($newQuestionResultContainer->getQuestionResult() as $newQuestionResult) {
+            foreach ($newQuestionResultContainer->getQuestionResult()->toArray() as $key => $newQuestionResult) {
 
                 // Workaround: We have several problems if we're using @validate via PhpDocs.
                 $validatorRequest = $this->questionResultValidator->isValid($newQuestionResult);
@@ -239,42 +242,61 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                 if (is_string($validatorRequest)) {
                     // set error message to user
                     $this->view->assign('errorMessage', $validatorRequest);
+                    $formErrorDetected = true;
+                    // in fluid we identify the error-question through container iteration
+                    $questionHasErrorArray[$key] = ' validation-error';
 
                 } elseif ($validatorRequest === true) {
 
                     // continue with question result
                     if ($newQuestionResult) {
+
                         // for secure - check if question is already answered (prevents browser-hopping anomalies)
                         /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $oldQuestionResult */
                         if ($oldQuestionResult = $this->questionResultRepository->findByQuestionAndSurveyResult($newQuestionResult->getQuestion(), $surveyResult)) {
-
-                            //@toDo: Why not remove the old one instead of returning an error
+                            // Remove the old one instead of returning an error
                             $surveyResult->removeQuestionResult($oldQuestionResult);
                             $this->questionResultRepository->remove($oldQuestionResult);
-
-                            /*
-                             $this->addFlashMessage(
-                                \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_rkwsurvey_controller_survey.alreadyAnswered', $this->extensionName),
-                                '',
-                                \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
-                            );
-                            $this->redirect('welcome', null, null, array('survey' => $surveyResult->getSurvey()));
-                            //===
-                            */
                         }
 
-                        $surveyResult->addQuestionResult($newQuestionResult);
-                        // @toDo: Add container jump
-                        SurveyProgressUtility::handleJumpAction($surveyResult, $newQuestionResult);
-                        $this->surveyResultRepository->update($surveyResult);
+                        // add it only, if there comes no more validation error
+                        $questionResultToAddList[] = $newQuestionResult;
+
+                        if ($surveyResult->getSurvey()->getType() == 2) {
+
+                            // @toDo: Add container jump
+                            // @toDo: Makes a container jump sense? Actually the jump-function depends on a single question type
+
+                        } else {
+                            SurveyProgressUtility::handleJumpAction($surveyResult, $newQuestionResult);
+                        }
                     }
                 }
             }
+
+            // only update the surveyResult if there is no error message. Other simply show the template again with error message
+            if (!$formErrorDetected) {
+                $this->surveyResultRepository->update($surveyResult);
+
+                // if there comes to error around, not set the questionResults to the surveyResult
+                foreach ($questionResultToAddList as $questionResultToAdd) {
+                    $surveyResult->addQuestionResult($questionResultToAdd);
+                }
+            } else {
+
+                DebuggerUtility::var_dump($questionHasErrorArray);
+
+                // give back the given questionContainer to re-fill given formfields
+                $this->view->assign('prevResultContainer', $newQuestionResultContainer);
+                $this->view->assign('questionHasErrorArray', $questionHasErrorArray);
+            }
+
         }
 
+    //    DebuggerUtility::var_dump($newQuestionResultContainer); exit;
 
         // if all questions are answered, finalize it!
-        if (count($surveyResult->getQuestionResult()) === count($surveyResult->getSurvey()->getQuestion())) {
+        if (count($surveyResult->getQuestionResult()) === $surveyResult->getSurvey()->getQuestionCountTotal()) {
 
             // final create and show endtext
             $this->forward('create', null, null, array('surveyResult' => $surveyResult, 'tokenInput' => $tokenInput));
@@ -284,6 +306,10 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         $this->view->assign('surveyResult', $surveyResult);
         $this->view->assign('extensionSuffix', $extensionSuffix);
         $this->view->assign('tokenInput', $tokenInput);
+        // workaround test ObjectStorage iteration issue
+        $this->view->assign('surveyQuestionContainerArray', $surveyResult->getSurvey()->getQuestionContainer()->toArray());
+
+
     }
 
 

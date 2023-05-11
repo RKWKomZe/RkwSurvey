@@ -164,6 +164,13 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $survey = null;
 
     /**
+     * questionContainer
+     *
+     * @var \RKW\RkwSurvey\Domain\Model\QuestionContainer
+     */
+    protected $questionContainer = null;
+
+    /**
      * topic
      *
      * @var \RKW\RkwSurvey\Domain\Model\Topic
@@ -589,6 +596,27 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function setSurvey(\RKW\RkwSurvey\Domain\Model\Survey $survey)
     {
         $this->survey = $survey;
+    }
+
+    /**
+     * Returns the questionContainer
+     *
+     * @return \RKW\RkwSurvey\Domain\Model\QuestionContainer $questionContainer
+     */
+    public function getQuestionContainer()
+    {
+        return $this->questionContainer;
+    }
+
+    /**
+     * Sets the questionContainer
+     *
+     * @param \RKW\RkwSurvey\Domain\Model\QuestionContainer $questionContainer
+     * @return void
+     */
+    public function setQuestionContainer(\RKW\RkwSurvey\Domain\Model\QuestionContainer $questionContainer)
+    {
+        $this->questionContainer = $questionContainer;
     }
 
     /**

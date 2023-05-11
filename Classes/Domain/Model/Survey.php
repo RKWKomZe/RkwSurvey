@@ -83,6 +83,13 @@ class Survey extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $question = null;
 
     /**
+     * questionContainer
+     *
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\RKW\RkwSurvey\Domain\Model\QuestionContainer>
+     */
+    protected $questionContainer = null;
+
+    /**
      * admin
      *
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\RKW\RkwSurvey\Domain\Model\BackendUser>
@@ -124,6 +131,7 @@ class Survey extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->topics = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->question = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $this->questionContainer = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->admin = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->token = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
     }
@@ -350,6 +358,49 @@ class Survey extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
     /**
+     * Adds a QuestionContainer
+     *
+     * @param \RKW\RkwSurvey\Domain\Model\QuestionContainer $questionContainer
+     * @return void
+     */
+    public function addQuestionContainer(\RKW\RkwSurvey\Domain\Model\QuestionContainer $questionContainer)
+    {
+        $this->questionContainer->attach($questionContainer);
+    }
+
+    /**
+     * Removes a QuestionContainer
+     *
+     * @param \RKW\RkwSurvey\Domain\Model\QuestionContainer $questionContainerToRemove The QuestionContainer to be removed
+     * @return void
+     */
+    public function removeQuestionContainer(\RKW\RkwSurvey\Domain\Model\QuestionContainer $questionContainerToRemove)
+    {
+        $this->question->detach($questionContainerToRemove);
+    }
+
+    /**
+     * Returns the questionContainer
+     *
+     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\RKW\RkwSurvey\Domain\Model\QuestionContainer> $questionContainer
+     */
+    public function getQuestionContainer()
+    {
+        return $this->questionContainer;
+    }
+
+    /**
+     * Sets the questionContainer
+     *
+     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\RKW\RkwSurvey\Domain\Model\QuestionContainer> $questionContainer
+     * @return void
+     */
+    public function setQuestionContainer(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $questionContainer)
+    {
+        $this->questionContainer = $questionContainer;
+    }
+
+    /**
      * Adds a BackendUser
      *
      * @param \RKW\RkwSurvey\Domain\Model\BackendUser $admin
@@ -448,6 +499,25 @@ class Survey extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         }
 
         return $benchmarkQuestions;
+    }
+
+
+    /**
+     * Service function. Get question count
+     * @return int
+     */
+    public function getQuestionCountTotal()
+    {
+        if ($this->type == 2) {
+            $questionTotalCount = 0;
+            /** @var Question $container */
+            foreach ($this->getQuestionContainer() as $container) {
+                $questionTotalCount += $container->getQuestion()->count();
+            }
+            return $questionTotalCount;
+        } else {
+            return $this->getQuestion()->count();
+        }
     }
 
 }

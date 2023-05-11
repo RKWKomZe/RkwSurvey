@@ -5,7 +5,7 @@
         <h2 class="h4 align-center">{question.question}</h2>
     </div>
 
-    <div class="webcheck__questions mt-1">
+    <div class="webcheck__questions mt-1{questionHasErrorArray.{iter.index}}">
 
         <f:comment><!-- multiple choice (checkboxes) --></f:comment>
         <f:if condition="{question.type} == 1">
