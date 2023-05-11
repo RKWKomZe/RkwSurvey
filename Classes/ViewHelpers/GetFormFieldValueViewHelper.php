@@ -66,7 +66,7 @@ class GetFormFieldValueViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\Abstr
 
         $questionResultList = $questionResultContainer->getQuestionResult()->toArray();
 
-        if (!key_exists($containerIter, $questionResultList)) {
+        if (!array_key_exists($containerIter, $questionResultList)) {
             return '';
         }
 
