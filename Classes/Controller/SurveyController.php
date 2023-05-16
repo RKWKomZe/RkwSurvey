@@ -2,7 +2,6 @@
 
 namespace RKW\RkwSurvey\Controller;
 
-use Doctrine\Common\Util\Debug;
 use RKW\RkwSurvey\Domain\Model\QuestionResultContainer;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use RKW\RkwSurvey\Domain\Model\Survey;
@@ -14,7 +13,6 @@ use RKW\RkwSurvey\Utility\SurveyProgressUtility;
 use TYPO3\CMS\Extbase\Mvc\Exception\StopActionException;
 use TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException;
 use TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -289,8 +287,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
             }
 
         }
-
-    //    DebuggerUtility::var_dump($newQuestionResultContainer); exit;
 
         // if all questions are answered, finalize it!
         if (count($surveyResult->getQuestionResult()) === $surveyResult->getSurvey()->getQuestionCountTotal()) {

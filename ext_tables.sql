@@ -175,10 +175,10 @@ CREATE TABLE tx_rkwsurvey_domain_model_surveyresult (
 
 );
 
+
 #
 # Table structure for table 'tx_rkwsurvey_domain_model_questionresultcontainer'
 #
-    /*
 CREATE TABLE tx_rkwsurvey_domain_model_questionresultcontainer (
 
 	uid int(11) NOT NULL auto_increment,
@@ -197,7 +197,7 @@ CREATE TABLE tx_rkwsurvey_domain_model_questionresultcontainer (
 
 );
 
-     */
+
 
 #
 # Table structure for table 'tx_rkwsurvey_domain_model_questionresult'
