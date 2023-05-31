@@ -37,6 +37,23 @@
 			</trans-unit>
 
 
+            <trans-unit id="tx_rkwsurvey_domain_model_questioncontainer">
+                <source>RKW Survey: Question container</source>
+                <target>RKW Survey: Container für Fragen</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_questioncontainer.name">
+                <source>Title</source>
+                <target>Titel (optional)</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_questioncontainer.description">
+                <source>Description</source>
+                <target>Beschreibung</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwsurvey_domain_model_questioncontainer.question">
+                <source>Question</source>
+                <target>Frage</target>
+            </trans-unit>
+
 
 			<trans-unit id="tx_rkwsurvey_domain_model_question">
 				<source>RKW Survey: Question</source>
@@ -180,6 +197,10 @@
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.surveyResultTags">
 				<source>Survey Result tags</source>
 				<source>Umfrage Ergebnis Tags</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.questionContainerUid">
+				<source>Container Uid</source>
+				<target>Container Uid</target>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.questionUid">
 				<source>Question Uid</source>
@@ -636,7 +657,6 @@
 				<source>Dropouts/Incomplete</source>
 				<target>Abbrüche/Unvollständig</target>
 			</trans-unit>
-
 
 
 		</body>

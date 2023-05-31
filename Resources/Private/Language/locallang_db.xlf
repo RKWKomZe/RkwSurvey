@@ -25,6 +25,9 @@
     		<trans-unit id="tx_rkwsurvey_domain_model_survey.type.benchmark">
                 <source>Benchmark</source>
             </trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.type.container">
+				<source>Container</source>
+			</trans-unit>
             <trans-unit id="tx_rkwsurvey_domain_model_survey.starttext">
 				<source>Starttext</source>
 			</trans-unit>
@@ -33,6 +36,27 @@
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_survey.question">
 				<source>Question</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.question_container">
+				<source>Question container</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questioncontainer">
+				<source>RKW Survey: Question container</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questioncontainer.name">
+				<source>Title</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questioncontainer.hide_name_fe">
+				<source>Hide title in FE</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questioncontainer.description">
+				<source>Description</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questioncontainer.question">
+				<source>Question</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questioncontainer.palettes.name">
+				<source>Title</source>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_survey.admin">
 				<source>Admin (receives e-mail when a survey has been completed)</source>

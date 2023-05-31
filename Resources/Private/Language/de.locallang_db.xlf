@@ -31,6 +31,10 @@
                 <source>Benchmark</source>
                 <target>Benchmark</target>
             </trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.type.container">
+				<source>Container</source>
+				<target>Container (enthält mehrere Fragen)</target>
+			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_survey.starttext">
 				<source>Starttext</source>
 				<target>Einleitungstext</target>
@@ -42,6 +46,10 @@
 			<trans-unit id="tx_rkwsurvey_domain_model_survey.question">
 				<source>Question</source>
 				<target>Frage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_survey.question_container">
+				<source>Question container</source>
+				<target>Container für Fragen</target>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_survey.admin">
 				<source>Admin (receives e-mail when a survey has been completed)</source>
@@ -55,6 +63,32 @@
                 <source>Access Restricted</source>
                 <target>Zugriffsbeschränkt (Nutzer benötigen Token zur Teilnahme)</target>
             </trans-unit>
+
+
+			<trans-unit id="tx_rkwsurvey_domain_model_questioncontainer">
+				<source>RKW Survey: Question container</source>
+				<target>RKW Survey: Container für Fragen</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questioncontainer.name">
+				<source>Title</source>
+				<target>Titel (optional)</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questioncontainer.hide_name_fe">
+				<source>Hide title in FE</source>
+				<target>Titel im Frontend verbergen</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questioncontainer.description">
+				<source>Description</source>
+				<target>Beschreibung</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questioncontainer.question">
+				<source>Question</source>
+				<target>Frage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questioncontainer.palettes.name">
+				<source>Title</source>
+				<target>Title</target>
+			</trans-unit>
 
 
 			<trans-unit id="tx_rkwsurvey_domain_model_question">
@@ -237,6 +271,33 @@
             </trans-unit>
 
 
+
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresultcontainer">
+				<source>RKW Survey: Question Result Container</source>
+				<target>RKW Survey: Antwort Container</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresultcontainer.answer_multiple">
+				<source>Answer Multiple</source>
+				<target>Multiple choice Antwort</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresultcontainer.answer_free">
+				<source>Answer Free</source>
+				<target>Freitext Antwort</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresultcontainer.survey_result">
+				<source>Survey Result</source>
+				<target>Umfrageergebnis</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresultcontainer.question">
+				<source>Question</source>
+				<target>Frage</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questionresultcontainer.skipped">
+				<source>Question was skipped automatically</source>
+				<target>Frage wurde automatisch übersprungen</target>
+			</trans-unit>
+
+
             <trans-unit id="tx_rkwsurvey_domain_model_token">
                 <source>RKW Survey: Token</source>
                 <target>RKW Survey: Token</target>
@@ -354,6 +415,9 @@
                 <source>Required field: Phone</source>
                 <target>Pflichtfeld: Telefon</target>
             </trans-unit>
+
+
+
 
 		</body>
 	</file>

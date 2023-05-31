@@ -164,6 +164,13 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $survey = null;
 
     /**
+     * questionContainer
+     *
+     * @var \RKW\RkwSurvey\Domain\Model\QuestionContainer
+     */
+    protected $questionContainer = null;
+
+    /**
      * topic
      *
      * @var \RKW\RkwSurvey\Domain\Model\Topic
@@ -592,6 +599,27 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
     /**
+     * Returns the questionContainer
+     *
+     * @return \RKW\RkwSurvey\Domain\Model\QuestionContainer $questionContainer
+     */
+    public function getQuestionContainer()
+    {
+        return $this->questionContainer;
+    }
+
+    /**
+     * Sets the questionContainer
+     *
+     * @param \RKW\RkwSurvey\Domain\Model\QuestionContainer $questionContainer
+     * @return void
+     */
+    public function setQuestionContainer(\RKW\RkwSurvey\Domain\Model\QuestionContainer $questionContainer)
+    {
+        $this->questionContainer = $questionContainer;
+    }
+
+    /**
      * Returns the topic
      *
      * @return \RKW\RkwSurvey\Domain\Model\Topic $topic
@@ -619,6 +647,6 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      */
     public function getScale()
     {
-        return range($this->scaleFromPoints, $this->scaleToPoints, $this->scaleStep);
+        return range($this->scaleFromPoints, $this->scaleToPoints, $this->scaleStep == 0 ? 1 : $this->scaleStep);
     }
 }

@@ -1,0 +1,68 @@
+
+<!-- the question -->
+<!-- show only once for all answers -->
+<f:if condition="{survey.type} == 2">
+    <f:then>
+        <dt>{iterationContainer.cycle}.{iteration.cycle} {question.question}</dt>
+    </f:then>
+    <f:else>
+        <dt>{iteration.cycle}. {question.question}</dt>
+    </f:else>
+</f:if>
+
+
+<!-- the answer(s) -->
+<f:if condition="{question.type} == 0">
+    <f:then>
+        <!-- free text -->
+        <dd>
+            <f:for each="<rkw:collectFreeTextAnswers question='{question}' questionResultList='{questionResultList}' />" as="answer">
+                <pre><f:format.nl2br>{answer}</f:format.nl2br></pre>
+            </f:for>
+        </dd>
+        <br />
+    </f:then>
+    <f:else>
+        <f:if condition="{question.type} == 3">
+            <f:then>
+                <dd>
+                    <table>
+                        <!-- scale -->
+                        <tr>
+                            <th rowspan="2" class="labels">
+                                {question.textConsent}
+                            </th>
+                            <f:for each="<rkw:collectScaleAnswers question='{question}' questionResultList='{questionResultList}' />" key="option" as="timesSelected">
+                                <th class="center">{option}</th>
+                            </f:for>
+                            <th rowspan="2" class="labels">
+                                {question.textRejection}
+                            </th>
+                        </tr>
+                        <tr>
+                            <f:for each="<rkw:collectScaleAnswers question='{question}' questionResultList='{questionResultList}' />" key="option" as="timesSelected">
+                                <td class="center">{timesSelected}x</td>
+                            </f:for>
+                        </tr>
+                    </table>
+                    <br />
+                </dd>
+            </f:then>
+            <f:else>
+                <!-- Multi- und Single-Select -->
+                <dd>
+                    <table>
+
+                        <f:for each="<rkw:explode string='{question.answerOption}' />" as="answerOption" iteration="iterAnswer">
+                            <tr>
+                                <td class="answer"><rkw:countMultipleChoiceAnswers answerToCount="{iterAnswer.cycle}" question="{question}" questionResultList="{questionResultList}" />x</td>
+                                <td>{answerOption}</td>
+                            </tr>
+                        </f:for>
+                    </table>
+                    <br />
+                </dd>
+            </f:else>
+        </f:if>
+    </f:else>
+</f:if>
