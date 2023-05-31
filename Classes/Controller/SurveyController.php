@@ -129,13 +129,12 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
     public function welcomeAction(Survey $survey = null, $tokenInput = null, $tagsInput = '')
     {
         if (
-            (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('token'))
+            (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tx_rkwsurvey_survey')['token'])
             && (!$tokenInput)
         ) {
-            $tokenInput = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('token');
+            $tokenInput = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tx_rkwsurvey_survey')['token'];
         }
 
-        //  @todo: Why is the explicit key needed? Due to real_url_configuration? And how to make sure that token works?
         if (
             (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tx_rkwsurvey_survey')['tags'])
             && (!$tagsInput)
