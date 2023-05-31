@@ -194,6 +194,10 @@
 				<source>Survey Result Uid</source>
 				<target>Umfrage Ergebnis Uid</target>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.surveyResultTags">
+				<source>Survey Result tags</source>
+				<source>Umfrage Ergebnis Tags</source>
+			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.questionContainerUid">
 				<source>Container Uid</source>
 				<target>Container Uid</target>
@@ -653,7 +657,6 @@
 				<source>Dropouts/Incomplete</source>
 				<target>Abbrüche/Unvollständig</target>
 			</trans-unit>
-
 
 
 		</body>

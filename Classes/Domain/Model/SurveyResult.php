@@ -61,6 +61,13 @@ class SurveyResult extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $questionResult = null;
 
     /**
+     * tags
+     *
+     * @var string
+     */
+    protected $tags = '';
+
+    /**
      * __construct
      */
     public function __construct()
@@ -223,6 +230,27 @@ class SurveyResult extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         }
 
         return $benchmarkQuestionResults;
+    }
+
+    /**
+     * Returns the tags
+     *
+     * @return string $tags
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * Sets the tags
+     *
+     * @param string $tags
+     * @return void
+     */
+    public function setTags(string $tags)
+    {
+        $this->tags = $tags;
     }
 
 }

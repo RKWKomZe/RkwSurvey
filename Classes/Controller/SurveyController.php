@@ -2,7 +2,6 @@
 
 namespace RKW\RkwSurvey\Controller;
 
-use Doctrine\Common\Util\Debug;
 use RKW\RkwSurvey\Domain\Model\QuestionResultContainer;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use RKW\RkwSurvey\Domain\Model\Survey;
@@ -14,7 +13,6 @@ use RKW\RkwSurvey\Utility\SurveyProgressUtility;
 use TYPO3\CMS\Extbase\Mvc\Exception\StopActionException;
 use TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException;
 use TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -128,22 +126,31 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      *
      * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
      * @param string $tokenInput
+     * @param string $tagsInput
      * @return void
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException
      */
-    public function welcomeAction(Survey $survey = null, $tokenInput = null)
+    public function welcomeAction(Survey $survey = null, $tokenInput = null, $tagsInput = '')
     {
         if (
-            (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('token'))
+            (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tx_rkwsurvey_survey')['token'])
             && (!$tokenInput)
         ) {
-            $tokenInput = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('token');
+            $tokenInput = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tx_rkwsurvey_survey')['token'];
+        }
+
+        if (
+            (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tx_rkwsurvey_survey')['tags'])
+            && (!$tagsInput)
+        ) {
+            $tagsInput = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tx_rkwsurvey_survey')['tags'];
         }
 
         $this->view->assignMultiple(
             array(
                 'survey'     => $survey ? $survey : $this->surveyRepository->findByIdentifierIgnoreEnableFields(intval($this->settings['selectedSurvey'])),
                 'tokenInput' => $tokenInput,
+                'tagsInput'  => $tagsInput
             )
         );
     }
@@ -156,11 +163,12 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
      * @param string $extensionSuffix
      * @param string $tokenInput
+     * @param string $tagsInput
      * @return void
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      */
-    public function startAction(Survey $survey, $extensionSuffix = null, $tokenInput = null)
+    public function startAction(Survey $survey, $extensionSuffix = null, $tokenInput = null, $tagsInput = '')
     {
         // If access restricted, the initial assignment will be done here
         // Is also returning initial surveyResult-Object (existing or new)
@@ -169,6 +177,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         // create new surveyResult (if not exists)
         if ($surveyResult->_isNew()) {
             $surveyResult->setSurvey($survey);
+            $surveyResult->setTags($tagsInput);
             $this->surveyResultRepository->add($surveyResult);
             // persist now to have a uid to log
             $this->persistenceManager->persistAll();
@@ -289,8 +298,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
             }
 
         }
-
-    //    DebuggerUtility::var_dump($newQuestionResultContainer); exit;
 
         // if all questions are answered, finalize it!
         if (count($surveyResult->getQuestionResult()) === $surveyResult->getSurvey()->getQuestionCountTotal()) {
