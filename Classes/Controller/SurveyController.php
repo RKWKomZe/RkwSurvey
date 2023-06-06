@@ -135,13 +135,21 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
             (GeneralUtility::_GP('token'))
             && (!$tokenInput)
         ) {
-            $tokenInput = GeneralUtility::_GP('token');
+            $tokenInput = GeneralUtility::_GP('tx_rkwsurvey_survey')['token'];
+        }
+
+        if (
+            (GeneralUtility::_GP('tx_rkwsurvey_survey')['tags'])
+            && (!$tagsInput)
+        ) {
+            $tagsInput = GeneralUtility::_GP('tx_rkwsurvey_survey')['tags'];
         }
 
         $this->view->assignMultiple(
             array(
                 'survey'     => $survey ?: $this->surveyRepository->findByIdentifierIgnoreEnableFields(intval($this->settings['selectedSurvey'])),
                 'tokenInput' => $tokenInput,
+                'tagsInput'  => $tagsInput
             )
         );
     }
@@ -154,12 +162,17 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
      * @param string $extensionSuffix
      * @param string $tokenInput
+     * @param string $tagsInput
      * @return void
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      */
-    public function startAction(Survey $survey, string $extensionSuffix = '', string $tokenInput = ''): void
-    {
+    public function startAction(
+    Survey $survey,
+    string $extensionSuffix = '',
+    string $tokenInput = '',
+    string $tagsInput
+    ): void {
         // If access restricted, the initial assignment will be done here
         // Is also returning initial surveyResult-Object (existing or new)
         $surveyResult = $this->checkInitialAccessRestriction($survey, $tokenInput);
@@ -167,6 +180,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         // create new surveyResult (if not exists)
         if ($surveyResult->_isNew()) {
             $surveyResult->setSurvey($survey);
+            $surveyResult->setTags($tagsInput);
             $this->surveyResultRepository->add($surveyResult);
             // persist now to have a uid to log
             $this->persistenceManager->persistAll();
@@ -361,6 +375,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @param \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult
      * @param array $contactForm
      * @param string $tokenInput
+     * @validate $contactForm \RKW\RkwSurvey\Validation\ContactFormValidator
      * @return void
      * @TYPO3\CMS\Extbase\Annotation\Validate("RKW\RkwSurvey\Validation\ContactFormValidator", param="contactForm")
      * @TYPO3\CMS\Extbase\Annotation\Validate("Madj2k\FeRegister\Validation\Consent\PrivacyValidator", param="contactForm")

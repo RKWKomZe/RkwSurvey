@@ -16,16 +16,16 @@ return [
             // 'starttime' => 'starttime',
 			// 'endtime' => 'endtime',
 		],
-		'searchFields' => 'finished,survey,question_result,token',
+		'searchFields' => 'finished,survey,question_result,token,tags',
 		'iconfile' => 'EXT:rkw_survey/Resources/Public/Icons/tx_rkwsurvey_domain_model_surveyresult.gif'
 	],
 	'interface' => [
 	    // 'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, finished, survey, question_result',
-		'showRecordFieldList' => 'finished, survey, question_result, token',
+		'showRecordFieldList' => 'finished, survey, question_result, token, tags',
 	],
 	'types' => [
         // '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, finished, survey, question_result, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
-        '1' => ['showitem' => 'finished, survey, question_result, token, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
+        '1' => ['showitem' => 'finished, survey, question_result, token, tags, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
 	],
 	'columns' => [
 	    /*
@@ -165,17 +165,19 @@ return [
             'exclude' => true,
             'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_surveyresult.token',
             'config' => [
-                'type' => 'inline',
-                'foreign_table' => 'tx_rkwsurvey_domain_model_token',
-                'maxitems' => 1,
-                'minitems' => 0,
-                'appearance' => [
-                    'collapseAll' => 1,
-                    'levelLinksPosition' => 'top',
-                    'showSynchronizationLink' => 1,
-                    'showPossibleLocalizationRecords' => 1,
-                    'showAllLocalizationLink' => 1
-                ],
+                'type' => 'input',
+                'size' => 255,
+                'eval' => 'trim, required'
+            ],
+        ],
+        'tags' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_surveyresult.tags',
+            'config' => [
+                'type' => 'text',
+                'cols' => 40,
+                'rows' => 5,
+                'readOnly' => true,
             ],
         ],
 	],
