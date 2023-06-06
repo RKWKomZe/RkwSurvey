@@ -45,7 +45,8 @@ class SurveyProgressUtility implements \TYPO3\CMS\Core\SingletonInterface
             && in_array(intval($newQuestionResult->getAnswer()), $newQuestionResult->getQuestion()->getDoActionIf())
         ) {
             // add (a) questions to jump and (b) already answered questions
-            $newAnswerCount = $newQuestionResult->getQuestion()->getDoActionJump() + $surveyResult->getQuestionResult()->count();
+            $newAnswerCount = $newQuestionResult->getQuestion()->getDoActionJump()
+                + $surveyResult->getQuestionResult()->count();
 
             // iterate questions
             $i = 0;
@@ -68,7 +69,7 @@ class SurveyProgressUtility implements \TYPO3\CMS\Core\SingletonInterface
                 }
 
                 // on the one hand: Simply quit if work is done
-                // on the other hand: Fetch it, if someone want to skip XXXXX questions (for safety - condition should never reached)
+                // on the other hand: Fetch it, if someone wants to skip X questions (for safety - condition should never be reached)
                 if (
                     $newAnswerCount == $surveyResult->getQuestionResult()->count()
                     || $surveyResult->getQuestionResult()->count() == $surveyResult->getSurvey()->getQuestion()->count()

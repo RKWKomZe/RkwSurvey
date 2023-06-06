@@ -15,6 +15,10 @@ namespace RKW\RkwSurvey\Domain\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
+use RKW\RkwSurvey\Domain\Model\Question;
+use RKW\RkwSurvey\Domain\Model\Survey;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+
 /**
  * SurveyResults
  *
@@ -32,10 +36,10 @@ class SurveyResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      *
      * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
      * @param string $startDate
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface|array
+     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function findBySurvey(\RKW\RkwSurvey\Domain\Model\Survey $survey, $startDate = '1970-01-01')
+    public function findBySurvey(Survey $survey, string $startDate = '1970-01-01'): QueryResultInterface
     {
         $query = $this->createQuery();
         $query->getQuerySettings()->setRespectStoragePage(false);
@@ -60,8 +64,8 @@ class SurveyResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         $query->matching($query->logicalAnd($constraints));
 
         return $query->execute();
-        //====
     }
+
 
     /**
      * findBySurveyAndFinished
@@ -72,8 +76,12 @@ class SurveyResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface|array
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function findBySurveyAndFinished(\RKW\RkwSurvey\Domain\Model\Survey $survey, $finished = 1, $startDate = '1970-01-01')
-    {
+    public function findBySurveyAndFinished(
+        Survey $survey,
+        int $finished = 1,
+        string $startDate = '1970-01-01'
+    ): QueryResultInterface{
+
         $query = $this->createQuery();
         $query->getQuerySettings()->setRespectStoragePage(false);
 
@@ -97,8 +105,8 @@ class SurveyResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         $query->matching($query->logicalAnd($constraints));
 
         return $query->execute();
-        //====
     }
+
 
     /**
      * findBySurveyAndQuestionAndAnswerAndFinished
@@ -108,11 +116,17 @@ class SurveyResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      * @param mixed $answer
      * @param int $finished
      * @param string $startDate
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface|array
+     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function findBySurveyAndQuestionAndAnswerAndFinished(\RKW\RkwSurvey\Domain\Model\Survey $survey, \RKW\RkwSurvey\Domain\Model\Question $question, $answer, $finished = 1, $startDate = '1970-01-01')
-    {
+    public function findBySurveyAndQuestionAndAnswerAndFinished(
+        Survey $survey,
+        Question $question,
+        $answer,
+        int $finished = 1,
+        string $startDate = '1970-01-01'
+    ): QueryResultInterface {
+
         $query = $this->createQuery();
         $query->getQuerySettings()->setRespectStoragePage(false);
 
@@ -138,7 +152,6 @@ class SurveyResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         $query->matching($query->logicalAnd($constraints));
 
         return $query->execute();
-        //====
     }
 
 
@@ -146,9 +159,9 @@ class SurveyResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      * findBySurveyWithToken
      *
      * @param \RKW\RkwSurvey\Domain\Model\Survey|int $survey
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface|array
+     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
      */
-    public function findBySurveyWithToken($survey)
+    public function findBySurveyWithToken($survey): QueryResultInterface
     {
         $query = $this->createQuery();
         $query->getQuerySettings()->setRespectStoragePage(false);
@@ -163,7 +176,6 @@ class SurveyResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         );
 
         return $query->execute();
-        //====
     }
 
 
@@ -174,7 +186,7 @@ class SurveyResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      * @param int $finished
      * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface|array
      */
-    public function findBySurveyAndFinishedWithToken(\RKW\RkwSurvey\Domain\Model\Survey $survey, $finished = 1)
+    public function findBySurveyAndFinishedWithToken(Survey $survey, int $finished = 1): QueryResultInterface
     {
         $query = $this->createQuery();
         $query->getQuerySettings()->setRespectStoragePage(false);
@@ -190,6 +202,5 @@ class SurveyResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         );
 
         return $query->execute();
-        //====
     }
 }

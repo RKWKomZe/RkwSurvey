@@ -14,6 +14,9 @@ namespace RKW\RkwSurvey\ViewHelpers;
  * The TYPO3 project - inspiring people to share!
  */
 
+use RKW\RkwSurvey\Domain\Model\QuestionContainer;
+use RKW\RkwSurvey\Domain\Model\SurveyResult;
+
 /**
  * PageCountViewHelper
  *
@@ -35,7 +38,7 @@ class PageCountViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractView
     public function initializeArguments(): void
     {
         parent::initializeArguments();
-        $this->registerArgument('questionResultList', 'array', 'Array with given answers for questions', true);
+        $this->registerArgument('surveyResult', SurveyResult:class, 'The survey result', true);
         $this->registerArgument('start', 'int', 'Page number to start from', false, 1);
     }
 
@@ -47,13 +50,13 @@ class PageCountViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractView
      */
     public function render(): int
     {
-        /** @var array $questionResultList */
-        $questionResultList = $this->arguments['questionResultList'];
+        /** @var \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult */
+        $surveyResult = $this->arguments['surveyResult'];
 
         /** @var int $start */
         $start = $this->arguments['start'];
 
-        return count($questionResultList) + $start;
+        return $surveyResult->getQuestionResult()->count() + $start;
     }
 
 }

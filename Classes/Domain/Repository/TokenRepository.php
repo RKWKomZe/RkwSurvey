@@ -3,6 +3,7 @@
 namespace RKW\RkwSurvey\Domain\Repository;
 
 use \RKW\RkwSurvey\Domain\Model\Survey;
+use RKW\RkwSurvey\Domain\Model\Token;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -35,7 +36,7 @@ class TokenRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      * @param string $name
      * @return \RKW\RkwSurvey\Domain\Model\Token|null
      */
-    public function findOneBySurveyAndName(Survey $survey, $name)
+    public function findOneBySurveyAndName(Survey $survey, string $name):? Token
     {
         $query = $this->createQuery();
         $query->getQuerySettings()->setIgnoreEnableFields(true);
@@ -48,7 +49,6 @@ class TokenRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         );
 
         return $query->execute()->getFirst();
-        //====
     }
 
 }

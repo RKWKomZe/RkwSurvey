@@ -164,27 +164,20 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         header("Content-Disposition: attachment; filename=$surveyName");
         header("Pragma: no-cache");
 
+        $columArray = [];
         // column names
-        $surveyUidTranslation = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyUid', $this->extensionName);
-        $surveyResultUidTranslation = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultUid', $this->extensionName);
-        $questionResultUidTranslation = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionUid', $this->extensionName);
-        $questionTranslation = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.question', $this->extensionName);
-        $answerOptionTranslation = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answerOption', $this->extensionName);
-        $answerTranslation = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answer', $this->extensionName);
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyUid', $this->extensionName);
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultUid', $this->extensionName);
+        if ($survey->getType() == 2) {
+            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionContainerUid', $this->extensionName);
+        }
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionUid', $this->extensionName);
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.question', $this->extensionName);
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answerOption', $this->extensionName);
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answer', $this->extensionName);
 
         // Fill the CSV file with content
-        fputcsv(
-            $csv,
-            [
-                $surveyUidTranslation,
-                $surveyResultUidTranslation,
-                $questionResultUidTranslation,
-                $questionTranslation,
-                $answerOptionTranslation,
-                $answerTranslation
-            ],
-            $separator
-        );
+        fputcsv($csv, $columArray, $separator);
 
         /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult */
         foreach ($questionResultList as $questionResult) {
@@ -198,9 +191,6 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
 
                 /** @var \RKW\RkwSurvey\Domain\Model\Question $question */
                 $question = $questionResult->getQuestion();
-                $surveyUid = $survey->getUid();
-                $surveyResultUid = $questionResult->getSurveyResult()->getUid();
-                $questionResultUid = $questionResult->getUid();
 
                 $answerOption = '';
                 if (!$question->getAnswerOption()) {
@@ -220,17 +210,18 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
                     $answerOption = $question->getAnswerOption();
                 }
 
-                fputcsv(
-                    $csv,
-                    [
-                        $surveyUid,
-                        $surveyResultUid,
-                        $questionResultUid,
-                        $question->getQuestion(),
-                        $answerOption, $questionResult->getAnswer()
-                    ],
-                    $separator
-                );
+                $dataArray = [];
+                $dataArray[] = $survey->getUid();
+                $dataArray[] = $questionResult->getSurveyResult()->getUid();
+                if ($survey->getType() == 2) {
+                    $dataArray[] = $questionResult->getQuestion()->getQuestionContainer()->getUid();
+                }
+                $dataArray[] = $questionResult->getUid();
+                $dataArray[] = $question->getQuestion();
+                $dataArray[] = $answerOption;
+                $dataArray[] = $questionResult->getAnswer();
+
+                fputcsv($csv, $dataArray, $separator);
 
             } catch (\Exception $e) {
                 continue;

@@ -21,10 +21,10 @@ return [
 		'iconfile' => 'EXT:rkw_survey/Resources/Public/Icons/tx_rkwsurvey_domain_model_survey.gif'
 	],
 	'interface' => [
-		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, type, starttext, endtext, topics, question, admin, access_restricted, token',
+		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, type, starttext, endtext, topics, question, question_container, admin, access_restricted, token',
 	],
 	'types' => [
-		'1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, type, topics, question, starttext, endtext, admin, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime, access_restricted'],
+		'1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, type, topics, question, question_container, starttext, endtext, admin, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime, access_restricted'],
 	],
 	'columns' => [
 		'sys_language_uid' => [
@@ -126,6 +126,7 @@ return [
                 'items' => [
                     ['LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_survey.type.default', 0],
                     ['LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_survey.type.benchmark', 1],
+                    ['LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_survey.type.container', 2],
                 ],
                 'default' => 0
             ],
@@ -191,7 +192,28 @@ return [
 					'showAllLocalizationLink' => 1
 				],
 			],
+            'displayCond' => 'FIELD:type:=:0',
 		],
+        'question_container' => [
+            'exclude' => false,
+            'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_survey.question_container',
+            'config' => [
+                'type' => 'inline',
+                'foreign_table' => 'tx_rkwsurvey_domain_model_questioncontainer',
+                'foreign_field' => 'survey',
+                'foreign_sortby' => 'sorting',
+                'maxitems' => 9999,
+                'minitems' => 1,
+                'appearance' => [
+                    'collapseAll' => 1,
+                    'levelLinksPosition' => 'top',
+                    'showSynchronizationLink' => 1,
+                    'showPossibleLocalizationRecords' => 1,
+                    'showAllLocalizationLink' => 1
+                ],
+            ],
+            'displayCond' => 'FIELD:type:=:2',
+        ],
 		'admin' => [
 			'exclude' => false,
 			'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_survey.admin',
