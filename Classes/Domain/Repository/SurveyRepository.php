@@ -15,6 +15,9 @@ namespace RKW\RkwSurvey\Domain\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
+use RKW\RkwSurvey\Domain\Model\Survey;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+
 /**
  * Surveys
  *
@@ -30,10 +33,10 @@ class SurveyRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      * findAllSorted
      *
      * @param int $year
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface|array
+     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function findAllSorted($year = null)
+    public function findAllSorted(int $year = 0): QueryResultInterface
     {
         $query = $this->createQuery();
         $query->getQuerySettings()->setIgnoreEnableFields(true);
@@ -55,7 +58,6 @@ class SurveyRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         );
 
         return $query->execute();
-        //====
     }
 
 
@@ -65,7 +67,7 @@ class SurveyRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      * @param int $surveyUid
      * @return \RKW\RkwSurvey\Domain\Model\Survey|null
      */
-    public function findByIdentifierIgnoreEnableFields($surveyUid)
+    public function findByIdentifierIgnoreEnableFields(int $surveyUid):? Survey
     {
         $query = $this->createQuery();
         $query->getQuerySettings()->setIgnoreEnableFields(true);
@@ -76,7 +78,6 @@ class SurveyRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         );
 
         return $query->execute()->getFirst();
-        //====
     }
 
 }

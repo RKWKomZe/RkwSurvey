@@ -1,48 +1,46 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
     data-namespace-typo3-fluid="true">
 
-    <div class="flex">
-        <h2 class="h4 align-center">{question.question}</h2>
-    </div>
+    <div class="contentbox contentbox--gray contentbox--webcheck webcheck {f:if(condition:'{iter.index} > 0', then:'mt-2')}{questionHasErrorArray.{iter.index}}" {f:if(condition:'{iter.index} == 0', then:'id="tx-rkwsurvey-head"')}>
+        
+        <f:form.hidden name="questionResult.{iter.index}.question" property="questionResult.{iter.index}.question" value="{question}" />
+    
+        <div class="flex">
+            <h2 class="h4 align-center">{question.question}</h2>
+        </div>
 
-    <div class="webcheck__questions mt-1">
+        <div class="webcheck__questions mt-1">
+    
+            <f:comment><!-- multiple choice (checkboxes) --></f:comment>
+            <f:if condition="{question.type} == 1">
+                <p class="webcheck__hint"><f:translate key="partials_survey_question_pleaseSelect" extensionName="RkwSurvey" />&nbsp;<f:translate key="partials_survey_question_mulitSelect" extensionName="RkwSurvey" /></p>
+                <f:render partial="Survey/QuestionType/MultipleChoice" arguments="{_all}" />
+            </f:if>
+    
+            <f:comment><!-- single choice (radio) --></f:comment>
+            <f:if condition="{question.type} == 2">
+                <p class="webcheck__hint"><f:translate key="partials_survey_question_pleaseSelect" extensionName="RkwSurvey" />&nbsp;<f:translate key="partials_survey_question_singleSelect" extensionName="RkwSurvey" /></p>
+                <f:render partial="Survey/QuestionType/SingleChoice" arguments="{_all}" />
+            </f:if>
 
-        <f:comment><!-- multiple choice (checkboxes) --></f:comment>
-        <f:if condition="{question.type} == 1">
-            <p class="webcheck__hint"><f:translate key="partials_survey_question_pleaseSelect" extensionName="RkwSurvey" />&nbsp;<f:translate key="partials_survey_question_mulitSelect" extensionName="RkwSurvey" /></p>
-            <f:render partial="Survey/QuestionType/MultipleChoice" arguments="{_all}" />
-        </f:if>
-
-        <f:comment><!-- single choice (radio) --></f:comment>
-        <f:if condition="{question.type} == 2">
-            <p class="webcheck__hint"><f:translate key="partials_survey_question_pleaseSelect" extensionName="RkwSurvey" />&nbsp;<f:translate key="partials_survey_question_singleSelect" extensionName="RkwSurvey" /></p>
-            <f:render partial="Survey/QuestionType/SingleChoice" arguments="{_all}" />
-        </f:if>
-
-        <f:comment><!-- free text --></f:comment>
-        <f:if condition="{question.type} == 0">
-            <div class="answer-container">
-                <f:render partial="Survey/QuestionType/FreeText" arguments="{_all}" />
-            </div>
-        </f:if>
-
-        <f:comment><!-- free text (short) --></f:comment>
-        <f:if condition="{question.type} == 4">
-            <div class="answer-container">
-                <f:render partial="Survey/QuestionType/FreeTextShort" arguments="{_all}" />
-            </div>
-        </f:if>
-
-        <f:comment><!-- scale (radio) --></f:comment>
-        <f:if condition="{question.type} == 3">
-            <div class="answer-container scale-group">
+            <f:comment><!-- scale (radio) --></f:comment>
+            <f:if condition="{question.type} == 3">
                 <f:render partial="Survey/QuestionType/Scale" arguments="{_all}" />
-            </div>
-        </f:if>
-
+            </f:if>
+            
+            <f:comment><!-- free text --></f:comment>
+            <f:if condition="{question.type} == 0">
+                <f:render partial="Survey/QuestionType/FreeText" arguments="{_all}" />
+            </f:if>
+    
+            <f:comment><!-- free text (short) --></f:comment>
+            <f:if condition="{question.type} == 4">
+                <f:render partial="Survey/QuestionType/FreeTextShort" arguments="{_all}" />
+            </f:if>
+            
+        </div>
+    
+        <f:render partial="Survey/Hint" arguments="{_all}" />
     </div>
-
-    <f:render partial="Survey/Hint" arguments="{_all}" />
-
 </html>
 

@@ -354,5 +354,10 @@ return [
 				'type' => 'passthrough',
 			],
 		],
+        'question_container' => [
+            'config' => [
+                'type' => 'passthrough',
+            ],
+        ],
 	],
 ];

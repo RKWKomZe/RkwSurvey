@@ -21,6 +21,7 @@ use RKW\RkwSurvey\Domain\Repository\SurveyRepository;
 use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
 use RKW\RkwSurvey\Domain\Repository\TokenRepository;
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
@@ -93,16 +94,16 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * because extbase makes some trouble if some survey has a starttime in future, is disabled or something, just give the uid
      *
      * @param int $surveyUid
-     * @param int $starttime
+     * @param string $starttime
      * @return void
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function showAction(int $surveyUid, int $starttime = 0)
+    public function showAction(int $surveyUid, string $starttime = '')
     {
         /** @var \RKW\RkwSurvey\Domain\Model\Survey $survey */
         $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields($surveyUid);
 
-        $this->view->assign('starttime', $starttime);
+        $this->view->assign('starttime', ($starttime ? strtotime($starttime) : $survey->getStarttime()));
         $this->view->assign('survey', $survey);
 
         // To get always a complete year filter
@@ -112,6 +113,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         $this->view->assign('surveyResultListFinished', $this->surveyResultRepository->findBySurveyAndFinished($survey, 1, $starttime));
         $this->view->assign('surveyResultListUnfinished', $this->surveyResultRepository->findBySurveyAndFinished($survey, 0, $starttime));
         $this->view->assign('questionResultList', $this->questionResultRepository->findBySurveyOrderByQuestionAndType($survey, $starttime));
+
     }
 
 
@@ -120,11 +122,11 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * because extbase makes some trouble if some survey has a starttime in future, ist disabled or something, just give the uid
      *
      * @param int $surveyUid
-     * @param int $starttime
+     * @param string $starttime
      * @return void
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function printAction(int $surveyUid, int $starttime = 0): void
+    public function printAction(int $surveyUid, string $starttime = ''): void
     {
         /** @var \RKW\RkwSurvey\Domain\Model\Survey $survey */
         $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields($surveyUid);
@@ -142,11 +144,11 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * because extbase makes some trouble if some survey has a starttime in future, ist disabled or something, just give the uid
      *
      * @param int $surveyUid
-     * @param int $starttime
+     * @param string $starttime
      * @return void
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function csvAction(int $surveyUid, int $starttime = 0): void
+    public function csvAction(int $surveyUid, string $starttime = ''): void
     {
         /** @var \RKW\RkwSurvey\Domain\Model\Survey $survey */
         $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields($surveyUid);
@@ -164,27 +166,21 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         header("Content-Disposition: attachment; filename=$surveyName");
         header("Pragma: no-cache");
 
+        $columArray = [];
         // column names
-        $surveyUidTranslation = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyUid', $this->extensionName);
-        $surveyResultUidTranslation = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultUid', $this->extensionName);
-        $questionResultUidTranslation = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionUid', $this->extensionName);
-        $questionTranslation = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.question', $this->extensionName);
-        $answerOptionTranslation = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answerOption', $this->extensionName);
-        $answerTranslation = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answer', $this->extensionName);
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyUid', $this->extensionName);
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultUid', $this->extensionName);
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultTags', $this->extensionName);
+        if ($survey->getType() == 2) {
+            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionContainerUid', $this->extensionName);
+        }
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionUid', $this->extensionName);
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.question', $this->extensionName);
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answerOption', $this->extensionName);
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answer', $this->extensionName);
 
         // Fill the CSV file with content
-        fputcsv(
-            $csv,
-            [
-                $surveyUidTranslation,
-                $surveyResultUidTranslation,
-                $questionResultUidTranslation,
-                $questionTranslation,
-                $answerOptionTranslation,
-                $answerTranslation
-            ],
-            $separator
-        );
+        fputcsv($csv, $columArray, $separator);
 
         /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult */
         foreach ($questionResultList as $questionResult) {
@@ -193,14 +189,10 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
 
                 if (!$questionResult->getSurveyResult()) {
                     continue;
-                    //===
                 }
 
                 /** @var \RKW\RkwSurvey\Domain\Model\Question $question */
                 $question = $questionResult->getQuestion();
-                $surveyUid = $survey->getUid();
-                $surveyResultUid = $questionResult->getSurveyResult()->getUid();
-                $questionResultUid = $questionResult->getUid();
 
                 $answerOption = '';
                 if (!$question->getAnswerOption()) {
@@ -220,17 +212,19 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
                     $answerOption = $question->getAnswerOption();
                 }
 
-                fputcsv(
-                    $csv,
-                    [
-                        $surveyUid,
-                        $surveyResultUid,
-                        $questionResultUid,
-                        $question->getQuestion(),
-                        $answerOption, $questionResult->getAnswer()
-                    ],
-                    $separator
-                );
+                $dataArray = [];
+                $dataArray[] = $survey->getUid();
+                $dataArray[] = $questionResult->getSurveyResult()->getUid();
+                $dataArray[] = $questionResult->getSurveyResult()->getTags();
+                if ($survey->getType() == 2) {
+                    $dataArray[] = $questionResult->getQuestion()->getQuestionContainer()->getUid();
+                }
+                $dataArray[] = $questionResult->getUid();
+                $dataArray[] = $question->getQuestion();
+                $dataArray[] = $answerOption;
+                $dataArray[] = $questionResult->getAnswer();
+
+                fputcsv($csv, $dataArray, $separator);
 
             } catch (\Exception $e) {
                 continue;

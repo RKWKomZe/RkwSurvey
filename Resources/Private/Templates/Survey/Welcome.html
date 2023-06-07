@@ -52,6 +52,12 @@
                                 </f:if>
                             </f:if>
 
+                            <f:if condition="{tagsInput}">
+                                <f:then>
+                                    <f:form.hidden name="tagsInput" value="{tagsInput}" />
+                                </f:then>
+                            </f:if>
+
                             <div class="form__field flex space-start full-width-narrow">
                                 <f:form.button class="btn btn--primary full-width-narrow"><f:translate key="templates_survey_welcome.start" extensionName="RkwSurvey" /></f:form.button>
                             </div>

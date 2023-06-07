@@ -39,9 +39,9 @@
                 <!-- Filter by starttime -->
                 <label style="position:relative;">
                     <span><f:translate key='partials_backend_actions.labelStarttime' extensionName='RkwSurvey' />:</span>
-                    <f:form.textfield value="<f:format.date format='Y-m-d'>{starttime}</f:format.date>" id="datepicker-starttime" name="starttime" />
+                    <f:form.textfield value="<f:format.date format='Y-m-d H:i'>{starttime}</f:format.date>" id="datepicker-starttime" name="starttime" />
                 </label>
-                <f:form.hidden id="datepicker-min-date" value="<f:format.date format='Y-m-d'>{survey.starttime}</f:format.date>" />
+                <f:form.hidden id="datepicker-min-date" value="<f:format.date format='Y-m-d H:i'>{survey.starttime}</f:format.date>" />
     
                 <f:form.button type="submit" name="action" value="show">
                     <f:translate key="partials_backend_actions.filter" extensionName="RkwSurvey" />

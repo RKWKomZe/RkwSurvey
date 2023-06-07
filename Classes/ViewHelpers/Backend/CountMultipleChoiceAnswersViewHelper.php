@@ -1,5 +1,5 @@
 <?php
-namespace RKW\RkwSurvey\ViewHelpers;
+namespace RKW\RkwSurvey\ViewHelpers\Backend;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -14,9 +14,10 @@ namespace RKW\RkwSurvey\ViewHelpers;
  * The TYPO3 project - inspiring people to share!
  */
 
+use RKW\RkwSurvey\Domain\Model\Question;
 
 /**
- * Class CollectFreeTextAnswersViewHelper
+ * Class CountMultipleChoiceAnswersViewHelper
  *
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
@@ -24,8 +25,9 @@ namespace RKW\RkwSurvey\ViewHelpers;
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class CollectFreeTextAnswersViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
+class CountMultipleChoiceAnswersViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
 {
+
     /**
      * Initialize arguments.
      *
@@ -35,34 +37,42 @@ class CollectFreeTextAnswersViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper
     public function initializeArguments(): void
     {
         parent::initializeArguments();
-        $this->registerArgument('question', Question::class, 'The question which answers should be searched for free-text-answers', true);
+        $this->registerArgument('question', Question::class, 'The question which answers should be searched for multiple-choice answers', true);
         $this->registerArgument('questionResultList', 'array', 'Array with given answers for questions', true);
-    }
+        $this->registerArgument('answerToCount', 'string', 'The answer to count.', true);
 
+    }
 
     /**
      * Render
      *
-     * @return array
+     * @return int
      */
-    public function render(): array
+    public function render(): int
     {
-        /** @var \RKW\RkwSurvey\Domain\Model\Survey $question */
+        /** @var \RKW\RkwSurvey\Domain\Model\Question $question */
         $question = $this->arguments['question'];
 
         /** @var array $questionResultList */
         $questionResultList = $this->arguments['questionResultList'];
 
-        $collectedAnswers = array();
+        /** @var string answerToCount */
+        $answerToCount = $this->arguments['answerToCount'];
+
+        $countTotal = 0;
         /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult */
         foreach ($questionResultList as $questionResult) {
+            $selectedAnswers = explode(',', $questionResult->getAnswer());
             if ($questionResult->getQuestion()->getUid() === $question->getUid()) {
-                if ($questionResult->getAnswer()) {
-                    $collectedAnswers[] = $questionResult->getAnswer();
+                if (in_array($answerToCount, $selectedAnswers)) {
+                    $countTotal++;
                 }
             }
         }
 
-        return $collectedAnswers;
+        return $countTotal;
+        //===
     }
+
+
 }

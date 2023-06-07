@@ -35,6 +35,18 @@
 			<trans-unit id="tx_rkwsurvey_domain_model_survey.admin">
 				<source>Admin</source>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questioncontainer">
+				<source>RKW Survey: Question container</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questioncontainer.name">
+				<source>Title</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questioncontainer.description">
+				<source>Description</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_questioncontainer.question">
+				<source>Question</source>
+			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question">
 				<source>Question</source>
 			</trans-unit>
@@ -135,6 +147,12 @@
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.surveyResultUid">
 				<source>Survey Result Uid</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.surveyResultTags">
+				<source>Survey Result tags</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.questionContainerUid">
+				<source>Container Uid</source>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.questionUid">
 				<source>Question Uid</source>
@@ -501,7 +519,6 @@
 			<trans-unit id="partials_backend_survey.dropouts">
 				<source>Dropouts/Incomplete</source>
 			</trans-unit>
-
 
 		</body>
 	</file>

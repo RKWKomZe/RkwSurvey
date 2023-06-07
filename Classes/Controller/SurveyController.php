@@ -14,22 +14,22 @@ namespace RKW\RkwSurvey\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
+use RKW\RkwSurvey\Domain\Model\Evaluator;
+use RKW\RkwSurvey\Domain\Model\Survey;
+use RKW\RkwSurvey\Domain\Model\SurveyResult;
+use RKW\RkwSurvey\Domain\Model\QuestionResultContainer;
 use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
 use RKW\RkwSurvey\Domain\Repository\SurveyRepository;
 use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
 use RKW\RkwSurvey\Domain\Repository\TokenRepository;
 use RKW\RkwSurvey\Service\RkwMailService;
+use RKW\RkwSurvey\Utility\SurveyProgressUtility;
 use RKW\RkwSurvey\Validation\ContactFormValidator;
 use RKW\RkwSurvey\Validation\QuestionResultValidator;
 use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Page\PageRenderer;
-use RKW\RkwSurvey\Domain\Model\Survey;
-use RKW\RkwSurvey\Domain\Model\Evaluator;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use RKW\RkwSurvey\Domain\Model\SurveyResult;
-use RKW\RkwSurvey\Domain\Model\QuestionResult;
-use RKW\RkwSurvey\Utility\SurveyProgressUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
@@ -134,13 +134,21 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
             (GeneralUtility::_GP('token'))
             && (!$tokenInput)
         ) {
-            $tokenInput = GeneralUtility::_GP('token');
+            $tokenInput = GeneralUtility::_GP('tx_rkwsurvey_survey')['token'];
+        }
+
+        if (
+            (GeneralUtility::_GP('tx_rkwsurvey_survey')['tags'])
+            && (!$tagsInput)
+        ) {
+            $tagsInput = GeneralUtility::_GP('tx_rkwsurvey_survey')['tags'];
         }
 
         $this->view->assignMultiple(
             array(
                 'survey'     => $survey ?: $this->surveyRepository->findByIdentifierIgnoreEnableFields(intval($this->settings['selectedSurvey'])),
                 'tokenInput' => $tokenInput,
+                'tagsInput'  => $tagsInput
             )
         );
     }
@@ -153,12 +161,18 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
      * @param string $extensionSuffix
      * @param string $tokenInput
+     * @param string $tagsInput
      * @return void
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      */
-    public function startAction(Survey $survey, string $extensionSuffix = '', string $tokenInput = ''): void
-    {
+    public function startAction(
+        Survey $survey,
+        string $extensionSuffix = '',
+        string $tokenInput = '',
+        string $tagsInput = ''
+    ): void {
+
         // If access restricted, the initial assignment will be done here
         // Is also returning initial surveyResult-Object (existing or new)
         $surveyResult = $this->checkInitialAccessRestriction($survey, $tokenInput);
@@ -166,8 +180,10 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         // create new surveyResult (if not exists)
         if ($surveyResult->_isNew()) {
             $surveyResult->setSurvey($survey);
+            $surveyResult->setTags($tagsInput);
             $this->surveyResultRepository->add($surveyResult);
-            // persist now to have a uid to log
+
+            // persist now to have an uid to log
             $this->persistenceManager->persistAll();
         }
 
@@ -201,12 +217,20 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      */
     public function initializeProgressAction(): void
     {
-        if ($this->request->hasArgument('newQuestionResult')) {
-            $newQuestionResult = $this->request->getArgument('newQuestionResult');
 
-            if (is_array($newQuestionResult['answer'])) {
-                $newQuestionResult['answer'] = implode(',', array_keys(array_filter($newQuestionResult['answer'])));
-                $this->request->setArgument('newQuestionResult', $newQuestionResult);
+        if ($this->request->hasArgument('newQuestionResultContainer')) {
+            $newQuestionResultContainer = $this->request->getArgument('newQuestionResultContainer');
+
+            if (key_exists('questionResult', $newQuestionResultContainer)) {
+                foreach ($newQuestionResultContainer['questionResult'] as $key => $newQuestionResult) {
+                    if (is_array($newQuestionResult['answer'])) {
+                        $newQuestionResultContainer['questionResult'][$key]['answer'] = implode(
+                            ',',
+                            array_keys(array_filter($newQuestionResult['answer']))
+                        );
+                    }
+                }
+                $this->request->setArgument('newQuestionResultContainer', $newQuestionResultContainer);
             }
         }
     }
@@ -219,7 +243,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @param \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult
      * @param string $extensionSuffix
      * @param string $tokenInput
-     * @param \RKW\RkwSurvey\Domain\Model\QuestionResult|null $newQuestionResult
+     * @param \RKW\RkwSurvey\Domain\Model\QuestionResultContainer|null $newQuestionResultContainer
      * @return void
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
@@ -229,65 +253,102 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         SurveyResult $surveyResult,
         string $extensionSuffix = '',
         string $tokenInput = '',
-        ?QuestionResult $newQuestionResult = null
+        ?QuestionResultContainer $newQuestionResultContainer = null
     ): void {
 
         // check access restriction
         $this->checkAccessRestriction($surveyResult, $tokenInput);
 
-        // Workaround: We have several problems if we're using @TYPO3\CMS\Extbase\Annotation\Validatevia PhpDocs.
-        $validatorRequest = false;
-        if ($newQuestionResult) {
-            $validatorRequest = $this->questionResultValidator->isValid($newQuestionResult);
-        }
+        if ($newQuestionResultContainer instanceof QuestionResultContainer) {
 
-        if (is_string($validatorRequest)) {
-            // set error message to user
-            $this->view->assign('errorMessage', $validatorRequest);
+            $formErrorDetected = false;
+            $questionHasErrorArray = [];
+            $questionResultToAddList = [];
 
-        } elseif ($validatorRequest === true) {
+            /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $newQuestionResult */
+            foreach ($newQuestionResultContainer->getQuestionResult()->toArray() as $key => $newQuestionResult) {
 
-            // continue with question result
-            if ($newQuestionResult) {
-                // for secure - check if question is already answered (prevents browser-hopping anomalies)
-                /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $oldQuestionResult */
-                if ($oldQuestionResult = $this->questionResultRepository->findByQuestionAndSurveyResult(
-                    $newQuestionResult->getQuestion(),
-                    $surveyResult
-                )) {
+                // Workaround: We have several problems if we're using @validate via PhpDocs.
+                $validatorRequest = $this->questionResultValidator->isValid($newQuestionResult);
 
-                    //@todo Why not remove the old one instead of returning an error
-                    $surveyResult->removeQuestionResult($oldQuestionResult);
-                    $this->questionResultRepository->remove($oldQuestionResult);
+                if (is_string($validatorRequest)) {
+                    // set error message to user
+                    $this->view->assign('errorMessage', $validatorRequest);
+                    $formErrorDetected = true;
 
-                    /*
-                     $this->addFlashMessage(
-                        LocalizationUtility::translate('tx_rkwsurvey_controller_survey.alreadyAnswered', $this->extensionName),
-                        '',
-                        \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
-                    );
-                    $this->redirect('welcome', null, null, array('survey' => $surveyResult->getSurvey()));
-                    //===
-                    */
+                    // in fluid we identify the error-question through container iteration
+                    $questionHasErrorArray[$key] = ' validation-error';
+
+                } elseif ($validatorRequest === true) {
+
+                    // continue with question result
+                    if ($newQuestionResult) {
+
+                        // for secure - check if question is already answered (prevents browser-hopping anomalies)
+                        /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $oldQuestionResult */
+                        if ($oldQuestionResult = $this->questionResultRepository
+                            ->findByQuestionAndSurveyResult($newQuestionResult->getQuestion(), $surveyResult)
+                        ) {
+
+                            // Remove the old one instead of returning an error
+                            $surveyResult->removeQuestionResult($oldQuestionResult);
+                            $this->questionResultRepository->remove($oldQuestionResult);
+                        }
+
+                        // add it only, if there comes no more validation error
+                        $questionResultToAddList[] = $newQuestionResult;
+
+                        if ($surveyResult->getSurvey()->getType() == 2) {
+
+                            // @toDo: Add container jump
+                            // @toDo: Makes a container jump sense? Actually the jump-function depends on a single question type
+
+                        } else {
+                            SurveyProgressUtility::handleJumpAction($surveyResult, $newQuestionResult);
+                        }
+                    }
+                }
+            }
+
+            // only update the surveyResult if there is no error message. Other simply show the template again with error message
+            if (!$formErrorDetected) {
+                $this->surveyResultRepository->update($surveyResult);
+
+                // if there comes to error around, not set the questionResults to the surveyResult
+                foreach ($questionResultToAddList as $questionResultToAdd) {
+                    $surveyResult->addQuestionResult($questionResultToAdd);
                 }
 
-                $surveyResult->addQuestionResult($newQuestionResult);
-                SurveyProgressUtility::handleJumpAction($surveyResult, $newQuestionResult);
-                $this->surveyResultRepository->update($surveyResult);
+            } else {
+                // give back the given questionContainer to re-fill given formfields
+                $this->view->assign('prevResultContainer', $newQuestionResultContainer);
+                $this->view->assign('questionHasErrorArray', $questionHasErrorArray);
             }
         }
 
         // if all questions are answered, finalize it!
-        if (count($surveyResult->getQuestionResult()) === count($surveyResult->getSurvey()->getQuestion())) {
+        if (count($surveyResult->getQuestionResult()) === $surveyResult->getSurvey()->getQuestionCountTotal()) {
 
             // final create and show endtext
-            $this->forward('create', null, null, array('surveyResult' => $surveyResult, 'tokenInput' => $tokenInput));
-            //===
+            $this->forward(
+                'create',
+                null,
+                null,
+                [
+                    'surveyResult' => $surveyResult,
+                    'tokenInput' => $tokenInput
+                ]
+            );
         }
 
         $this->view->assign('surveyResult', $surveyResult);
         $this->view->assign('extensionSuffix', $extensionSuffix);
         $this->view->assign('tokenInput', $tokenInput);
+
+        // workaround test ObjectStorage iteration issue
+        $this->view->assign('surveyQuestionContainerArray', $surveyResult->getSurvey()->getQuestionContainer()->toArray());
+
+
     }
 
 
@@ -315,6 +376,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @param \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult
      * @param array $contactForm
      * @param string $tokenInput
+     * @validate $contactForm \RKW\RkwSurvey\Validation\ContactFormValidator
      * @return void
      * @TYPO3\CMS\Extbase\Annotation\Validate("RKW\RkwSurvey\Validation\ContactFormValidator", param="contactForm")
      * @TYPO3\CMS\Extbase\Annotation\Validate("Madj2k\FeRegister\Validation\Consent\PrivacyValidator", param="contactForm")
@@ -441,7 +503,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                 false, /* compress*/
                 true, /* force on top */
                 '', /* allwrap */
-                true /* exlude from concatenation */
+                true /* exclude from concatenation */
             );
 
             $chart = $evaluator->prepareChart();
@@ -451,12 +513,9 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
             $this->pageRenderer->addJsFooterInlineCode('donutScript', $evaluator->renderDonuts($donuts), true);
 
             if ($evaluator->containsGroupedByQuestion()) {
-
                 $bars = $evaluator->prepareBars();
                 $this->pageRenderer->addJsFooterInlineCode('barScript', $evaluator->renderBars($bars), true);
-
                 $this->view->assign('bars', $bars);
-
             }
 
             $this->view->assign('donuts', $donuts);
@@ -491,7 +550,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                     \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
                 );
                 $this->forward('welcome', null, null, array('survey' => $survey));
-                //===
             }
 
             /** @var \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult */
@@ -511,7 +569,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                     \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
                 );
                 $this->forward('welcome', null, null, array('survey' => $survey));
-                //===
 
             // exist & not finished: The $surveyResult is already set, let him run
             } else {
@@ -520,7 +577,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                 if ($surveyResult->_isNew()) {
 
                     if ($survey->getToken()->contains($token)) {
-
                         $surveyResult->setToken($token);
 
                     } else {
@@ -532,7 +588,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                             \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
                         );
                         $this->forward('welcome', null, null, array('survey' => $survey));
-                        //===
                     }
                 }
             }
@@ -563,7 +618,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                     \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
                 );
                 $this->forward('welcome', null, null, array('survey' => $surveyResult->getSurvey()));
-                //===
             }
 
             // check token itself
@@ -577,7 +631,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                     \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
                 );
                 $this->forward('welcome', null, null, array('survey' => $surveyResult->getSurvey()));
-                //===
             }
         }
     }

@@ -1,9 +1,12 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
-    data-namespace-typo3-fluid="true">
+      xmlns:rkw="http://typo3.org/ns/RKW/RkwSurvey/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
 
     <f:form.textarea
         id="tx-rkwsurvey-question"
-        property="answer"
+        property="questionResult.{iter.index}.answer"
+        value="<rkw:getFormFieldValue questionResultContainer='{prevResultContainer}' containerIter='{iter.index}' />"
     />
 
 </html>

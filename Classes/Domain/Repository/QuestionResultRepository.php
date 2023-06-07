@@ -15,6 +15,9 @@ namespace RKW\RkwSurvey\Domain\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
+use RKW\RkwSurvey\Domain\Model\Question;
+use RKW\RkwSurvey\Domain\Model\QuestionResult;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 
@@ -36,8 +39,11 @@ class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      * @param \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult
      * @return \RKW\RkwSurvey\Domain\Model\QuestionResult|null
      */
-    public function findByQuestionAndSurveyResult(\RKW\RkwSurvey\Domain\Model\Question $question, \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult)
-    {
+    public function findByQuestionAndSurveyResult(
+        \RKW\RkwSurvey\Domain\Model\Question $question,
+        \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult
+    ):? QuestionResult {
+
         $query = $this->createQuery();
 
         $query->matching(
@@ -48,18 +54,20 @@ class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         );
 
         return $query->execute()->getFirst();
-        //====
     }
 
     /**
      * findByQuestionAndSurveyResultUids
      *
      * @param \RKW\RkwSurvey\Domain\Model\Question $question
-     * @param array $surveyResultIds
+     * @param array $surveyResultUids
      * @return \RKW\RkwSurvey\Domain\Model\QuestionResult|null
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function findByQuestionAndSurveyResultUids(\RKW\RkwSurvey\Domain\Model\Question $question, array $surveyResultUids)
-    {
+    public function findByQuestionAndSurveyResultUids(
+        \RKW\RkwSurvey\Domain\Model\Question $question,
+        array $surveyResultUids
+    ):? QuestionResult {
         $query = $this->createQuery();
 
         $query->matching(
@@ -70,18 +78,22 @@ class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         );
 
         return $query->execute();
-        //====
     }
+
 
     /**
      * findByQuestionUidAndSurveyResultUids
      *
      * @param int $questionUid
-     * @param array $surveyResultIds
+     * @param array $surveyResultUids
      * @return \RKW\RkwSurvey\Domain\Model\QuestionResult|null
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function findByQuestionUidAndSurveyResultUids($questionUid, array $surveyResultUids)
-    {
+    public function findByQuestionUidAndSurveyResultUids(
+        int $questionUid,
+        array $surveyResultUids
+    ):? QuestionResult {
+
         $query = $this->createQuery();
 
         $query->matching(
@@ -92,25 +104,29 @@ class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         );
 
         return $query->execute();
-        //====
     }
+
 
     /**
      * findBySurveyOrderByQuestionAndType
      *
      * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
      * @param string $startDate
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface|array
+     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function findBySurveyOrderByQuestionAndType(\RKW\RkwSurvey\Domain\Model\Survey $survey, $startDate = null)
-    {
+    public function findBySurveyOrderByQuestionAndType(
+        \RKW\RkwSurvey\Domain\Model\Survey $survey,
+        string $startDate = ''
+    ): QueryResultInterface {
+
         $query = $this->createQuery();
         $query->getQuerySettings()->setRespectStoragePage(false);
 
         $constraints = array();
 
-        $constraints[] = $query->equals('question.survey', $survey);
+        //$constraints[] = $query->equals('question.survey', $survey);
+        $constraints[] = $query->equals('surveyResult.survey', $survey);
         $constraints[] = $query->logicalAnd(
             $query->logicalNot(
                 $query->equals('surveyResult.uid', null)
@@ -141,8 +157,8 @@ class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         );
 
         return $query->execute();
-        //====
     }
+
 
     /**
      * findByQuestion
@@ -150,7 +166,7 @@ class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      * @param \RKW\RkwSurvey\Domain\Model\Question $question
      * @return \RKW\RkwSurvey\Domain\Model\QuestionResult|null
      */
-    public function findByQuestion(\RKW\RkwSurvey\Domain\Model\Question $question)
+    public function findByQuestion(Question $question):? QuestionResult
     {
         $query = $this->createQuery();
 
@@ -159,8 +175,8 @@ class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         );
 
         return $query->execute();
-        //====
     }
+
 
     /**
      * findByQuestionUid
@@ -168,7 +184,7 @@ class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      * @param int $questionUid
      * @return \RKW\RkwSurvey\Domain\Model\QuestionResult|null
      */
-    public function findByQuestionUid($questionUid)
+    public function findByQuestionUid(int $questionUid):? QuestionResult
     {
         $query = $this->createQuery();
 
@@ -177,16 +193,18 @@ class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         );
 
         return $query->execute();
-        //====
+
     }
+
 
     /**
      * findByQuestionAndAnswer
      *
      * @param \RKW\RkwSurvey\Domain\Model\Question $question
+     * @param mixed $answer
      * @return \RKW\RkwSurvey\Domain\Model\QuestionResult|null
      */
-    public function findByQuestionAndAnswer(\RKW\RkwSurvey\Domain\Model\Question $question, $answer)
+    public function findByQuestionAndAnswer(Question $question, $answer):? QuestionResult
     {
         $query = $this->createQuery();
 
@@ -198,7 +216,6 @@ class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         );
 
         return $query->execute();
-        //====
     }
 
 }

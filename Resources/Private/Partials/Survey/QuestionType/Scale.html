@@ -11,13 +11,14 @@
         <f:for each="{question.scale}" key="key" as="value" iteration="iterScale">
             <div class="form__field scale-group__item">
                 <f:form.radio
-                    id="tx-rkwsurvey-radio-{key}"
+                    id="tx-rkwsurvey-radio{iter.cycle}-{key}"
                     class="radio"
-                    name="answer"
-                    property="answer"
+                    name="questionResult.{iter.index}.answer"
+                    property="questionResult.{iter.index}.answer"
                     value="{value}"
+                    checked="<rkw:getFormFieldValue questionResultContainer='{prevResultContainer}' containerIter='{iter.index}' questionIter='{iterAnswer.cycle}' />"
                 />
-                <label for="tx-rkwsurvey-radio-{key}" class="radio-label"><span>{value}</span></label>
+                <label for="tx-rkwsurvey-radio{iter.cycle}-{key}" class="radio-label"><span>{value}</span></label>
             </div>
         </f:for>
 

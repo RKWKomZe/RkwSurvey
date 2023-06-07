@@ -15,6 +15,9 @@ namespace RKW\RkwSurvey\Domain\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
+use RKW\RkwSurvey\Domain\Model\Question;
+use RKW\RkwSurvey\Domain\Model\Survey;
+
 /**
  * Class QuestionRepository
  *
@@ -32,7 +35,7 @@ class QuestionRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
      * @return \RKW\RkwSurvey\Domain\Model\Question|null
      */
-    public function findOneByGroupedByAndSurvey(\RKW\RkwSurvey\Domain\Model\Survey $survey)
+    public function findOneByGroupedByAndSurvey(Survey $survey):? Question
     {
         $query = $this->createQuery();
 
@@ -44,7 +47,6 @@ class QuestionRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         );
 
         return $query->execute()->getFirst();
-        //====
     }
 
 
