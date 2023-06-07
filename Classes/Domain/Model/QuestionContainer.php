@@ -50,7 +50,7 @@ class QuestionContainer extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\RKW\RkwSurvey\Domain\Model\Question>|null
      * @TYPO3\CMS\Extbase\Annotation\ORM\Cascade("remove")
      */
-    protected ?ObjectStorage $question;
+    protected ?ObjectStorage $question = null;
 
 
     /**

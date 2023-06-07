@@ -252,7 +252,7 @@ class SurveyResult extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         return $this->tags;
     }
 
-    
+
     /**
      * Sets the tags
      *

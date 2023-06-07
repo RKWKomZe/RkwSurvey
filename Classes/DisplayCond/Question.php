@@ -29,10 +29,9 @@ class Question
 {
 
     /**
-     * @var \RKW\RkwSurvey\Domain\Repository\SurveyRepository
-     * @TYPO3\CMS\Extbase\Annotation\Inject
+     * @var \RKW\RkwSurvey\Domain\Repository\SurveyRepository|null
      */
-    protected SurveyRepository $surveyRepository;
+    protected ?SurveyRepository $surveyRepository = null;
 
 
     /**

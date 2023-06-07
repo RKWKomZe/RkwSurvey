@@ -168,11 +168,12 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      */
     public function startAction(
-    Survey $survey,
-    string $extensionSuffix = '',
-    string $tokenInput = '',
-    string $tagsInput
+        Survey $survey,
+        string $extensionSuffix = '',
+        string $tokenInput = '',
+        string $tagsInput = ''
     ): void {
+
         // If access restricted, the initial assignment will be done here
         // Is also returning initial surveyResult-Object (existing or new)
         $surveyResult = $this->checkInitialAccessRestriction($survey, $tokenInput);
@@ -182,7 +183,8 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
             $surveyResult->setSurvey($survey);
             $surveyResult->setTags($tagsInput);
             $this->surveyResultRepository->add($surveyResult);
-            // persist now to have a uid to log
+
+            // persist now to have an uid to log
             $this->persistenceManager->persistAll();
         }
 
@@ -326,7 +328,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         }
 
         // if all questions are answered, finalize it!
-        if (count($surveyResult->getQuestionResult()) === count($surveyResult->getSurvey()->getQuestion())) {
+        if (count($surveyResult->getQuestionResult()) === $surveyResult->getSurvey()->getQuestionCountTotal()) {
 
             // final create and show endtext
             $this->forward(

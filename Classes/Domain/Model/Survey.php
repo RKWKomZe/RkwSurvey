@@ -74,7 +74,7 @@ class Survey extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      */
     protected ?ObjectStorage $question = null;
 
-    
+
     /**
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\RKW\RkwSurvey\Domain\Model\QuestionContainer>|null
      */
@@ -368,7 +368,7 @@ class Survey extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         $this->question = $question;
     }
 
-    
+
     /**
      * Adds a QuestionContainer
      *
@@ -380,7 +380,7 @@ class Survey extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         $this->questionContainer->attach($questionContainer);
     }
 
-    
+
     /**
      * Removes a QuestionContainer
      *
@@ -391,19 +391,19 @@ class Survey extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->question->detach($questionContainerToRemove);
     }
-    
+
 
     /**
      * Returns the questionContainer
      *
      * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\RKW\RkwSurvey\Domain\Model\QuestionContainer> $questionContainer
      */
-    public function getQuestionContainer(): void
+    public function getQuestionContainer(): ObjectStorage
     {
         return $this->questionContainer;
     }
 
-    
+
     /**
      * Sets the questionContainer
      *
@@ -414,7 +414,7 @@ class Survey extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->questionContainer = $questionContainer;
     }
-    
+
 
     /**
      * Adds a BackendUser

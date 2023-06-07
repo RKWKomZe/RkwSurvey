@@ -146,7 +146,7 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * @var \RKW\RkwSurvey\Domain\Model\QuestionContainer|null
      */
-    protected ?$questionContainer = null;
+    protected ?QuestionContainer $questionContainer = null;
 
 
     /**
@@ -612,7 +612,7 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         $this->survey = $survey;
     }
 
-    
+
     /**
      * Returns the questionContainer
      *
@@ -622,7 +622,7 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         return $this->questionContainer;
     }
-    
+
 
     /**
      * Sets the questionContainer
@@ -635,7 +635,7 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         $this->questionContainer = $questionContainer;
     }
 
-    
+
     /**
      * Returns the topic
      *

@@ -38,7 +38,7 @@ class PageCountViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractView
     public function initializeArguments(): void
     {
         parent::initializeArguments();
-        $this->registerArgument('surveyResult', SurveyResult:class, 'The survey result', true);
+        $this->registerArgument('surveyResult', SurveyResult::class, 'The survey result', true);
         $this->registerArgument('start', 'int', 'Page number to start from', false, 1);
     }
 
