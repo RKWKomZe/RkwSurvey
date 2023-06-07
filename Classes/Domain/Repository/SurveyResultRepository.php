@@ -79,7 +79,7 @@ class SurveyResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
     public function findBySurveyAndFinished(
         Survey $survey,
         int $finished = 1,
-        string $startDate = '1970-01-01'
+        string $startDate = '1970-01-01 00:00'
     ): QueryResultInterface{
 
         $query = $this->createQuery();

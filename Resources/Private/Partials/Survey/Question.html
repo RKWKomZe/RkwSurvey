@@ -1,7 +1,7 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
     data-namespace-typo3-fluid="true">
 
-    <div class="contentbox contentbox--gray contentbox--webcheck webcheck {f:if(condition:'{iter.index} > 0', then:'mt-2')}" {f:if(condition:'{iter.index} == 0', then:'id="tx-rkwsurvey-head"')}>
+    <div class="contentbox contentbox--gray contentbox--webcheck webcheck {f:if(condition:'{iter.index} > 0', then:'mt-2')}{questionHasErrorArray.{iter.index}}" {f:if(condition:'{iter.index} == 0', then:'id="tx-rkwsurvey-head"')}>
         
         <f:form.hidden name="questionResult.{iter.index}.question" property="questionResult.{iter.index}.question" value="{question}" />
     
@@ -9,7 +9,7 @@
             <h2 class="h4 align-center">{question.question}</h2>
         </div>
 
-        <div class="webcheck__questions mt-1 {questionHasErrorArray.{iter.index}}">
+        <div class="webcheck__questions mt-1">
     
             <f:comment><!-- multiple choice (checkboxes) --></f:comment>
             <f:if condition="{question.type} == 1">

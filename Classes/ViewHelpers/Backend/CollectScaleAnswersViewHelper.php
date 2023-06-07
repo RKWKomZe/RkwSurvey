@@ -1,5 +1,5 @@
 <?php
-namespace RKW\RkwSurvey\ViewHelpers;
+namespace RKW\RkwSurvey\ViewHelpers\Backend;
 
 /*
  * This file is part of the TYPO3 CMS project.

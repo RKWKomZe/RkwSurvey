@@ -103,21 +103,7 @@ return [
 			],
 		],
 	    */
-        'crdate' => [
-            'exclude' => true,
-            //'l10n_mode' => 'mergeIfNotBlank',
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.crdate',
-            'config' => [
-                'type' => 'input',
-                'renderType' => 'inputDateTime',
-                'size' => 13,
-                'eval' => 'datetime',
-                'default' => 0,
-                'behaviour' => [
-                    'allowLanguageSynchronization' => true
-                ]
-            ]
-        ],
+
 		'finished' => [
 			'exclude' => true,
 			'label' => 'LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_surveyresult.finished',

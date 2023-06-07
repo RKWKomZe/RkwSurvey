@@ -14,13 +14,9 @@ namespace RKW\RkwSurvey\ViewHelpers;
  * The TYPO3 project - inspiring people to share!
  */
 
-use Doctrine\Common\Util\Debug;
-use RKW\RkwAjax\Utilities\GeneralUtility;
-use RKW\RkwSurvey\Domain\Model\QuestionContainer;
+use Madj2k\CoreExtended\Utility\GeneralUtility;
 use RKW\RkwSurvey\Domain\Model\QuestionResult;
 use RKW\RkwSurvey\Domain\Model\QuestionResultContainer;
-use RKW\RkwSurvey\Domain\Model\SurveyResult;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * GetFormFieldValueViewHelper
@@ -65,7 +61,6 @@ class GetFormFieldValueViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\Abstr
         }
 
         $questionResultList = $questionResultContainer->getQuestionResult()->toArray();
-
         if (!array_key_exists($containerIter, $questionResultList)) {
             return '';
         }
@@ -76,6 +71,7 @@ class GetFormFieldValueViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\Abstr
         if (!$questionIter) {
             return $questionResult->getAnswer();
         } else {
+
             // multi field fields (checkboxes, radio)
             $selectedAnswers = GeneralUtility::trimExplode(',', $questionResult->getAnswer());
 

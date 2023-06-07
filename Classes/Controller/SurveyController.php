@@ -17,7 +17,6 @@ namespace RKW\RkwSurvey\Controller;
 use RKW\RkwSurvey\Domain\Model\Evaluator;
 use RKW\RkwSurvey\Domain\Model\Survey;
 use RKW\RkwSurvey\Domain\Model\SurveyResult;
-use RKW\RkwSurvey\Domain\Model\QuestionResult;
 use RKW\RkwSurvey\Domain\Model\QuestionResultContainer;
 use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
 use RKW\RkwSurvey\Domain\Repository\SurveyRepository;

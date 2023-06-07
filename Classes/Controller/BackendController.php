@@ -21,6 +21,7 @@ use RKW\RkwSurvey\Domain\Repository\SurveyRepository;
 use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
 use RKW\RkwSurvey\Domain\Repository\TokenRepository;
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
@@ -93,16 +94,16 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * because extbase makes some trouble if some survey has a starttime in future, is disabled or something, just give the uid
      *
      * @param int $surveyUid
-     * @param int $starttime
+     * @param string $starttime
      * @return void
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function showAction(int $surveyUid, int $starttime = 0)
+    public function showAction(int $surveyUid, string $starttime = '')
     {
         /** @var \RKW\RkwSurvey\Domain\Model\Survey $survey */
         $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields($surveyUid);
 
-        $this->view->assign('starttime', $starttime);
+        $this->view->assign('starttime', ($starttime ? strtotime($starttime) : $survey->getStarttime()));
         $this->view->assign('survey', $survey);
 
         // To get always a complete year filter
@@ -112,6 +113,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         $this->view->assign('surveyResultListFinished', $this->surveyResultRepository->findBySurveyAndFinished($survey, 1, $starttime));
         $this->view->assign('surveyResultListUnfinished', $this->surveyResultRepository->findBySurveyAndFinished($survey, 0, $starttime));
         $this->view->assign('questionResultList', $this->questionResultRepository->findBySurveyOrderByQuestionAndType($survey, $starttime));
+
     }
 
 
@@ -120,11 +122,11 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * because extbase makes some trouble if some survey has a starttime in future, ist disabled or something, just give the uid
      *
      * @param int $surveyUid
-     * @param int $starttime
+     * @param string $starttime
      * @return void
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function printAction(int $surveyUid, int $starttime = 0): void
+    public function printAction(int $surveyUid, string $starttime = ''): void
     {
         /** @var \RKW\RkwSurvey\Domain\Model\Survey $survey */
         $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields($surveyUid);
@@ -142,11 +144,11 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * because extbase makes some trouble if some survey has a starttime in future, ist disabled or something, just give the uid
      *
      * @param int $surveyUid
-     * @param int $starttime
+     * @param string $starttime
      * @return void
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function csvAction(int $surveyUid, int $starttime = 0): void
+    public function csvAction(int $surveyUid, string $starttime = ''): void
     {
         /** @var \RKW\RkwSurvey\Domain\Model\Survey $survey */
         $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields($surveyUid);
@@ -187,7 +189,6 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
 
                 if (!$questionResult->getSurveyResult()) {
                     continue;
-                    //===
                 }
 
                 /** @var \RKW\RkwSurvey\Domain\Model\Question $question */
