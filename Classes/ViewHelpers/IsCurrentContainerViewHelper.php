@@ -14,10 +14,8 @@ namespace RKW\RkwSurvey\ViewHelpers;
  * The TYPO3 project - inspiring people to share!
  */
 
-use RKW\RkwSurvey\Domain\Model\Question;
 use RKW\RkwSurvey\Domain\Model\QuestionContainer;
 use RKW\RkwSurvey\Domain\Model\SurveyResult;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * IsCurrentContainerViewHelper
@@ -28,7 +26,7 @@ use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class IsCurrentContainerViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class IsCurrentContainerViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
 {
 
     /**

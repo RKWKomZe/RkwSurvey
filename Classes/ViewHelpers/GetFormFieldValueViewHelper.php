@@ -27,7 +27,7 @@ use RKW\RkwSurvey\Domain\Model\QuestionResultContainer;
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class GetFormFieldValueViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class GetFormFieldValueViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
 {
 
     /**
