@@ -3,6 +3,8 @@ routeEnhancers:
     type: Extbase
     namespace: 'tx_rkwsurvey_survey'
     routes:
+      - routePath: '/rkw-survey/welcome/{survey}'
+        _controller: 'Survey::welcome'
       - routePath: '/rkw-survey/start/{survey}'
         _controller: 'Survey::start'
       - routePath: '/rkw-survey/progress/{surveyResult}'
@@ -15,5 +17,10 @@ routeEnhancers:
         _controller: 'Survey::createContact'
     defaultController: 'Survey::welcome'
     requirements:
-      survey: '[0-9]{1,10}'
       surveyResult: '[0-9]{1,10}'
+    aspects:
+      survey:
+        type: PersistedSlugifiedPatternMapper
+        tableName: 'tx_rkwsurvey_domain_model_survey'
+        routeFieldPattern: '^(.*)-(?P<uid>\d+)$'
+        routeFieldResult: '{name|sanitized}-{uid}'
