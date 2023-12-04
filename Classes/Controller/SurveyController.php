@@ -33,7 +33,6 @@ use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
@@ -127,10 +126,11 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * action welcome
      *
      * @param \RKW\RkwSurvey\Domain\Model\Survey|null $survey
-     * @param string $tokenInput
+     * @param string                                  $tokenInput
+     * @param string                                  $tagsInput
      * @return void
      */
-    public function welcomeAction(Survey $survey = null, string $tokenInput = ''): void
+    public function welcomeAction(Survey $survey = null, string $tokenInput = '', string $tagsInput = ''): void
     {
         if (
             (GeneralUtility::_GP('token'))
