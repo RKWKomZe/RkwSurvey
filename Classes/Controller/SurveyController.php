@@ -28,10 +28,12 @@ use RKW\RkwSurvey\Validation\ContactFormValidator;
 use RKW\RkwSurvey\Validation\QuestionResultValidator;
 use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\CMS\Core\Log\LogManager;
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
@@ -402,7 +404,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         $this->addFlashMessage(
             LocalizationUtility::translate('tx_rkwsurvey_controller_survey.contactSuccessful', $this->extensionName),
             '',
-            \TYPO3\CMS\Core\Messaging\AbstractMessage::OK
+            AbstractMessage::OK
         );
 
         // final create and show final text
@@ -547,7 +549,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                 $this->addFlashMessage(
                     LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenNotValid', $this->extensionName),
                     '',
-                    \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
+                    AbstractMessage::WARNING
                 );
                 $this->forward('welcome', null, null, array('survey' => $survey));
             }
@@ -566,7 +568,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                 $this->addFlashMessage(
                     LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenExistAndFinished', $this->extensionName),
                     '',
-                    \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
+                    AbstractMessage::WARNING
                 );
                 $this->forward('welcome', null, null, array('survey' => $survey));
 
@@ -585,7 +587,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                         $this->addFlashMessage(
                             LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenSomethingWentWrong', $this->extensionName),
                             '',
-                            \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
+                            AbstractMessage::WARNING
                         );
                         $this->forward('welcome', null, null, array('survey' => $survey));
                     }
@@ -607,28 +609,33 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      */
     protected function checkAccessRestriction(SurveyResult $surveyResult, string $tokenInput): void
     {
+        // avoid errors which occurs if a survey is hidden or deleted
+        if (!$surveyResult->getSurvey() instanceof Survey) {
+            $this->addFlashMessage(
+                LocalizationUtility::translate('tx_rkwsurvey_controller_survey.surveyNoLongerActive', $this->extensionName),
+                '',
+                AbstractMessage::INFO
+            );
+            $this->forward('welcome');
+        }
+
         if ($surveyResult->getSurvey()->isAccessRestricted()) {
             $token = trim(filter_var($tokenInput, FILTER_SANITIZE_STRING));
 
-            // for secure: check surveyResult-token (catch if getToken()->getName() does not exists. Avoid PHP-error)
-            if (!$surveyResult->getToken()) {
-                $this->addFlashMessage(
-                    LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenSomethingWentWrong', $this->extensionName),
-                    '',
-                    \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
-                );
-                $this->forward('welcome', null, null, array('survey' => $surveyResult->getSurvey()));
-            }
-
-            // check token itself
+            // for secure:
+            // a) check surveyResult-token (catch if getToken()->getName() does not exists. Avoid PHP-error)
+            // b) check token itself
             if (
-                $token != $surveyResult->getToken()->getName()
-                || !$this->tokenRepository->findOneBySurveyAndName($surveyResult->getSurvey(), $token)
+                !$surveyResult->getToken()
+                || (
+                    $token != $surveyResult->getToken()->getName()
+                    || !$this->tokenRepository->findOneBySurveyAndName($surveyResult->getSurvey(), $token)
+                )
             ) {
                 $this->addFlashMessage(
                     LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenSomethingWentWrong', $this->extensionName),
                     '',
-                    \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
+                    AbstractMessage::WARNING
                 );
                 $this->forward('welcome', null, null, array('survey' => $surveyResult->getSurvey()));
             }
