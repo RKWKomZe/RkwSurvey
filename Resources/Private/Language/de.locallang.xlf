@@ -179,6 +179,10 @@
                 <source>Oops! During the execution something went wrong with the given survey code. Please contact our support.</source>
                 <target>Upps! Während der Ausführung ist mit dem übergebenen Umfragecode wohl etwas schief gelaufen. Bitte wenden Sie sich an unseren Support.</target>
             </trans-unit>
+            <trans-unit id="tx_rkwsurvey_controller_survey.surveyNoLongerActive">
+                <source>Oops! The survey is no longer active.</source>
+                <target>Upps! Diese Umfrage ist nicht mehr aktiv.</target>
+            </trans-unit>
             <trans-unit id="tx_rkwsurvey_controller_survey.contactSuccessful">
                 <source>Woohoo! Your request has been successfully sent. We will contact you shortly.</source>
                 <target>Woohoo! Ihre Anfrage wurde erfolgreich versendet. Wir melden uns in Kürze bei Ihnen.</target>
