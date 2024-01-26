@@ -400,7 +400,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         $this->rkwMailService->sendContactForm($surveyResult->getSurvey()->getAdmin(), $surveyResult, $contactForm);
 
         $this->addFlashMessage(
-            LocalizationUtility::translate('tx_rkwsurvey_controller_survey.contactSuccessful', $this->extensionName),
+            LocalizationUtility::translate('tx_rkwsurvey_controller_survey.contactSuccessful', 'rkw_survey'),
             '',
             \TYPO3\CMS\Core\Messaging\AbstractMessage::OK
         );
@@ -545,7 +545,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                 || (!$token = $this->tokenRepository->findOneBySurveyAndName($survey, $tokenName))
             ) {
                 $this->addFlashMessage(
-                    LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenNotValid', $this->extensionName),
+                    LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenNotValid', 'rkw_survey'),
                     '',
                     \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
                 );
@@ -564,7 +564,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
             if ($surveyResult->isFinished()) {
                 // 1. exist & finished!
                 $this->addFlashMessage(
-                    LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenExistAndFinished', $this->extensionName),
+                    LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenExistAndFinished', 'rkw_survey'),
                     '',
                     \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
                 );
@@ -583,7 +583,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
 
                         // something went wrong
                         $this->addFlashMessage(
-                            LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenSomethingWentWrong', $this->extensionName),
+                            LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenSomethingWentWrong', 'rkw_survey'),
                             '',
                             \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
                         );
@@ -613,7 +613,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
             // for secure: check surveyResult-token (catch if getToken()->getName() does not exists. Avoid PHP-error)
             if (!$surveyResult->getToken()) {
                 $this->addFlashMessage(
-                    LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenSomethingWentWrong', $this->extensionName),
+                    LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenSomethingWentWrong', 'rkw_survey'),
                     '',
                     \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
                 );
@@ -626,7 +626,7 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                 || !$this->tokenRepository->findOneBySurveyAndName($surveyResult->getSurvey(), $token)
             ) {
                 $this->addFlashMessage(
-                    LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenSomethingWentWrong', $this->extensionName),
+                    LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenSomethingWentWrong', 'rkw_survey'),
                     '',
                     \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
                 );

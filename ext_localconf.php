@@ -21,6 +21,21 @@ call_user_func(
 		);
 
         //=================================================================
+        // Add XClasses for extending existing classes
+        //=================================================================
+        // for TYPO3 12+
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\Madj2k\FeRegister\Domain\Model\BackendUser::class] = [
+            'className' => \RKW\RkwSurvey\Domain\Model\BackendUser::class
+        ];
+
+        // for TYPO3 9.5 - 11.5 only, not required for TYPO3 12
+        \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Object\Container\Container::class)
+            ->registerImplementation(
+                \Madj2k\FeRegister\Domain\Model\BackendUser::class,
+                \RKW\RkwSurvey\Domain\Model\BackendUser::class
+            );
+
+        //=================================================================
         // Setting Logger
         //=================================================================
         $GLOBALS['TYPO3_CONF_VARS']['LOG']['RKW']['RkwSurvey']['writerConfiguration'] = array(
@@ -37,5 +52,5 @@ call_user_func(
 		);
 
 	},
-	$_EXTKEY
+	'rkw_survey'
 );
