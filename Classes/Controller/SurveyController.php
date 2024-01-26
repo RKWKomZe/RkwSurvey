@@ -28,6 +28,7 @@ use RKW\RkwSurvey\Validation\ContactFormValidator;
 use RKW\RkwSurvey\Validation\QuestionResultValidator;
 use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\CMS\Core\Log\LogManager;
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
@@ -125,10 +126,11 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * action welcome
      *
      * @param \RKW\RkwSurvey\Domain\Model\Survey|null $survey
-     * @param string $tokenInput
+     * @param string                                  $tokenInput
+     * @param string                                  $tagsInput
      * @return void
      */
-    public function welcomeAction(Survey $survey = null, string $tokenInput = ''): void
+    public function welcomeAction(Survey $survey = null, string $tokenInput = '', string $tagsInput = ''): void
     {
         if (
             (GeneralUtility::_GP('token'))
@@ -400,9 +402,9 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         $this->rkwMailService->sendContactForm($surveyResult->getSurvey()->getAdmin(), $surveyResult, $contactForm);
 
         $this->addFlashMessage(
-            LocalizationUtility::translate('tx_rkwsurvey_controller_survey.contactSuccessful', 'rkw_survey'),
+            LocalizationUtility::translate('tx_rkwsurvey_controller_survey.contactSuccessful', $this->extensionName),
             '',
-            \TYPO3\CMS\Core\Messaging\AbstractMessage::OK
+            AbstractMessage::OK
         );
 
         // final create and show final text
@@ -545,9 +547,9 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                 || (!$token = $this->tokenRepository->findOneBySurveyAndName($survey, $tokenName))
             ) {
                 $this->addFlashMessage(
-                    LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenNotValid', 'rkw_survey'),
+                    LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenNotValid', $this->extensionName),
                     '',
-                    \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
+                    AbstractMessage::WARNING
                 );
                 $this->forward('welcome', null, null, array('survey' => $survey));
             }
@@ -564,9 +566,9 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
             if ($surveyResult->isFinished()) {
                 // 1. exist & finished!
                 $this->addFlashMessage(
-                    LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenExistAndFinished', 'rkw_survey'),
+                    LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenExistAndFinished', $this->extensionName),
                     '',
-                    \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
+                    AbstractMessage::WARNING
                 );
                 $this->forward('welcome', null, null, array('survey' => $survey));
 
@@ -583,9 +585,9 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
 
                         // something went wrong
                         $this->addFlashMessage(
-                            LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenSomethingWentWrong', 'rkw_survey'),
+                            LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenSomethingWentWrong', $this->extensionName),
                             '',
-                            \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
+                            AbstractMessage::WARNING
                         );
                         $this->forward('welcome', null, null, array('survey' => $survey));
                     }
@@ -607,28 +609,24 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      */
     protected function checkAccessRestriction(SurveyResult $surveyResult, string $tokenInput): void
     {
+
         if ($surveyResult->getSurvey()->isAccessRestricted()) {
             $token = trim(filter_var($tokenInput, FILTER_SANITIZE_STRING));
 
-            // for secure: check surveyResult-token (catch if getToken()->getName() does not exists. Avoid PHP-error)
-            if (!$surveyResult->getToken()) {
-                $this->addFlashMessage(
-                    LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenSomethingWentWrong', 'rkw_survey'),
-                    '',
-                    \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
-                );
-                $this->forward('welcome', null, null, array('survey' => $surveyResult->getSurvey()));
-            }
-
-            // check token itself
+            // for secure:
+            // a) check surveyResult-token (catch if getToken()->getName() does not exists. Avoid PHP-error)
+            // b) check token itself
             if (
-                $token != $surveyResult->getToken()->getName()
-                || !$this->tokenRepository->findOneBySurveyAndName($surveyResult->getSurvey(), $token)
+                !$surveyResult->getToken()
+                || (
+                    $token != $surveyResult->getToken()->getName()
+                    || !$this->tokenRepository->findOneBySurveyAndName($surveyResult->getSurvey(), $token)
+                )
             ) {
                 $this->addFlashMessage(
-                    LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenSomethingWentWrong', 'rkw_survey'),
+                    LocalizationUtility::translate('tx_rkwsurvey_controller_survey.tokenSomethingWentWrong', $this->extensionName),
                     '',
-                    \TYPO3\CMS\Core\Messaging\AbstractMessage::WARNING
+                    AbstractMessage::WARNING
                 );
                 $this->forward('welcome', null, null, array('survey' => $surveyResult->getSurvey()));
             }
