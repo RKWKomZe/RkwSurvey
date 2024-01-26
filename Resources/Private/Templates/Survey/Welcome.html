@@ -7,13 +7,15 @@
     <f:section name="main">
 
         <f:if condition="{survey}">
-
             <f:if condition="{settings.showSurveyNameIntroExtro}">
                 <h2 class="h2">{survey.name}</h2>
             </f:if>
+        </f:if>
 
-            <f:render partial="FlashMessages" arguments="{_all}" />
+        <f:comment><!-- always print FleshMessages. Even if the survey is not set! (needed for error message) --></f:comment>
+        <f:render partial="FlashMessages" arguments="{_all}" />
 
+        <f:if condition="{survey}">
             <f:if condition="<rkw:checkSurveyDate survey='{survey}' />">
                 <f:then>
                     <div class="system-message system-message--scroll" role="alert">

@@ -168,16 +168,16 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
 
         $columArray = [];
         // column names
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyUid', $this->extensionName);
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultUid', $this->extensionName);
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultTags', $this->extensionName);
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyUid', 'rkw_survey');
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultUid', 'rkw_survey');
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultTags', 'rkw_survey');
         if ($survey->getType() == 2) {
-            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionContainerUid', $this->extensionName);
+            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionContainerUid', 'rkw_survey');
         }
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionUid', $this->extensionName);
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.question', $this->extensionName);
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answerOption', $this->extensionName);
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answer', $this->extensionName);
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionUid', 'rkw_survey');
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.question', 'rkw_survey');
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answerOption', 'rkw_survey');
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answer', 'rkw_survey');
 
         // Fill the CSV file with content
         fputcsv($csv, $columArray, $separator);
@@ -197,10 +197,10 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
                 $answerOption = '';
                 if (!$question->getAnswerOption()) {
                     if ($question->getType() == 0 || $question->getType() == 4) {
-                        $answerOption = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.freetext', $this->extensionName);
+                        $answerOption = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.freetext', 'rkw_survey');
                     }
                     if ($question->getType() == 3) {
-                        $answerOption = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.scale', $this->extensionName,
+                        $answerOption = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.scale', 'rkw_survey',
                             [
                                 $question->getScaleFromPoints(),
                                 $question->getScaleToPoints(),
