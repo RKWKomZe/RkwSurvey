@@ -609,15 +609,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      */
     protected function checkAccessRestriction(SurveyResult $surveyResult, string $tokenInput): void
     {
-        // avoid errors which occurs if a survey is hidden or deleted
-        if (!$surveyResult->getSurvey() instanceof Survey) {
-            $this->addFlashMessage(
-                LocalizationUtility::translate('tx_rkwsurvey_controller_survey.surveyNoLongerActive', $this->extensionName),
-                '',
-                AbstractMessage::INFO
-            );
-            $this->forward('welcome');
-        }
 
         if ($surveyResult->getSurvey()->isAccessRestricted()) {
             $token = trim(filter_var($tokenInput, FILTER_SANITIZE_STRING));
