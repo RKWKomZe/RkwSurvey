@@ -8,12 +8,12 @@ call_user_func(
 		if (TYPO3_MODE === 'BE') {
 
 			\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
-				$extKey,
+                'RKW.RkwSurvey',
 				'web', // Make module a submodule of 'web'
 				'evaluation', // Submodule key
 				'', // Position
 				[
-					\RKW\RkwSurvey\Controller\BackendController::class => 'list, show, print, csv, tokenList, tokenCreate, tokenRemove, tokenCsv',
+					'Backend' => 'list, show, print, csv, tokenList, tokenCreate, tokenRemove, tokenCsv',
 				],
 				[
 					'access' => 'user,group',
