@@ -58,56 +58,56 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @var \RKW\RkwSurvey\Domain\Repository\SurveyRepository
      * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected SurveyRepository $surveyRepository;
+    protected ?SurveyRepository $surveyRepository = null;
 
 
     /**
      * @var \RKW\RkwSurvey\Domain\Repository\SurveyResultRepository
      * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected SurveyResultRepository $surveyResultRepository;
+    protected ?SurveyResultRepository $surveyResultRepository = null;
 
 
     /**
      * @var \RKW\RkwSurvey\Domain\Repository\QuestionResultRepository
      * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected QuestionResultRepository $questionResultRepository;
+    protected ?QuestionResultRepository $questionResultRepository = null;
 
 
     /**
      * @var \RKW\RkwSurvey\Domain\Repository\TokenRepository
      * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected TokenRepository $tokenRepository;
+    protected ?TokenRepository $tokenRepository = null;
 
 
     /**
      * @var \RKW\RkwSurvey\Validation\QuestionResultValidator
      * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected QuestionResultValidator $questionResultValidator;
+    protected ?QuestionResultValidator $questionResultValidator = null;
 
 
     /**
      * @var \RKW\RkwSurvey\Validation\ContactFormValidator
      * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected ContactFormValidator $contactFormValidator;
+    protected ?ContactFormValidator $contactFormValidator = null;
 
 
     /**
      * @var \RKW\RkwSurvey\Service\RkwMailService
      * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected RkwMailService $rkwMailService;
+    protected ?RkwMailService $rkwMailService = null;
 
 
     /**
      * @var \TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager
      * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected PersistenceManager $persistenceManager;
+    protected ?PersistenceManager $persistenceManager = null;
 
 
     /**
@@ -120,6 +120,78 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @var \TYPO3\CMS\Core\Page\PageRenderer $pageRenderer|null
      */
     protected ?PageRenderer $pageRenderer = null;
+
+
+    /**
+     * @param \RKW\RkwSurvey\Domain\Repository\SurveyRepository $surveyRepository
+     */
+    public function injectSurveyRepository(SurveyRepository $surveyRepository)
+    {
+        $this->surveyRepository = $surveyRepository;
+    }
+
+
+    /**
+     * @param \RKW\RkwSurvey\Domain\Repository\SurveyResultRepository $surveyResultRepository
+     */
+    public function injectSurveyResultRepository(SurveyResultRepository $surveyResultRepository)
+    {
+        $this->surveyResultRepository = $surveyResultRepository;
+    }
+
+
+    /**
+     * @param \RKW\RkwSurvey\Domain\Repository\QuestionResultRepository $questionResultRepository
+     */
+    public function injectQuestionResultRepository(QuestionResultRepository $questionResultRepository)
+    {
+        $this->questionResultRepository = $questionResultRepository;
+    }
+
+
+    /**
+     * @param \RKW\RkwSurvey\Domain\Repository\TokenRepository $tokenRepository
+     */
+    public function injectTokenRepository(TokenRepository $tokenRepository)
+    {
+        $this->tokenRepository = $tokenRepository;
+    }
+
+
+    /**
+     * @param \RKW\RkwSurvey\Validation\QuestionResultValidator $questionResultValidator
+     */
+    public function injectQuestionResultValidator(QuestionResultValidator $questionResultValidator)
+    {
+        $this->questionResultValidator = $questionResultValidator;
+    }
+
+
+    /**
+     * @param \RKW\RkwSurvey\Validation\ContactFormValidator $contactFormValidator
+     */
+    public function injectContactFormValidator(ContactFormValidator $contactFormValidator)
+    {
+        $this->contactFormValidator = $contactFormValidator;
+    }
+
+
+    /**
+     * @param \RKW\RkwSurvey\Service\RkwMailService $rkwMailService
+     */
+    public function injectRkwMailService(RkwMailService $rkwMailService)
+    {
+        $this->rkwMailService = $rkwMailService;
+    }
+
+
+    /**
+     * @param \TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager $persistenceManager
+     */
+    public function injectPersistenceManager(PersistenceManager $persistenceManager)
+    {
+        $this->persistenceManager = $persistenceManager;
+    }
 
 
     /**
