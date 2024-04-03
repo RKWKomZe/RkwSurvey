@@ -37,6 +37,7 @@ class Question
     /**
      * Question constructor
      * @return void
+     * @throws \TYPO3\CMS\Extbase\Object\Exception
      */
     public function __construct()
     {

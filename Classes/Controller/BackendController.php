@@ -40,28 +40,64 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * @var \RKW\RkwSurvey\Domain\Repository\SurveyRepository
      * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected SurveyRepository $surveyRepository;
+    protected ?SurveyRepository $surveyRepository = null;
 
 
     /**
      * @var \RKW\RkwSurvey\Domain\Repository\SurveyResultRepository
      * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected SurveyResultRepository $surveyResultRepository;
+    protected ?SurveyResultRepository $surveyResultRepository = null;
 
 
     /**
      * @var \RKW\RkwSurvey\Domain\Repository\QuestionResultRepository
      * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected QuestionResultRepository $questionResultRepository;
+    protected ?QuestionResultRepository $questionResultRepository = null;
 
 
     /**
      * @var \RKW\RkwSurvey\Domain\Repository\TokenRepository
      * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected TokenRepository $tokenRepository;
+    protected ?TokenRepository $tokenRepository = null;
+
+
+    /**
+     * @param \RKW\RkwSurvey\Domain\Repository\SurveyRepository $surveyRepository
+     */
+    public function injectSurveyRepository(SurveyRepository $surveyRepository)
+    {
+        $this->surveyRepository = $surveyRepository;
+    }
+
+
+    /**
+     * @param \RKW\RkwSurvey\Domain\Repository\SurveyResultRepository $surveyResultRepository
+     */
+    public function injectSurveyResultRepository(SurveyResultRepository $surveyResultRepository)
+    {
+        $this->surveyResultRepository = $surveyResultRepository;
+    }
+
+
+    /**
+     * @param \RKW\RkwSurvey\Domain\Repository\QuestionResultRepository $questionResultRepository
+     */
+    public function injectQuestionResultRepository(QuestionResultRepository $questionResultRepository)
+    {
+        $this->questionResultRepository = $questionResultRepository;
+    }
+
+
+    /**
+     * @param \RKW\RkwSurvey\Domain\Repository\TokenRepository $tokenRepository
+     */
+    public function injectTokenRepository(TokenRepository $tokenRepository)
+    {
+        $this->tokenRepository = $tokenRepository;
+    }
 
 
     /**

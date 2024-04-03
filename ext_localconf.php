@@ -22,7 +22,9 @@ call_user_func(
 
         //=================================================================
         // Add XClasses for extending existing classes
+        // ATTENTION: deactivated due to faulty mapping in TYPO3 9.5
         //=================================================================
+        /*
         // for TYPO3 12+
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\Madj2k\FeRegister\Domain\Model\BackendUser::class] = [
             'className' => \RKW\RkwSurvey\Domain\Model\BackendUser::class
@@ -34,7 +36,7 @@ call_user_func(
                 \Madj2k\FeRegister\Domain\Model\BackendUser::class,
                 \RKW\RkwSurvey\Domain\Model\BackendUser::class
             );
-
+        */
         //=================================================================
         // Setting Logger
         //=================================================================
