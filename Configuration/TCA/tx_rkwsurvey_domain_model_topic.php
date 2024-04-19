@@ -17,10 +17,6 @@ return [
         'iconfile'                 => 'EXT:rkw_survey/Resources/Public/Icons/tx_rkwsurvey_domain_model_topic.gif',
         'hideTable'                => true,
     ],
-    'interface' => [
-        // 'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, short_name, weight, result_a, result_b, result_c, questions',
-        'showRecordFieldList' => 'hidden, name, short_name',
-    ],
     'types'     => [
         // '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, short_name, weight, result_a, result_b, result_c, questions'],
         '1' => ['showitem' => 'hidden, name, short_name'],

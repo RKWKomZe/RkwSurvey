@@ -20,11 +20,6 @@ return [
 		'searchFields' => 'required,group_by,topic,question,hint,short_name,type,text_consent,text_rejection,scale_from_points,scale_to_points,scale_step,answer_option,benchmark,benchmark_value, benchmark_weighting, survey,do_action,do_action_if,do_action_jump',
 		'iconfile' => 'EXT:rkw_survey/Resources/Public/Icons/tx_rkwsurvey_domain_model_question.gif'
 	],
-	'interface' => [
-		// 'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, required, question, type, short_name, hint, text_consent, text_rejection, scale_from_points, scale_to_points, benchmark, answer_option, survey',
-        'showRecordFieldList' => 'hidden, required, group_by, topic, question, type, short_name, hint, text_consent, text_rejection, scale_from_points, scale_to_points, scale_step, answer_option, benchmark, benchmark_value, benchmark_weighting, scale_open_from, scale_open_to, scale_open_step,  do_action, do_action_if, do_action_jump, survey',
-
-    ],
 	'types' => [
         // '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, required, question, hint, short_name, type, text_consent, text_rejection, scale_from_points, scale_to_points, benchmark, answer_option, survey, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
 		'1' => ['showitem' => 'hidden, required, group_by, topic, question, hint, short_name, type, text_consent, text_rejection, scale_from_points, scale_to_points, scale_step, answer_option, benchmark, benchmark_value, benchmark_weighting, scale_open_from, scale_open_to, scale_open_step,  do_action, do_action_if, do_action_jump, survey, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
@@ -50,7 +45,6 @@ return [
 		],
 		'l10n_parent' => [
 			'displayCond' => 'FIELD:sys_language_uid:>:0',
-			'exclude' => false,
 			'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent',
 			'config' => [
 				'type' => 'select',
