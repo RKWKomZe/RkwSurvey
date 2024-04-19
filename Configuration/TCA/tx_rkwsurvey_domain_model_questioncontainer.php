@@ -17,10 +17,6 @@ return [
         'iconfile'                 => 'EXT:rkw_survey/Resources/Public/Icons/tx_rkwsurvey_domain_model_questioncontainer.gif',
         'hideTable'                => true,
     ],
-    'interface' => [
-        // 'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, short_name, weight, result_a, result_b, result_c, question',
-        'showRecordFieldList' => 'hidden, name, hide_name_fe, description, question',
-    ],
     'types'     => [
         // '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, short_name, weight, result_a, result_b, result_c, question'],
         '1' => ['showitem' => 'hidden, --palette--;LLL:EXT:rkw_survey/Resources/Private/Language/locallang_db.xlf:tx_rkwsurvey_domain_model_questioncontainer.palettes.name;name_pal,, description, question'],

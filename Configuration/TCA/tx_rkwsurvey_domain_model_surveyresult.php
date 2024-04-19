@@ -19,10 +19,6 @@ return [
 		'searchFields' => 'finished,survey,question_result,token,tags',
 		'iconfile' => 'EXT:rkw_survey/Resources/Public/Icons/tx_rkwsurvey_domain_model_surveyresult.gif'
 	],
-	'interface' => [
-	    // 'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, finished, survey, question_result',
-		'showRecordFieldList' => 'finished, survey, question_result, token, tags',
-	],
 	'types' => [
         // '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, finished, survey, question_result, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
         '1' => ['showitem' => 'finished, survey, question_result, token, tags, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
@@ -48,7 +44,6 @@ return [
 		],
 		'l10n_parent' => [
 			'displayCond' => 'FIELD:sys_language_uid:>:0',
-			'exclude' => true,
 			'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent',
 			'config' => [
 				'type' => 'select',

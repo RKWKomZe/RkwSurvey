@@ -10,10 +10,6 @@ return [
 		'searchFields' => 'name,used,survey,cruser_id',
 		'iconfile' => 'EXT:rkw_survey/Resources/Public/Icons/tx_rkwsurvey_domain_model_token.gif'
 	],
-	'interface' => [
-        'showRecordFieldList' => 'name, used, survey',
-
-    ],
 	'types' => [
 		'1' => ['showitem' => 'name, used, survey'],
     ],
