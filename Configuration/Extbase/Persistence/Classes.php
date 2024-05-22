@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 
 return [
-    \Madj2k\CoreExtended\Domain\Model\BackendUser::class => [
+    \RKW\RkwSurvey\Domain\Model\BackendUser::class => [
         'tableName' => 'be_users',
     ],
     # Optional dependency for rkw_events!
