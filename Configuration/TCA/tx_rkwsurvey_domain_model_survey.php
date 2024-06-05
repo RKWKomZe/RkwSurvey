@@ -70,7 +70,7 @@ return [
 				'type' => 'check',
 				'items' => [
 					'1' => [
-						'0' => 'LLL:EXT:lang/locallang_core.xlf:labels.enabled'
+						'0' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:labels.enabled'
 					]
 				],
 			],
@@ -232,7 +232,7 @@ return [
                 'type' => 'check',
                 'items' => [
                     '1' => [
-                        '0' => 'LLL:EXT:lang/locallang_core.xlf:labels.enabled'
+                        '0' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:labels.enabled'
                     ]
                 ],
             ]

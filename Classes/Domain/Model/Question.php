@@ -15,7 +15,6 @@ namespace RKW\RkwSurvey\Domain\Model;
  */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * Question
@@ -666,6 +665,11 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      */
     public function getScale(): array
     {
-        return range($this->scaleFromPoints, $this->scaleToPoints, $this->scaleStep);
+        if (! $range = range($this->scaleFromPoints, $this->scaleToPoints, $this->scaleStep)) {
+            return [];
+        }
+
+        return $range;
+
     }
 }
