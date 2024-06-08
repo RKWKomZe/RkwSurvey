@@ -11,7 +11,6 @@
                 <f:form.select value="{survey.uid}" id="survey" name="surveyUid" options="{surveyList}" optionLabelField="name" optionValueField="uid"/>
             </label>
         </f:if>
-        
         <f:if condition="{survey}">
     
             <f:then>
@@ -21,7 +20,7 @@
                         <f:translate key="partials_backend_actions.token" extensionName="RkwSurvey" />
                     </f:form.button>
                 </f:if>
-    
+
                 <!-- print button -->
                 <f:comment>
                     <f:form action="print" target="_blank" arguments="{survey: survey.uid}">

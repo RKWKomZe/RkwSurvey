@@ -6,12 +6,12 @@
     <f:section name="content">
         <f:render partial="FlashMessages" arguments="{_all}" />
     
-        <f:link.action action="show" arguments="{survey: survey.uid}">
+        <f:link.action action="show" arguments="{surveyUid: survey.uid}">
             <f:translate key="templates_backend_tokenlist.backToDetailview" extensionName="RkwSurvey" />
         </f:link.action>
         <h1><f:translate key="templates_backend_tokenlist.tokenManagement" extensionName="RkwSurvey" />: {survey.name}</h1>
     
-        <f:form action="tokenCreate" arguments="{survey: survey.uid}">
+        <f:form action="tokenCreate" arguments="{surveyUid: survey.uid}">
             <f:form.textfield id="number" name="number" type="number" value="50" additionalAttributes="{step: '10'}" />
             <f:form.submit value="<f:translate key='templates_backend_tokenlist.generate' extensionName='RkwSurvey' />" />
         </f:form>
@@ -19,11 +19,11 @@
         <f:if condition="{survey.token}">
             <f:then>
     
-                <f:form action="tokenCsv" arguments="{survey: survey.uid}">
+                <f:form action="tokenCsv" arguments="{surveyUid: survey.uid}">
                     <f:form.submit value="<f:translate key='templates_backend_tokenlist.csv' extensionName='RkwSurvey' />" />
                 </f:form>
     
-                <f:form action="tokenRemove" arguments="{survey: survey.uid}">
+                <f:form action="tokenRemove" arguments="{surveyUid: survey.uid}">
                     <f:form.submit value="<f:translate key='templates_backend_tokenlist.delete' extensionName='RkwSurvey' />" />
                 </f:form>
     
