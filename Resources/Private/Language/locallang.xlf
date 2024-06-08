@@ -445,6 +445,9 @@
             <trans-unit id="templates_backend_tokenlist.generate">
                 <source>Create tokens</source>
             </trans-unit>
+            <trans-unit id="templates_backend_tokenlist.csv">
+                <source>CSV Export</source>
+            </trans-unit>
             <trans-unit id="templates_backend_tokenlist.delete">
                 <source>Delete token list</source>
             </trans-unit>
