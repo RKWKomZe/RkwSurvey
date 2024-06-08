@@ -136,6 +136,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      */
     public function showAction(int $surveyUid, string $starttime = '')
     {
+
         /** @var \RKW\RkwSurvey\Domain\Model\Survey $survey */
         $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields($surveyUid);
 
@@ -276,14 +277,17 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * action tokenList
      * show token list (if exists)
      *
-     * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
+     * @param int $surveyUid
      * @return void
      */
-    public function tokenListAction(Survey $survey): void
+    public function tokenListAction(int $surveyUid): void
     {
+        /** @var Survey $survey */
+        $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields($surveyUid);
 
         // get all results of survey
         $surveyResultList = $this->surveyResultRepository->findBySurveyWithToken($survey);
+
 
         // build list of unused tokens
         $usedTokens = [];
@@ -304,15 +308,18 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * creates a given number of token for given survey
      * (create completely new OR add if already exists)
      *
-     * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
+     * @param int $surveyUid
      * @param int $number
      * @return void
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
-    public function tokenCreateAction(Survey $survey, int $number): void
+    public function tokenCreateAction(int $surveyUid, int $number): void
     {
+        /** @var Survey $survey */
+        $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields($surveyUid);
+
         $tokenCountBefore = $survey->getToken()->count();
         do {
 
@@ -331,7 +338,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         } while (($tokenCountBefore + $number) > $survey->getToken()->count());
 
         $this->surveyRepository->update($survey);
-        $this->forward('tokenList', null, null, ['survey' => $survey]);
+        $this->forward('tokenList', null, null, ['surveyUid' => $survey->getUid()]);
     }
 
 
@@ -339,14 +346,16 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * action tokenRemove
      * remove token list (if exists)
      *
-     * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
+     * @param int $surveyUid
      * @return void
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
-    public function tokenRemoveAction(Survey $survey): void
+    public function tokenRemoveAction(int $surveyUid): void
     {
+        /** @var Survey $survey */
+        $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields($surveyUid);
 
         $tokenList = $this->tokenRepository->findBySurvey($survey);
         /** @var \RKW\RkwSurvey\Domain\Model\Token $token */
@@ -355,7 +364,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         }
 
         $this->surveyRepository->update($survey);
-        $this->forward('tokenList', null, null, array('survey' => $survey));
+        $this->forward('tokenList', null, null, array('surveyUid' => $survey->getUid()));
     }
 
 
