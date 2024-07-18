@@ -1,0 +1,42 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:rkwEvaluation="http://typo3.org/ns/RKW/RkwSurvey/ViewHelpers"
+    data-namespace-typo3-fluid="true">
+
+<h3>Gründungsbezogene Rahmenbedingungen</h3>
+<p>Das nachfolgende Radar-Chart zeigt Ihre individuellen Bewertungen einzelner gründungsbezogener Rahmenbedingungen im Vergleich mit der Einschätzung der Experten, die für den Länderbericht Deutschland des Global Entrepreneurship Monitor (GEM) befragt werden. Die GEM-Experten beziehen sich auf den Gründungsstandort Deutschland.</p>
+<div class="tiles-wrapper">
+    <div class="tiles flex-container flex-container--margin">
+        <div class="flex-item flex-basis-12">
+            <div class="tile tile--no-img">
+                <div class="tile__content">
+                    <div id="context_{surveyResult.uid}" class="tile__text tile__text--no-img"></div>
+
+                    <script>
+
+                        window.addEventListener('load', function () {
+                            new ApexCharts(
+                                document.querySelector('#context_' + '<f:format.raw>{surveyResult.uid}</f:format.raw>'),
+                                {
+                                    chart: {
+                                        type: 'radar'
+                                    },
+                                    colors: <f:format.raw>{context.colors}</f:format.raw>,
+                                    yaxis: {
+                                        decimalsInFloat: 0,
+                                        min: 0,
+                                        max: 10,
+                                    },
+                                    xaxis: <f:format.raw>{context.xaxis}</f:format.raw>,
+                                    series: <f:format.raw>{context.series}</f:format.raw>
+                                }
+                            ).render();
+                        });
+
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>

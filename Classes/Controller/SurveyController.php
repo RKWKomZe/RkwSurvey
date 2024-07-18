@@ -558,30 +558,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         $this->view->assign('surveyResult', $surveyResult);
         $this->view->assign('tokenInput', $tokenInput);
 
-        if ($surveyResult->getSurvey()->getType() === 1) {
-
-            /**  @todo Das muss ausgelagert werden in die RkwGraphs!
-             *  Allerdings muss auch ein Identifier übergeben werden, anhand dessen die RkwGraphs das Ergebnis render kann!
-             *  instantiate with object manager -> see feecalculator
-             */
-
-            $evaluator = GeneralUtility::makeInstance(Evaluator::class, $surveyResult);
-            $this->pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
-
-            $chart = $evaluator->prepareChart();
-            $this->pageRenderer->addJsFooterInlineCode('chartScript', $evaluator->renderChart($chart), true);
-
-            $donuts = $evaluator->prepareDonuts();
-            $this->pageRenderer->addJsFooterInlineCode('donutScript', $evaluator->renderDonuts($donuts), true);
-
-            if ($evaluator->containsGroupedByQuestion()) {
-                $bars = $evaluator->prepareBars();
-                $this->pageRenderer->addJsFooterInlineCode('barScript', $evaluator->renderBars($bars), true);
-                $this->view->assign('bars', $bars);
-            }
-
-            $this->view->assign('donuts', $donuts);
-        }
     }
 
 

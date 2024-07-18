@@ -18,7 +18,6 @@ namespace RKW\RkwSurvey\Domain\Repository;
 use RKW\RkwSurvey\Domain\Model\Question;
 use RKW\RkwSurvey\Domain\Model\QuestionResult;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 
 /**

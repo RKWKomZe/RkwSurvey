@@ -37,6 +37,7 @@ class QuestionRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      */
     public function findOneByGroupedByAndSurvey(Survey $survey):? Question
     {
+
         $query = $this->createQuery();
 
         $query->matching(
