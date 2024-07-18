@@ -1,0 +1,19 @@
+.tx-rkw-graphics-chart,
+.tx-rkw-graphics-chart__figure,
+.tx-rkw-graphics-chart__caption {
+    width:100%;
+}
+
+.tx-rkw-graphics-chart {
+    margin-bottom:32px;
+}
+
+.tx-rkw-graphics-chart .tx-rkw-graphics-chart__caption {
+    font-size:80%;
+
+}
+@media (max-width: 1024px) {
+    .tx-rkw-graphics-chart .tx-rkw-graphics-chart__caption {
+        font-size:14px;
+    }
+}

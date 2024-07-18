@@ -569,17 +569,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
             $evaluator = GeneralUtility::makeInstance(Evaluator::class, $surveyResult);
             $this->pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
 
-            // Inject necessary js libs
-            $this->pageRenderer->addJsFooterLibrary(
-                'ApexCharts', /* name */
-                'https://cdn.jsdelivr.net/npm/apexcharts',
-                'text/javascript', /* type */
-                false, /* compress*/
-                true, /* force on top */
-                '', /* allwrap */
-                true /* exclude from concatenation */
-            );
-
             $chart = $evaluator->prepareChart();
             $this->pageRenderer->addJsFooterInlineCode('chartScript', $evaluator->renderChart($chart), true);
 
