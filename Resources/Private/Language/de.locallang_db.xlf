@@ -179,9 +179,17 @@
 				<source>Benchmark</source>
 				<target>Benchmark</target>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark.label">
+				<source>Label</source>
+				<target>Beschriftung</target>
+			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark.value">
 				<source>Reference value</source>
 				<target>Referenzwert</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark.label">
+				<source>Label</source>
+				<target>Beschriftung</target>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark.weighting.values">
 				<source>Reference values by topic (weighed)</source>

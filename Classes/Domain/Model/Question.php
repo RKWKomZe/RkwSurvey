@@ -102,6 +102,12 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 
 
     /**
+     * @var string
+     */
+    protected string $benchmarkLabel = '';
+
+
+    /**
      * @var float
      */
     protected float $benchmarkValue = 0.0;
@@ -437,6 +443,27 @@ class Question extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function setScaleStep(int $scaleStep): void
     {
         $this->scaleStep = $scaleStep;
+    }
+
+
+    /**
+     * Returns the benchmarkLabel
+     *
+     * @return string
+     */
+    public function getBenchmarkLabel(): string
+    {
+        return $this->benchmarkLabel;
+    }
+
+    /**
+     * Sets the benchmarkLabel
+     *
+     * @param string $benchmarkLabel
+     */
+    public function setBenchmarkLabel(string $benchmarkLabel): void
+    {
+        $this->benchmarkLabel = $benchmarkLabel;
     }
 
 

@@ -61,13 +61,13 @@ class QuestionResultRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      *
      * @param \RKW\RkwSurvey\Domain\Model\Question $question
      * @param array $surveyResultUids
-     * @return \RKW\RkwSurvey\Domain\Model\QuestionResult|null
+     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
     public function findByQuestionAndSurveyResultUids(
         \RKW\RkwSurvey\Domain\Model\Question $question,
         array $surveyResultUids
-    ):? QuestionResult {
+    ):? QueryResultInterface {
         $query = $this->createQuery();
 
         $query->matching(

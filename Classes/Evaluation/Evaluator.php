@@ -1,5 +1,6 @@
 <?php
-namespace RKW\RkwSurvey\Domain\Model;
+
+namespace RKW\RkwSurvey\Evaluation;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -14,14 +15,22 @@ namespace RKW\RkwSurvey\Domain\Model;
  * The TYPO3 project - inspiring people to share!
  */
 
+use JsonException;
 use Madj2k\CoreExtended\Utility\GeneralUtility;
+use Madj2k\DrSeo\Utility\SlugUtility;
+use RKW\RkwSurvey\Domain\Model\Question;
+use RKW\RkwSurvey\Domain\Model\SurveyResult;
 use RKW\RkwSurvey\Domain\Repository\QuestionRepository;
-use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
 use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
+use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
+use TYPO3\CMS\Extbase\Object\Exception;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+
 
 /**
  * Evaluator
@@ -39,21 +48,21 @@ class Evaluator
      * @var \RKW\RkwSurvey\Domain\Repository\SurveyResultRepository
      * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected SurveyResultRepository $surveyResultRepository;
+    protected ?SurveyResultRepository $surveyResultRepository = null;
 
 
     /**
      * @var \RKW\RkwSurvey\Domain\Repository\QuestionResultRepository
      * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected QuestionResultRepository $questionResultRepository;
+    protected ?QuestionResultRepository $questionResultRepository = null;
 
 
     /**
      * @var \RKW\RkwSurvey\Domain\Repository\QuestionRepository
      * @TYPO3\CMS\Extbase\Annotation\Inject
      */
-    protected QuestionRepository $questionRepository;
+    protected ?QuestionRepository $questionRepository = null;
 
 
     /**
@@ -84,43 +93,32 @@ class Evaluator
      * Constructor
      *
      * @param SurveyResult $surveyResult
-     *  @todo class should only be used via objectManager. Thus manually loading of repositories should not be needed.
+     * @throws Exception
+     * @todo class should only be used via objectManager. Thus manually loading of repositories should not be needed.
      */
     public function __construct(SurveyResult $surveyResult)
     {
         $this->surveyResult = $surveyResult;
         $this->colors = [
-            'me' => '#d63f11', // $color-primary
-            'my-region' => '#792400', //    #009fee' - $color-blue
+            'me'          => '#d63f11', // $color-primary
+            'my-region'   => '#792400', //    #009fee' - $color-blue
             'all-regions' => '#7c7c7b', // #fdc500' - $color-webcheck-yellow
-            'gem' => '#4a4a49', // #94c119' - $color-webcheck-green
+            'gem'         => '#4a4a49', // #94c119' - $color-webcheck-green
         ];
 
         $this->labels = [
             'weighting' => [
-                'low' => LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.low', 'RkwSurvey'),
+                'low'     => LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.low', 'RkwSurvey'),
                 'neutral' => LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.neutral', 'RkwSurvey'),
-                'high' => LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.high', 'RkwSurvey'),
+                'high'    => LocalizationUtility::translate('tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.high', 'RkwSurvey'),
             ],
         ];
 
         /** @var \TYPO3\CMS\Extbase\Object\ObjectManager $objectManager */
         $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class);
-
-        if (!$this->surveyResultRepository) {
-            $this->surveyResultRepository = $objectManager->get(SurveyResultRepository::class);
-            trigger_error(__CLASS__ . ': Please use the ObjectManager to load this class.', E_USER_DEPRECATED);
-        }
-
-        if (!$this->questionResultRepository) {
-            $this->questionResultRepository = $objectManager->get(QuestionResultRepository::class);
-            trigger_error(__CLASS__ . ': Please use the ObjectManager to load this class.', E_USER_DEPRECATED);
-        }
-
-        if (!$this->questionRepository) {
-            $this->questionRepository = $objectManager->get(QuestionRepository::class);
-            trigger_error(__CLASS__ . ': Please use the ObjectManager to load this class.', E_USER_DEPRECATED);
-        }
+        $this->surveyResultRepository = $objectManager->get(SurveyResultRepository::class);
+        $this->questionResultRepository = $objectManager->get(QuestionResultRepository::class);
+        $this->questionRepository = $objectManager->get(QuestionRepository::class);
 
         $this->setGroupedByQuestion();
     }
@@ -130,7 +128,6 @@ class Evaluator
      * setGroupedByQuestion
      *
      * @return void
-     *  @todo this is method should not be part of a model
      */
     protected function setGroupedByQuestion(): void
     {
@@ -143,100 +140,60 @@ class Evaluator
      * containsGroupedByQuestion
      *
      * @return bool
-     *  @todo this is method should not be part of a model
      */
     public function containsGroupedByQuestion(): bool
     {
-        return (bool) $this->groupByQuestion;
+        return (bool)$this->groupByQuestion;
     }
 
-
     /**
-     * getSurveyResultUidsGroupedByQuestion
+     * prepareBars
      *
      * @return array
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
-     *  @todo this is method should not be part of a model
+     * @throws InvalidQueryException
+     * @todo this is method should not be part of a model. Maybe a ViewHelper!
      */
-    public function getSurveyResultUidsGroupedByQuestion(): array
-    {
-        $survey = $this->surveyResult->getSurvey();
-        if ($this->groupByQuestion) {
-            $myGroupByQuestionResult = $this->questionResultRepository->findByQuestionAndSurveyResult(
-                $this->groupByQuestion,
-                $this->surveyResult
-            );
-
-            $surveyResults = $this->surveyResultRepository->findBySurveyAndQuestionAndAnswerAndFinished(
-                $survey,
-                $this->groupByQuestion,
-                $myGroupByQuestionResult->getAnswer(),
-                $finished = 1
-            );
-
-        } else {
-            $surveyResults = $this->surveyResultRepository->findBySurveyAndFinished($survey);
-        }
-
-        $surveyResultUids = [];
-        foreach ($surveyResults as $surveyResult) {
-            $surveyResultUids[] = $surveyResult->getUid();
-        }
-
-        return $surveyResultUids;
-    }
-
-
-    /**
-     * getGroupByQuestionAnswer
-     *
-     * @return mixed|null
-     *  @todo mixed return type is evil
-     *  @todo this is method should not be part of a model
-     */
-    public function getGroupByQuestionAnswer()
+    public function prepareBars(): array
     {
 
-        if ($this->groupByQuestion) {
+        $topics = $this->surveyResult->getSurvey()->getTopics();
 
-            $result = $this->questionResultRepository->findByQuestionAndSurveyResult(
-                $this->groupByQuestion,
-                $this->surveyResult
-            );
+        $topicNames = [];
 
-            /**  @todo this is barely readable */
-            return $this->parseStringToArray(
-                $result->getQuestion()->getAnswerOption(),
-                PHP_EOL
-            )[((int) $result->getAnswer() - 1)];
-
+        foreach ($topics as $topic) {
+            $topicNames[] = ($topic->getShortName()) ?: $topic->getName();
         }
-        return null;
+
+        $bars = [];
+
+        //  single_region vs. all_regions
+        $title = '';
+        $series = [
+            [
+                'name' => 'Meine Werte',
+                'data' => array_values($this->getAverageResultByTopics($topics, 'my_values')),
+            ],
+            [
+                'name' => $this->getTitleByGroupByQuestionAnswer(),
+                'data' => array_values($this->getAverageResultByTopics($topics, 'single_region')),
+            ],
+            [
+                'name' => 'Alle 12 Regionen',
+                'data' => array_values($this->getAverageResultByTopics($topics)),
+            ],
+        ];
+
+        return $this->buildBar($topicNames, $title, $series, $bars);
 
     }
-
-
-    /**
-     * @return mixed|string
-     *  @todo mixed return type is evil; Gründungsökosystem Braunschweig - seriously?
-     *  @todo this is method should not be part of a model
-     */
-    public function getTitleByGroupByQuestionAnswer()
-    {
-        return ($this->getGroupByQuestionAnswer())
-            ? GeneralUtility::trimExplode('(', $this->getGroupByQuestionAnswer(), true)[0]
-            : 'Gründungsökosystem Braunschweig';
-    }
-
 
     /**
      *
-     * @param $topics
-     * @param null         $scope
+     * @param ObjectStorage $topics
+     * @param null                                         $scope
      * @return array
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
-     *  @todo parameter-type not defined. What is topics? QueryResultInterface? ObjectStorage?
-     *  @todo this is method should not be part of a model. Maybe a ViewHelper!
+     * @throws InvalidQueryException
+     * @todo this is method should not be part of a model. Maybe a ViewHelper!
      */
     public function getAverageResultByTopics($topics, $scope = null): array
     {
@@ -259,16 +216,18 @@ class Evaluator
 
                     if ($scope === 'my_values') {
                         $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, [$this->surveyResult->getUid()]);
-                    } else if ($scope === 'single_region') {
-                        $surveyResultUids = $this->getSurveyResultUidsGroupedByQuestion();
-                        $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
-                    } else {    //  all regions
-                        $surveyResults = $this->surveyResultRepository->findBySurveyAndFinished($this->surveyResult->getSurvey());
-                        $surveyResultUids = [];
-                        foreach ($surveyResults as $surveyResult) {
-                            $surveyResultUids[] = $surveyResult->getUid();
+                    } else {
+                        if ($scope === 'single_region') {
+                            $surveyResultUids = $this->getSurveyResultUidsGroupedByQuestion();
+                            $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
+                        } else {    //  all regions
+                            $surveyResults = $this->surveyResultRepository->findBySurveyAndFinished($this->surveyResult->getSurvey());
+                            $surveyResultUids = [];
+                            foreach ($surveyResults as $surveyResult) {
+                                $surveyResultUids[] = $surveyResult->getUid();
+                            }
+                            $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
                         }
-                        $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
                     }
 
                     $answers = [];
@@ -276,7 +235,6 @@ class Evaluator
                         $answers[] = (int)$questionResult->getAnswer();
                     }
 
-                    //  Was ist der Wert von "weiß ich nicht"? -> skipped = null
                     $answers = array_filter($answers, static function ($x) {
                         return $x !== '';
                     });
@@ -285,7 +243,7 @@ class Evaluator
 
                 }
 
-                /**  @todo: $averageOnQuestion may be undefined here  */
+                /**  @todo: $averageOnQuestion may be undefined here */
                 $averageOnTopic[$topic->getUid()] = $this->getAverage($averageOnQuestion);
 
             }
@@ -296,12 +254,151 @@ class Evaluator
     }
 
     /**
+     * getSurveyResultUidsGroupedByQuestion
+     *
+     * @return array
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
+     */
+    public function getSurveyResultUidsGroupedByQuestion(): array
+    {
+        $survey = $this->surveyResult->getSurvey();
+        if ($this->groupByQuestion) {
+            $myGroupByQuestionResult = $this->questionResultRepository->findByQuestionAndSurveyResult(
+                $this->groupByQuestion,
+                $this->surveyResult
+            );
+
+            $surveyResults = $this->surveyResultRepository->findBySurveyAndQuestionAndAnswerAndFinished(
+                $survey,
+                $this->groupByQuestion,
+                $myGroupByQuestionResult->getAnswer(),
+                1
+            );
+
+        } else {
+            $surveyResults = $this->surveyResultRepository->findBySurveyAndFinished($survey);
+        }
+
+        $surveyResultUids = [];
+        foreach ($surveyResults as $surveyResult) {
+            $surveyResultUids[] = $surveyResult->getUid();
+        }
+
+        return $surveyResultUids;
+    }
+
+    /**
+     * getAverage
+     *
+     * @param array $data
+     * @return float
+     * @todo this is method should not be part of a model. Maybe a ViewHelper!
+     */
+    protected function getAverage(array $data): float
+    {
+        return array_sum($data) / count($data);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitleByGroupByQuestionAnswer(): string
+    {
+
+        return ($this->getGroupByQuestionAnswer())
+            ? GeneralUtility::trimExplode('(', $this->getGroupByQuestionAnswer(), true)[0]
+            : $this->surveyResult->getSurvey()->getName();
+    }
+
+    /**
+     * getGroupByQuestionAnswer
+     *
+     * @return string|null
+     */
+    public function getGroupByQuestionAnswer(): ?string
+    {
+
+        if ($this->groupByQuestion) {
+
+            $result = $this->questionResultRepository->findByQuestionAndSurveyResult(
+                $this->groupByQuestion,
+                $this->surveyResult
+            );
+
+            $answerOption = $this->parseStringToArray(
+                $result->getQuestion()->getAnswerOption(),
+                PHP_EOL
+            );
+            $answerOptionIndex = (int)$result->getAnswer() - 1;
+
+            return $answerOption[$answerOptionIndex];
+
+        }
+
+        return null;
+
+    }
+
+    /**
+     * Parses strings to arrays
+     *
+     * @param string $data
+     * @param string $delimiter
+     * @param bool   $checkFloat
+     * @return array
+     * @todo this is method should not be part of a model. Maybe a ViewHelper!
+     */
+    public function parseStringToArray(string $data, string $delimiter = '|', bool $checkFloat = false): array
+    {
+
+        $parsedData = [];
+        $strings = GeneralUtility::trimExplode($delimiter, $data, true);
+        foreach ($strings as $string) {
+            if ($checkFloat) {
+                $parsedData[] = (float)str_replace(',', '.', $string);
+            } else {
+                $parsedData[] = addslashes($string);
+            }
+        }
+
+        if (count($parsedData) < 1) {
+            $parsedData = [];
+        }
+
+        return $parsedData;
+    }
+
+    /**
+     * buildBar
+     *
+     * @param array  $topicNames
+     * @param string $title
+     * @param array  $series
+     * @param array  $bars
+     * @return array
+     * @todo this is method should not be part of a model. Maybe a ViewHelper!
+     */
+    protected function buildBar(array $topicNames, string $title, array $series, array $bars): array
+    {
+        $slug = SlugUtility::slugify('bar-' . $title, '_');
+
+        $bars[$slug] = [
+            'topics' => $topicNames,
+            'title'  => $title,
+            'series' => $series,
+        ];
+
+        return $bars;
+    }
+
+    /**
      * renderBars
      *
      * @param array $charts
      * @return string
-     *  @todo this is method should not be part of a model. Maybe a ViewHelper!
-     *  @todo do not mix frontend-stuff with PHP. This is no WordPress ;-) Use a partial/template. Maybe with StandaloneView
+     * @throws \JsonException
+     * @todo do not mix frontend-stuff with PHP. This is no WordPress ;-) Use a partial/template. Maybe with StandaloneView
+     * @todo this is method should not be part of a model. Maybe a ViewHelper!
      */
     public function renderBars(array $charts): string
     {
@@ -321,7 +418,7 @@ class Evaluator
                         \'' . $this->colors['my-region'] . '\',
                         \'' . $this->colors['all-regions'] . '\',
                     ],
-                    series: ' . json_encode($comparison['series']) . ',
+                    series: ' . json_encode($comparison['series'], JSON_THROW_ON_ERROR) . ',
                     plotOptions: {
                         bar: {
                             horizontal: false
@@ -353,7 +450,7 @@ class Evaluator
                         }
                     },
                     xaxis: {
-                        categories: ' . json_encode($comparison['topics']) . ',
+                        categories: ' . json_encode($comparison['topics'], JSON_THROW_ON_ERROR) . ',
                     }
                 }
 
@@ -369,7 +466,6 @@ class Evaluator
 
     }
 
-
     /**
      * prepareDonuts
      *
@@ -383,7 +479,7 @@ class Evaluator
 
         $surveyQuestions = $this->surveyResult->getSurvey()->getQuestion();
 
-        /** @var Question $question */
+        /** @var \RKW\RkwSurvey\Domain\Model\Question $question */
         foreach ($surveyQuestions as $question) {
 
             //  use question only if it is of type scale
@@ -391,7 +487,7 @@ class Evaluator
                 continue;
             }
 
-            $slug = GeneralUtility::slugify('donuts-' . $question->getQuestion(), '_');
+            $slug = SlugUtility::slugify('donuts-' . $question->getQuestion(), '_');
 
             $donuts[$slug] = [
                 'question' => $question->getQuestion(),
@@ -402,31 +498,22 @@ class Evaluator
             //  single_region
             $questionResults = $this->questionResultRepository->findByQuestionAndSurveyResultUids($question, $surveyResultUids);
 
-            $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'single_region', $title = $this->getTitleByGroupByQuestionAnswer());
+            $donuts = $this->collectData(
+                $questionResults,
+                $donuts,
+                $slug,
+                'single_region',
+                $this->getTitleByGroupByQuestionAnswer()
+            );
 
 //            //    Ostdeutschland = all regions
 //            $questionResults = $this->questionResultRepository->findByQuestion($question);
 //            $donuts = $this->collectData($questionResults, $donuts, $slug, $key = 'all_regions', $title = 'Alle 12 Regionen');
 
-            /**  @todo no hard-coded texts in PHP! */
-            //  Deutschland = GEM
-            $donuts[$slug]['data']['benchmark']['title'] = 'GEM-Expertenbefragung Deutschland';
-
             if ($question->getBenchmark()) {
-
-                //  get benchmark from question = GEM
-                /**  @todo line too long */
-                $donuts[$slug]['data']['benchmark']['evaluation']['series'] = $this->parseStringToArray($question->getBenchmarkWeighting(), $delimiter = '|', $checkFloat = true);
-                $donuts[$slug]['data']['benchmark']['evaluation']['labels'] = [
-                    $this->labels['weighting']['low'],
-                    $this->labels['weighting']['neutral'],
-                    $this->labels['weighting']['high'],
-                ];
-
+                $donuts = $this->prepareBenchmark($question, $donuts, $slug);
             } else {
-
                 $donuts[$slug]['data']['benchmark']['evaluation'] = null;
-
             }
 
         }
@@ -434,14 +521,100 @@ class Evaluator
         return $donuts;
     }
 
+    /**
+     * @param QueryResult $questionResults
+     * @param array                                              $donuts
+     * @param string                                             $slug
+     * @param string                                             $key
+     * @param string                                             $title
+     * @return array $donuts
+     * @todo this is method should not be part of a model. Maybe a ViewHelper!
+     */
+    public function collectData(
+        QueryResultInterface $questionResults,
+        array                $donuts,
+        string               $slug,
+        string               $key,
+        string               $title
+    ): array
+    {
+        //  group the values
+        $evaluation = [
+            $key => [
+                'low'     => [],
+                'neutral' => [],
+                'high'    => [],
+            ],
+        ];
+
+        foreach ($questionResults as $result) {
+
+            $answer = (int)$result->getAnswer();
+
+            if ($answer < 5) {
+                $evaluation[$key]['low'][] = $result;
+            }
+
+            if ($answer === 5) {
+                $evaluation[$key]['neutral'][] = $result;
+            }
+
+            if ($answer > 5) {
+                $evaluation[$key]['high'][] = $result;
+            }
+
+        }
+
+        $donuts[$slug]['data'][$key]['title'] = $title;
+        $donuts[$slug]['data'][$key]['participations'] = $questionResults->count();
+
+        $donuts[$slug]['data'][$key]['evaluation']['series'] = [
+            count($evaluation[$key]['low']) ?? 0,
+            count($evaluation[$key]['neutral']) ?? 0,
+            count($evaluation[$key]['high']) ?? 0,
+        ];
+        $donuts[$slug]['data'][$key]['evaluation']['labels'] = [
+            $this->labels['weighting']['low'],
+            $this->labels['weighting']['neutral'],
+            $this->labels['weighting']['high'],
+        ];
+
+        return $donuts;
+    }
+
+    /**
+     * @param Question $question
+     * @param array    $donuts
+     * @param string   $slug
+     * @return array
+     */
+    protected function prepareBenchmark($question, array $donuts, string $slug): array
+    {
+        $donuts[$slug]['data']['benchmark']['title'] = $question->getBenchmarkLabel();
+        $donuts[$slug]['data']['benchmark']['evaluation'] = [
+            'series' => $this->parseStringToArray(
+                $question->getBenchmarkWeighting(),
+                '|',
+                true
+            ),
+            'labels' => [
+                $this->labels['weighting']['low'],
+                $this->labels['weighting']['neutral'],
+                $this->labels['weighting']['high'],
+            ],
+        ];
+
+        return $donuts;
+    }
 
     /**
      * renderDonuts
      *
      * @param array $charts
      * @return string
-     *  @todo this is method should not be part of a model. Maybe a ViewHelper!
-     *  @todo do not mix frontend-stuff with PHP. This is no WordPress ;-) Use a partial/template. Maybe with StandaloneView
+     * @throws \JsonException
+     * @todo do not mix frontend-stuff with PHP. This is no WordPress ;-) Use a partial/template. Maybe with StandaloneView
+     * @todo this is method should not be part of a model. Maybe a ViewHelper!
      */
     public function renderDonuts(array $charts): string
     {
@@ -466,8 +639,8 @@ class Evaluator
                                 \'' . $this->colors['my-region'] . '\',
                                 \'' . $this->colors['all-regions'] . '\',
                             ],
-                            series: ' . json_encode($comparison['evaluation']['series']) . ',
-                            labels: ' . json_encode($comparison['evaluation']['labels']) . ',
+                            series: ' . json_encode($comparison['evaluation']['series'], JSON_THROW_ON_ERROR) . ',
+                            labels: ' . json_encode($comparison['evaluation']['labels'], JSON_THROW_ON_ERROR) . ',
                             plotOptions: {
                                 pie: {
                                     donut: {
@@ -514,56 +687,11 @@ class Evaluator
         return $script;
     }
 
-
-    /**
-     * prepareBars
-     *
-     * @return array
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
-     *  @todo this is method should not be part of a model. Maybe a ViewHelper!
-     */
-    public function prepareBars(): array
-    {
-
-        /**  @todo no german comments please  */
-        //  get the topics -> muss dynamisch über Zuordnung im Fragebogen zu Themen erfolgen
-        $topics = $this->surveyResult->getSurvey()->getTopics();
-
-        $topicNames = [];
-
-        foreach ($topics as $topic) {
-            $topicNames[] = ($topic->getShortName()) ? $topic->getShortName() : $topic->getName();
-        }
-
-        $bars = [];
-
-        //  single_region vs. all_regions
-        $title = '';
-        $series = [
-            [
-                'name' => 'Meine Werte',
-                'data' => array_values($this->getAverageResultByTopics($topics, $scope = 'my_values')),
-            ],
-            [
-                'name' => $this->getTitleByGroupByQuestionAnswer(),
-                'data' => array_values($this->getAverageResultByTopics($topics, $scope = 'single_region')),
-            ],
-            [
-                'name' => 'Alle 12 Regionen',
-                'data' => array_values($this->getAverageResultByTopics($topics, $scope = null)),
-            ],
-        ];
-
-        return $this->buildBar($topicNames, $title, $series, $bars);
-
-    }
-
-
     /**
      * prepareChart
      *
      * @return array
-     *  @todo this is method should not be part of a model. Maybe a ViewHelper!
+     * @todo this is method should not be part of a model. Maybe a ViewHelper!
      */
     public function prepareChart(): array
     {
@@ -585,7 +713,7 @@ class Evaluator
             $individualValues[] = (int)$result->getAnswer();
         }
 
-        /**  @todo no german comments please  */
+        /**  @todo no german comments please */
         //  mit 0 auffüllen, wenn bisher weniger Antworten als Labels Fragen zur Verfügung stehen
         if (($fill = count($benchmarkValues) - count($individualValues)) > 0) {
             for ($i = 1; $i === $fill; $i++) {
@@ -602,14 +730,14 @@ class Evaluator
         ];
     }
 
-
     /**
      * renderChart
      *
      * @param array $chart
      * @return string
-     *  @todo do not mix frontend-stuff with PHP. This is no WordPress ;-) Use a partial/template. Maybe with StandaloneView
-     *  @todo this is method should not be part of a model. Maybe a ViewHelper!
+     * @throws \JsonException
+     * @todo this is method should not be part of a model. Maybe a ViewHelper!
+     * @todo do not mix frontend-stuff with PHP. This is no WordPress ;-) Use a partial/template. Maybe with StandaloneView
      */
     public function renderChart(array $chart): string
     {
@@ -637,18 +765,18 @@ class Evaluator
                 series: [
                     {
                         name: "Ihr Wert (0 = schwach, 10 = stark)",
-                        data: ' . json_encode($chart['values']['individual']) . ',
+                        data: ' . json_encode($chart['values']['individual'], JSON_THROW_ON_ERROR) . ',
                     },
                     {
                         name: "GEM-Expertenbefragung Deutschland (0 = schwach, 10 = stark)",
-                        data: ' . json_encode($chart['values']['benchmark']) . ',
+                        data: ' . json_encode($chart['values']['benchmark'], JSON_THROW_ON_ERROR) . ',
                     }
                 ],
                 xaxis: {
-                    categories: ' . json_encode($chart['labels']) . ',
+                    categories: ' . json_encode($chart['labels'], JSON_THROW_ON_ERROR) . ',
                     labels: {
                         style: {
-                            colors: ' . json_encode($labelColors) . ',
+                            colors: ' . json_encode($labelColors, JSON_THROW_ON_ERROR) . ',
                             fontSize: \'12px\'
                         }
                     }
@@ -660,134 +788,6 @@ class Evaluator
             chart.render();
 
         ';
-    }
-
-
-    /**
-     * @param \TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $questionResults
-     * @param array $donuts
-     * @param string $slug
-     * @param string $key
-     * @param string $title
-     * @return array $donuts
-     *  @todo this is method should not be part of a model. Maybe a ViewHelper!
-     */
-    public function collectData(
-        QueryResultInterface $questionResults,
-        array $donuts,
-        string $slug,
-        string $key,
-        string $title
-    ): array  {
-        //  group the values
-        $evaluation = [
-            $key   => [
-                'low'     => [],
-                'neutral' => [],
-                'high'    => [],
-            ],
-        ];
-
-        foreach ($questionResults as $result) {
-
-            $answer = (int)$result->getAnswer();
-
-            if ($answer < 5) {
-                $evaluation[$key]['low'][] = $result;
-            }
-
-            if ($answer === 5) {
-                $evaluation[$key]['neutral'][] = $result;
-            }
-
-            if ($answer > 5) {
-                $evaluation[$key]['high'][] = $result;
-            }
-
-        }
-
-        $donuts[$slug]['data'][$key]['title'] = $title;
-        $donuts[$slug]['data'][$key]['participations'] = $questionResults->count();
-
-        $donuts[$slug]['data'][$key]['evaluation']['series'] = [
-            count($evaluation[$key]['low']) ?? 0,
-            count($evaluation[$key]['neutral']) ??  0,
-            count($evaluation[$key]['high']) ??  0,
-        ];
-        $donuts[$slug]['data'][$key]['evaluation']['labels'] = [
-            $this->labels['weighting']['low'],
-            $this->labels['weighting']['neutral'],
-            $this->labels['weighting']['high'],
-        ];
-
-        return $donuts;
-    }
-
-
-    /**
-     * getAverage
-     *
-     * @param array $data
-     * @return float
-     *  @todo this is method should not be part of a model. Maybe a ViewHelper!
-     */
-    protected function getAverage(array $data): float
-    {
-        return array_sum($data) / count($data);
-    }
-
-
-    /**
-     * buildBar
-     *
-     * @param array  $topicNames
-     * @param string $title
-     * @param array  $series
-     * @param array $bars
-     * @return array
-     *   @todo this is method should not be part of a model. Maybe a ViewHelper!
-     */
-    protected function buildBar(array $topicNames, string $title, array $series, array $bars): array
-    {
-        $slug = GeneralUtility::slugify('bar-' . $title, '_');
-
-        $bars[$slug] = [
-            'topics' => $topicNames,
-            'title'  => $title,
-            'series' => $series,
-        ];
-
-        return $bars;
-    }
-
-
-    /**
-     * Parses strings to arrays
-     *
-     * @param string $data
-     * @param string $delimiter
-     * @param bool   $checkFloat
-     * @return array
-     *  @todo this is method should not be part of a model. Maybe a ViewHelper!
-     */
-    public function parseStringToArray(string $data, string $delimiter = '|', bool $checkFloat = false): array
-    {
-
-        $parsedData = [];
-        $strings = GeneralUtility::trimExplode($delimiter, $data, true);
-        foreach ($strings as $string) {
-            if ($checkFloat) {
-                $parsedData[] = (float)str_replace(',', '.', $string);
-            } else {
-                $parsedData[] = addslashes($string);
-            }
-        }
-
-        if (count($parsedData) < 1) {
-            $parsedData = [];
-        }
-
-        return $parsedData;
     }
 
 }
