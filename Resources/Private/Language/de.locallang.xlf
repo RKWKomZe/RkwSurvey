@@ -140,7 +140,7 @@
 				<target>Frage</target>
 			</trans-unit>
 
-			<!-- Models/Evaluator.php -->
+			<!-- Evaluation/Evaluator.php -->
             <trans-unit id="tx_rkwsurvey_domain_model_evaluator.question.weighting.labels.low">
                 <source>low</source>
                 <target>trifft nicht zu (0 - 4)</target>

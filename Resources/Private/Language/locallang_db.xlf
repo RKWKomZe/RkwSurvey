@@ -135,8 +135,14 @@
 			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark">
 				<source>Benchmark</source>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark.label">
+				<source>Label</source>
+			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark.value">
 				<source>Reference value</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark.label">
+				<source>Label</source>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_domain_model_question.benchmark.weighting.values">
 				<source>Reference values by topic (weighed)</source>

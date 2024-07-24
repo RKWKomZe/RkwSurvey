@@ -14,14 +14,14 @@ namespace RKW\RkwSurvey\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
-use RKW\RkwSurvey\Domain\Model\Evaluator;
+use RKW\RkwSurvey\Domain\Model\QuestionResultContainer;
 use RKW\RkwSurvey\Domain\Model\Survey;
 use RKW\RkwSurvey\Domain\Model\SurveyResult;
-use RKW\RkwSurvey\Domain\Model\QuestionResultContainer;
 use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
 use RKW\RkwSurvey\Domain\Repository\SurveyRepository;
 use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
 use RKW\RkwSurvey\Domain\Repository\TokenRepository;
+use RKW\RkwSurvey\Evaluation\Evaluator;
 use RKW\RkwSurvey\Service\RkwMailService;
 use RKW\RkwSurvey\Utility\SurveyProgressUtility;
 use RKW\RkwSurvey\Validation\ContactFormValidator;
@@ -450,7 +450,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @param \RKW\RkwSurvey\Domain\Model\SurveyResult $surveyResult
      * @param array $contactForm
      * @param string $tokenInput
-     * @validate $contactForm \RKW\RkwSurvey\Validation\ContactFormValidator
      * @return void
      * @TYPO3\CMS\Extbase\Annotation\Validate("RKW\RkwSurvey\Validation\ContactFormValidator", param="contactForm")
      * @TYPO3\CMS\Extbase\Annotation\Validate("Madj2k\FeRegister\Validation\Consent\PrivacyValidator", param="contactForm")
@@ -559,41 +558,6 @@ class SurveyController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         $this->view->assign('surveyResult', $surveyResult);
         $this->view->assign('tokenInput', $tokenInput);
 
-        if ($surveyResult->getSurvey()->getType() === 1) {
-
-            /**  @todo Das muss ausgelagert werden in die RkwGraphs!
-             *  Allerdings muss auch ein Identifier übergeben werden, anhand dessen die RkwGraphs das Ergebnis render kann!
-             *  instantiate with object manager -> see feecalculator
-             */
-
-            $evaluator = GeneralUtility::makeInstance(Evaluator::class, $surveyResult);
-            $this->pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
-
-            // Inject necessary js libs
-            $this->pageRenderer->addJsFooterLibrary(
-                'ApexCharts', /* name */
-                'https://cdn.jsdelivr.net/npm/apexcharts',
-                'text/javascript', /* type */
-                false, /* compress*/
-                true, /* force on top */
-                '', /* allwrap */
-                true /* exclude from concatenation */
-            );
-
-            $chart = $evaluator->prepareChart();
-            $this->pageRenderer->addJsFooterInlineCode('chartScript', $evaluator->renderChart($chart), true);
-
-            $donuts = $evaluator->prepareDonuts();
-            $this->pageRenderer->addJsFooterInlineCode('donutScript', $evaluator->renderDonuts($donuts), true);
-
-            if ($evaluator->containsGroupedByQuestion()) {
-                $bars = $evaluator->prepareBars();
-                $this->pageRenderer->addJsFooterInlineCode('barScript', $evaluator->renderBars($bars), true);
-                $this->view->assign('bars', $bars);
-            }
-
-            $this->view->assign('donuts', $donuts);
-        }
     }
 
 
