@@ -14,14 +14,16 @@ namespace RKW\RkwSurvey\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
+use League\Csv\Writer;
+use Madj2k\DrSeo\Utility\SlugUtility;
 use RKW\RkwSurvey\Domain\Model\Survey;
 use RKW\RkwSurvey\Domain\Model\Token;
 use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
 use RKW\RkwSurvey\Domain\Repository\SurveyRepository;
 use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
 use RKW\RkwSurvey\Domain\Repository\TokenRepository;
-use \TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+use SplTempFileObject;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
@@ -29,6 +31,7 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  *
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
+ * @author Christian Dilger <c.dilger@addorange.de>
  * @copyright RKW Kompetenzzentrum
  * @package RKW_RkwSurvey
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
@@ -191,20 +194,10 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields($surveyUid);
         $questionResultList = $this->questionResultRepository->findBySurveyOrderByQuestionAndType($survey, $starttime);
 
-        // create a name for the file
-        $surveyName = preg_replace("/[^a-zA-Z0-9]/", "", $survey->getName());
-        $surveyName = str_replace(' ', '', $surveyName);
-        $surveyName = strtolower(trim($surveyName)) . '.csv';
-
-        $csv = fopen('php://output', 'w');
-        $separator = ';';
-
-        header("Content-type: text/csv");
-        header("Content-Disposition: attachment; filename=$surveyName");
-        header("Pragma: no-cache");
+        $csv = Writer::createFromFileObject(new SplTempFileObject());
+        $csv->setDelimiter(';');
 
         $columArray = [];
-        // column names
         $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyUid', 'rkw_survey');
         $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultUid', 'rkw_survey');
         $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultTags', 'rkw_survey');
@@ -216,8 +209,7 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answerOption', 'rkw_survey');
         $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answer', 'rkw_survey');
 
-        // Fill the CSV file with content
-        fputcsv($csv, $columArray, $separator);
+        $csv->insertOne($columArray);
 
         /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult */
         foreach ($questionResultList as $questionResult) {
@@ -253,23 +245,30 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
                 $dataArray[] = $survey->getUid();
                 $dataArray[] = $questionResult->getSurveyResult()->getUid();
                 $dataArray[] = $questionResult->getSurveyResult()->getTags();
-                if ($survey->getType() == 2) {
+                if ($survey->getType() === 2) {
                     $dataArray[] = $questionResult->getQuestion()->getQuestionContainer()->getUid();
                 }
-                $dataArray[] = $questionResult->getUid();
+                $dataArray[] = $question->getUid();
                 $dataArray[] = $question->getQuestion();
                 $dataArray[] = $answerOption;
                 $dataArray[] = $questionResult->getAnswer();
 
-                fputcsv($csv, $dataArray, $separator);
+                $csv->insertOne($dataArray);
 
             } catch (\Exception $e) {
                 continue;
             }
         }
 
-        fclose($csv);
-        exit;
+        $surveyName = SlugUtility::slugify($survey->getName()) . '.csv';
+
+        header('Content-Type: text/csv; charset=UTF-8');
+        header('Content-Description: File Transfer');
+        header('Content-Disposition: attachment; filename="' . $surveyName . '"');
+
+        $csv->output($surveyName);
+        die;
+
     }
 
 
