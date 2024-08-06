@@ -17,7 +17,6 @@ namespace RKW\RkwSurvey\ViewHelpers;
 use Doctrine\Common\Util\Debug;
 use RKW\RkwSurvey\Domain\Model\QuestionContainer;
 use RKW\RkwSurvey\Domain\Model\SurveyResult;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * IsLastStepViewHelper
@@ -70,9 +69,7 @@ class IsLastStepViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractVie
                 return true;
             }
 
-
         } else {
-
             if ($surveyResult->getSurvey()->getQuestionCountTotal() == ($questionResultCountTotal + 1)) {
                 return true;
             }

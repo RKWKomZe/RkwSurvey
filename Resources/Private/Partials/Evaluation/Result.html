@@ -1,0 +1,38 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:rkwEvaluation="http://typo3.org/ns/RKW/RkwSurvey/ViewHelpers"
+    data-namespace-typo3-fluid="true">
+
+<div>
+    <rkwEvaluation:evaluation surveyResult="{surveyResult}">
+        <f:render partial="Evaluation/Result/Context" arguments="{_all}"/>
+
+        <f:if condition="{summary}">
+            <f:render partial="Evaluation/Result/Summary" arguments="{_all}"/>
+        </f:if>
+
+        <script>
+            let Benchmark = {
+                comparisons: [],
+            }
+        </script>
+
+        <f:render partial="Evaluation/Result/Comparison" arguments="{_all}"/>
+
+        <script>
+            window.addEventListener('load', function () {
+
+                Benchmark.comparisons.forEach((chart) => {
+
+                    new ApexCharts(
+                        document.querySelector('#' + chart.identifier.id),
+                        chart.options
+                    ).render();
+                })
+
+            });
+        </script>
+
+    </rkwEvaluation:evaluation>
+</div>
+
+</html>

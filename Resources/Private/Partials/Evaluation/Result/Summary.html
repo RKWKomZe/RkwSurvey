@@ -1,0 +1,70 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:rkwEvaluation="http://typo3.org/ns/RKW/RkwSurvey/ViewHelpers"
+    data-namespace-typo3-fluid="true">
+
+<h3>Ausprägung der Elemente im Gründungsökosystem</h3>
+<p>Das nachfolgende Säulendiagramm fasst die Bewertungen einzelner gründungsbezogener Rahmenbedingungen zu fünf übergeordneten Kategorien zusammen. Die Darstellung unterscheidet folgende Bewertungen (Säulen): Ihre persönliche Bewertung, die Bewertung für Ihre Region insgesamt und die Bewertung für alle 12 Regionen des Gründungsökosystem-Modellvorhabens.</p>
+
+<div class="tiles-wrapper">
+    <div class="tiles flex-container flex-container--margin">
+        <div class="flex-item flex-basis-12">
+            <div class="tile tile--no-img">
+                <div class="tile__content">
+                    <div id="summary_{surveyResult.uid}" class="tile__text tile__text--no-img"></div>
+
+                    <script>
+
+                        window.addEventListener('load', function () {
+
+                            new ApexCharts(
+                                document.querySelector('#summary_' + <f:format.raw>{surveyResult.uid}</f:format.raw>),
+                                {
+                                    chart: {
+                                        type: 'bar'
+                                    },
+                                    colors: <f:format.raw>{summary.colors}</f:format.raw>,
+                                    plotOptions: {
+                                        bar: {
+                                            horizontal: false
+                                        }
+                                    },
+                                    legend: {
+                                        show: true
+                                    },
+                                    dataLabels: {
+                                        enabled: false,
+                                    },
+                                    tooltip: {
+                                        enabled: false,
+                                    },
+                                    xaxis: <f:format.raw>{summary.xaxis}</f:format.raw>,
+                                    yaxis: {
+                                        decimalsInFloat: 0,
+                                            min: 0,
+                                            max: 10,
+                                            labels: {
+                                            formatter: (value) => {
+                                                if (value === 0) {
+                                                    return '0 = schwach'
+                                                }
+                                                if (value === 10) {
+                                                    return '10 = stark'
+                                                }
+                                                return value
+                                            },
+                                        }
+                                    },
+                                    series: <f:format.raw>{summary.series}</f:format.raw>
+                                }
+                            ).render();
+                        });
+
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>

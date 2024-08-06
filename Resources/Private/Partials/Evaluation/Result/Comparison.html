@@ -1,0 +1,90 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:rkwEvaluation="http://typo3.org/ns/RKW/RkwSurvey/ViewHelpers"
+    data-namespace-typo3-fluid="true">
+
+<h3>Ausprägung der gründungsbezogenen Rahmenbedingungen</h3>
+<p>Die nachfolgenden Kreisdiagramme vergleichen die Einschätzungen einzelner gründungsbezogenen Rahmenbedingungen für Ihre Region mit den Einschätzungen der GEM-Experten für den Gründungsstandort Deutschland. Die 11 Antwortmöglichkeiten auf einer Skala von 0 (vollkommen falsch) bis 10 (vollkommen wahr) sind in folgende 3 Kategorien zusammengefasst worden: trifft nicht zu (0-4), teils-teils (5), und trifft zu (6-10).</p>
+
+<f:for each="{comparisons}" as="donut" iteration="iterDonut" key="identifier">
+    <p>{donut.question}</p>
+    <div class="tiles-wrapper">
+        <div class="tiles flex-container flex-container--margin">
+            <f:for each="{donut.data}" as="comparison" iteration="iterComparison" key="comparisonIdentifier">
+                <div class="flex-item flex-basis-6" style="width: 50%;"><!-- @todo flex-basis-4 forces last chart to new line -->
+                    <div class="tile tile--no-img">
+                        <div class="tile__content">
+                            <f:if condition="{comparison.title}">
+                                <f:then>
+                                    <h3 class="tile__title">
+                                        <span class="tile__title-text">
+                                            {comparison.title} <f:if condition="{comparison.participations}">({comparison.participations} Teilnehmende)</f:if>
+                                        </span>
+                                    </h3>
+                                </f:then>
+                            </f:if>
+                            <f:if condition="{comparison.evaluation}">
+                                <f:then>
+                                    <div id="{identifier}_{comparisonIdentifier}" class="tile__text tile__text--no-img">
+                                    </div>
+                                </f:then>
+                                <f:else>
+                                    <div class="text-small">Keine Daten vorhanden</div>
+                                </f:else>
+                            </f:if>
+                        </div>
+                    </div>
+                </div>
+                <f:if condition="{comparison.evaluation}">
+
+                    <script>
+
+                        Benchmark.comparisons.push({
+                                                  identifier: <f:format.raw>{identifier}_{comparisonIdentifier}</f:format.raw>,
+                                                  options: {
+                                                      chart: {
+                                                          type: 'donut'
+                                                      },
+                                                      colors: <f:format.raw>{comparison.evaluation.colors}</f:format.raw>,
+                                                      series: <f:format.raw>{comparison.evaluation.series}</f:format.raw>,
+                                                      labels: <f:format.raw>{comparison.evaluation.labels}</f:format.raw>,
+                                                      plotOptions: {
+                                                          pie: {
+                                                              donut: {
+                                                                  labels: {
+                                                                      show: true,
+                                                                      name: {
+                                                                          show: false
+                                                                      },
+                                                                      value: {
+                                                                          formatter: function (val, w) {
+                                                                              const total = w.globals.seriesTotals.reduce((acc, val) => acc + val, 0);
+                                                                              let percent = (100 * val) / total;
+                                                                              return percent.toFixed(1) + ' %';
+                                                                          }
+                                                                      }
+                                                                  }
+                                                              }
+                                                          }
+                                                      },
+                                                      legend: {
+                                                          show: true,
+                                                          position: 'bottom'
+                                                      },
+                                                      dataLabels: {
+                                                          enabled: false
+                                                      },
+                                                      tooltip: {
+                                                          enabled: false
+                                                      }
+                                                  },
+                                                   });
+
+                    </script>
+                </f:if>
+            </f:for>
+        </div>
+    </div>
+
+</f:for>
+
+</html>

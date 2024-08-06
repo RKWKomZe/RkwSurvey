@@ -19,7 +19,7 @@ return [
     ],
     'types'     => [
         // '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, short_name, weight, result_a, result_b, result_c, questions'],
-        '1' => ['showitem' => 'hidden, name, short_name'],
+        '1' => ['showitem' => 'hidden, name, short_name, questions'],
     ],
     'columns'   => [
         /*
