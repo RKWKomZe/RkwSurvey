@@ -16,6 +16,10 @@ namespace RKW\RkwSurvey\Controller;
 
 use League\Csv\Writer;
 use Madj2k\DrSeo\Utility\SlugUtility;
+use RKW\RkwEvents\Domain\Model\Event;
+use RKW\RkwEvents\Domain\Repository\EventRepository;
+use RKW\RkwShop\Domain\Model\Product;
+use RKW\RkwShop\Domain\Repository\ProductRepository;
 use RKW\RkwSurvey\Domain\Model\Survey;
 use RKW\RkwSurvey\Domain\Model\Token;
 use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
@@ -24,6 +28,8 @@ use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
 use RKW\RkwSurvey\Domain\Repository\TokenRepository;
 use SplTempFileObject;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Domain\Model\Category;
+use TYPO3\CMS\Extbase\Domain\Repository\CategoryRepository;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
@@ -41,67 +47,72 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
 
     /**
      * @var \RKW\RkwSurvey\Domain\Repository\SurveyRepository
-     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected ?SurveyRepository $surveyRepository = null;
 
 
     /**
      * @var \RKW\RkwSurvey\Domain\Repository\SurveyResultRepository
-     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected ?SurveyResultRepository $surveyResultRepository = null;
 
 
     /**
      * @var \RKW\RkwSurvey\Domain\Repository\QuestionResultRepository
-     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected ?QuestionResultRepository $questionResultRepository = null;
 
 
     /**
      * @var \RKW\RkwSurvey\Domain\Repository\TokenRepository
-     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected ?TokenRepository $tokenRepository = null;
 
 
     /**
-     * @param \RKW\RkwSurvey\Domain\Repository\SurveyRepository $surveyRepository
+     * @var \TYPO3\CMS\Extbase\Domain\Repository\CategoryRepository
      */
-    public function injectSurveyRepository(SurveyRepository $surveyRepository)
-    {
+    protected ?CategoryRepository $categoryRepository = null;
+
+
+    /**
+     * @var \RKW\RkwShop\Domain\Repository\ProductRepository
+     */
+    protected ?ProductRepository $productRepository = null;
+
+
+    /**
+     * @var \RKW\RkwEvents\Domain\Repository\EventRepository
+     */
+    protected ?EventRepository $eventRepository = null;
+
+
+    /**
+     * @param SurveyRepository $surveyRepository
+     * @param SurveyResultRepository $surveyResultRepository
+     * @param QuestionResultRepository $questionResultRepository
+     * @param TokenRepository $tokenRepository
+     * @param CategoryRepository $categoryRepository
+     * @param ProductRepository $productRepository
+     * @param EventRepository $eventRepository
+     */
+    public function __construct(
+        SurveyRepository $surveyRepository,
+        SurveyResultRepository $surveyResultRepository,
+        QuestionResultRepository $questionResultRepository,
+        TokenRepository $tokenRepository,
+        CategoryRepository $categoryRepository,
+        ProductRepository $productRepository,
+        EventRepository $eventRepository
+    ) {
         $this->surveyRepository = $surveyRepository;
-    }
-
-
-    /**
-     * @param \RKW\RkwSurvey\Domain\Repository\SurveyResultRepository $surveyResultRepository
-     */
-    public function injectSurveyResultRepository(SurveyResultRepository $surveyResultRepository)
-    {
         $this->surveyResultRepository = $surveyResultRepository;
-    }
-
-
-    /**
-     * @param \RKW\RkwSurvey\Domain\Repository\QuestionResultRepository $questionResultRepository
-     */
-    public function injectQuestionResultRepository(QuestionResultRepository $questionResultRepository)
-    {
         $this->questionResultRepository = $questionResultRepository;
-    }
-
-
-    /**
-     * @param \RKW\RkwSurvey\Domain\Repository\TokenRepository $tokenRepository
-     */
-    public function injectTokenRepository(TokenRepository $tokenRepository)
-    {
         $this->tokenRepository = $tokenRepository;
+        $this->categoryRepository = $categoryRepository;
+        $this->productRepository = $productRepository;
+        $this->eventRepository = $eventRepository;
     }
-
 
     /**
      * initialize
@@ -197,12 +208,21 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         $csv = Writer::createFromFileObject(new SplTempFileObject());
         $csv->setDelimiter(';');
 
+        if ($survey->getType() === 2) {
+            $questionContainerUids = array_map(function($question) {
+                return $question->getUid();
+            }, $survey->getQuestionContainer()->toArray());
+        }
+
         $columArray = [];
         $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyUid', 'rkw_survey');
         $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultUid', 'rkw_survey');
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultTags', 'rkw_survey');
-        if ($survey->getType() == 2) {
-            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionContainerUid', 'rkw_survey');
+        if ($survey->getType() === 2) {
+            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultTags', 'rkw_survey');
+            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.output.targetGroup', 'rkw_survey');
+            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.output.type', 'rkw_survey');
+            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.output.title', 'rkw_survey');
+            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionPositionInContainerUid', 'rkw_survey');
         }
         $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionUid', 'rkw_survey');
         $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.question', 'rkw_survey');
@@ -225,10 +245,10 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
 
                 $answerOption = '';
                 if (!$question->getAnswerOption()) {
-                    if ($question->getType() == 0 || $question->getType() == 4) {
+                    if ($question->getType() === 0 || $question->getType() === 4) {
                         $answerOption = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.freetext', 'rkw_survey');
                     }
-                    if ($question->getType() == 3) {
+                    if ($question->getType() === 3) {
                         $answerOption = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.scale', 'rkw_survey',
                             [
                                 $question->getScaleFromPoints(),
@@ -244,9 +264,38 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
                 $dataArray = [];
                 $dataArray[] = $survey->getUid();
                 $dataArray[] = $questionResult->getSurveyResult()->getUid();
-                $dataArray[] = $questionResult->getSurveyResult()->getTags();
                 if ($survey->getType() === 2) {
-                    $dataArray[] = $questionResult->getQuestion()->getQuestionContainer()->getUid();
+
+                    //  @todo: evtl. separate Export-Klassen je nach Output bzw. Surveyart (siehe Laravel?)
+                    $dataArray[] = $questionResult->getSurveyResult()->getTags();
+                    $surveyResultTags = explode(',', $questionResult->getSurveyResult()->getTags());
+
+                    /** @var \TYPO3\CMS\Extbase\Domain\Model\Category $category */
+                    $category = $this->categoryRepository->findByUid($surveyResultTags[0]);
+                    $dataArray[] = $category->getTitle();
+
+                    $dataArray[] = $surveyResultTags[1];
+
+                    if ($surveyResultTags[1] === 'Product') {
+                        /** @var \RKW\RkwShop\Domain\Model\Product $product */
+                        $product = $this->productRepository->findByUid($surveyResultTags[2]);
+                        $dataArray[] = $product->getTitle();
+                    } else {
+                        /** @var \RKW\RkwEvents\Domain\Model\Event $event */
+                        $event = $this->eventRepository->findByUid($surveyResultTags[2]);
+                        $dataArray[] = $event->getTitle();
+                    }
+
+                    $indexQuestionContainer = array_search($questionResult->getQuestion()->getQuestionContainer()->getUid(), $questionContainerUids);
+                    $indexQuestionContainerPos = ($indexQuestionContainer !== false) ? $indexQuestionContainer + 1 : '';
+
+                    $questionUids = array_map(function($question) {
+                        return $question->getUid();
+                    }, $questionResult->getQuestion()->getQuestionContainer()->getQuestion()->toArray());
+                    $indexQuestion = array_search($questionResult->getQuestion()->getUid(), $questionUids);
+                    $indexQuestionPos = ($indexQuestion !== false) ? $indexQuestion + 1 : '';
+
+                    $dataArray[] = $indexQuestionPos . '.' . $indexQuestionContainerPos;
                 }
                 $dataArray[] = $question->getUid();
                 $dataArray[] = $question->getQuestion();

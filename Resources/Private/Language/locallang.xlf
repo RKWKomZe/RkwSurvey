@@ -154,8 +154,20 @@
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.surveyResultTags">
 				<source>Survey Result tags</source>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.output.type">
+				<source>Output type</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.output.targetGroup">
+				<source>Output target group</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.output.title">
+				<source>Output title</source>
+			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.questionContainerUid">
 				<source>Container Uid</source>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.questionPositionInContainerUid">
+				<source>Question position in container (Question.Container)</source>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.questionUid">
 				<source>Question Uid</source>
