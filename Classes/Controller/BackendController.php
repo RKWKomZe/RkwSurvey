@@ -16,9 +16,7 @@ namespace RKW\RkwSurvey\Controller;
 
 use League\Csv\Writer;
 use Madj2k\DrSeo\Utility\SlugUtility;
-use RKW\RkwEvents\Domain\Model\Event;
 use RKW\RkwEvents\Domain\Repository\EventRepository;
-use RKW\RkwShop\Domain\Model\Product;
 use RKW\RkwShop\Domain\Repository\ProductRepository;
 use RKW\RkwSurvey\Domain\Model\Survey;
 use RKW\RkwSurvey\Domain\Model\Token;
@@ -28,8 +26,8 @@ use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
 use RKW\RkwSurvey\Domain\Repository\TokenRepository;
 use SplTempFileObject;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Domain\Model\Category;
 use TYPO3\CMS\Extbase\Domain\Repository\CategoryRepository;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
@@ -85,6 +83,12 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * @var \RKW\RkwEvents\Domain\Repository\EventRepository
      */
     protected ?EventRepository $eventRepository = null;
+
+
+    /**
+     * @var string
+     */
+    protected string $surveyPurpose = 'default';
 
 
     /**
@@ -205,109 +209,12 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields($surveyUid);
         $questionResultList = $this->questionResultRepository->findBySurveyOrderByQuestionAndType($survey, $starttime);
 
+        $this->determineSurveyPurpose($questionResultList[0]);
+
         $csv = Writer::createFromFileObject(new SplTempFileObject());
         $csv->setDelimiter(';');
 
-        if ($survey->getType() === 2) {
-            $questionContainerUids = array_map(function($question) {
-                return $question->getUid();
-            }, $survey->getQuestionContainer()->toArray());
-        }
-
-        $columArray = [];
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyUid', 'rkw_survey');
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultUid', 'rkw_survey');
-        if ($survey->getType() === 2) {
-            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultTags', 'rkw_survey');
-            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.output.targetGroup', 'rkw_survey');
-            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.output.type', 'rkw_survey');
-            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.output.title', 'rkw_survey');
-            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionPositionInContainerUid', 'rkw_survey');
-        }
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionUid', 'rkw_survey');
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.question', 'rkw_survey');
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answerOption', 'rkw_survey');
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answer', 'rkw_survey');
-
-        $csv->insertOne($columArray);
-
-        /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult */
-        foreach ($questionResultList as $questionResult) {
-
-            try {
-
-                if (!$questionResult->getSurveyResult()) {
-                    continue;
-                }
-
-                /** @var \RKW\RkwSurvey\Domain\Model\Question $question */
-                $question = $questionResult->getQuestion();
-
-                $answerOption = '';
-                if (!$question->getAnswerOption()) {
-                    if ($question->getType() === 0 || $question->getType() === 4) {
-                        $answerOption = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.freetext', 'rkw_survey');
-                    }
-                    if ($question->getType() === 3) {
-                        $answerOption = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.scale', 'rkw_survey',
-                            [
-                                $question->getScaleFromPoints(),
-                                $question->getScaleToPoints(),
-                                $question->getScaleStep()
-                            ]
-                        );
-                    }
-                } else {
-                    $answerOption = $question->getAnswerOption();
-                }
-
-                $dataArray = [];
-                $dataArray[] = $survey->getUid();
-                $dataArray[] = $questionResult->getSurveyResult()->getUid();
-                if ($survey->getType() === 2) {
-
-                    //  @todo: evtl. separate Export-Klassen je nach Output bzw. Surveyart (siehe Laravel?)
-                    $dataArray[] = $questionResult->getSurveyResult()->getTags();
-                    $surveyResultTags = explode(',', $questionResult->getSurveyResult()->getTags());
-
-                    /** @var \TYPO3\CMS\Extbase\Domain\Model\Category $category */
-                    $category = $this->categoryRepository->findByUid($surveyResultTags[0]);
-                    $dataArray[] = $category->getTitle();
-
-                    $dataArray[] = $surveyResultTags[1];
-
-                    if ($surveyResultTags[1] === 'Product') {
-                        /** @var \RKW\RkwShop\Domain\Model\Product $product */
-                        $product = $this->productRepository->findByUid($surveyResultTags[2]);
-                        $dataArray[] = $product->getTitle();
-                    } else {
-                        /** @var \RKW\RkwEvents\Domain\Model\Event $event */
-                        $event = $this->eventRepository->findByUid($surveyResultTags[2]);
-                        $dataArray[] = $event->getTitle();
-                    }
-
-                    $indexQuestionContainer = array_search($questionResult->getQuestion()->getQuestionContainer()->getUid(), $questionContainerUids);
-                    $indexQuestionContainerPos = ($indexQuestionContainer !== false) ? $indexQuestionContainer + 1 : '';
-
-                    $questionUids = array_map(function($question) {
-                        return $question->getUid();
-                    }, $questionResult->getQuestion()->getQuestionContainer()->getQuestion()->toArray());
-                    $indexQuestion = array_search($questionResult->getQuestion()->getUid(), $questionUids);
-                    $indexQuestionPos = ($indexQuestion !== false) ? $indexQuestion + 1 : '';
-
-                    $dataArray[] = $indexQuestionPos . '.' . $indexQuestionContainerPos;
-                }
-                $dataArray[] = $question->getUid();
-                $dataArray[] = $question->getQuestion();
-                $dataArray[] = $answerOption;
-                $dataArray[] = $questionResult->getAnswer();
-
-                $csv->insertOne($dataArray);
-
-            } catch (\Exception $e) {
-                continue;
-            }
-        }
+        $csv = $this->buildCsvArray($survey, $csv, $questionResultList);
 
         $surveyName = SlugUtility::slugify($survey->getName()) . '.csv';
 
@@ -465,5 +372,168 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
 
         fclose($csv);
         exit;
+    }
+
+
+    /**
+     * @param Survey                                              $survey
+     * @param \League\Csv\Writer                                  $csv
+     * @param \TYPO3\CMS\Extbase\Persistence\QueryResultInterface $questionResultList
+     * @return \League\Csv\Writer
+     * @throws \League\Csv\CannotInsertRecord
+     */
+    protected function buildCsvArray(
+        Survey $survey,
+        Writer $csv,
+        \TYPO3\CMS\Extbase\Persistence\QueryResultInterface $questionResultList
+    ): Writer
+    {
+
+        if ($this->surveyPurpose === 'outcome') {
+            $questionContainerUids = array_map(static function ($question) {
+                return $question->getUid();
+            }, $survey->getQuestionContainer()->toArray());
+        }
+
+        $columArray = [];
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyUid', 'rkw_survey');
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultUid', 'rkw_survey');
+        if ($this->surveyPurpose === 'outcome') {
+            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultTags', 'rkw_survey');
+            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.output.targetGroup', 'rkw_survey');
+            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.output.type', 'rkw_survey');
+            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.output.title', 'rkw_survey');
+            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionPositionInContainerUid', 'rkw_survey');
+        }
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionUid', 'rkw_survey');
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.question', 'rkw_survey');
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answerOption', 'rkw_survey');
+        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answer', 'rkw_survey');
+
+        $csv->insertOne($columArray);
+
+        /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult */
+        foreach ($questionResultList as $questionResult) {
+
+            try {
+
+                if (!$questionResult->getSurveyResult()) {
+                    continue;
+                }
+
+                /** @var \RKW\RkwSurvey\Domain\Model\Question $question */
+                $question = $questionResult->getQuestion();
+
+                $dataArray = [];
+                $dataArray[] = $survey->getUid();
+                $dataArray[] = $questionResult->getSurveyResult()->getUid();
+                if ($this->surveyPurpose === 'outcome') {
+                    $dataArray = $this->resolveSurveyResultTags($questionResult, $dataArray);
+                    $dataArray = $this->getQuestionPosition($questionResult, $questionContainerUids, $dataArray);
+                }
+                $dataArray[] = $question->getUid();
+                $dataArray[] = $question->getQuestion();
+                $dataArray[] = $this->getAnswerOption($question);
+                $dataArray[] = $questionResult->getAnswer();
+
+                $csv->insertOne($dataArray);
+
+            } catch (\Exception $e) {
+                continue;
+            }
+        }
+
+        return $csv;
+    }
+
+    /**
+     * @param \RKW\RkwSurvey\Domain\Model\Question $question
+     * @return string
+     */
+    protected function getAnswerOption(\RKW\RkwSurvey\Domain\Model\Question $question): string
+    {
+        $answerOption = '';
+
+        if (!$question->getAnswerOption()) {
+            if ($question->getType() === 0 || $question->getType() === 4) {
+                $answerOption = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.freetext', 'rkw_survey');
+            }
+            if ($question->getType() === 3) {
+                $answerOption = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.scale', 'rkw_survey',
+                    [
+                        $question->getScaleFromPoints(),
+                        $question->getScaleToPoints(),
+                        $question->getScaleStep()
+                    ]
+                );
+            }
+        } else {
+            $answerOption = $question->getAnswerOption();
+        }
+
+        return $answerOption;
+    }
+
+    /**
+     * @param \RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult
+     * @param array                                      $dataArray
+     * @return array
+     */
+    protected function resolveSurveyResultTags(\RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult, array $dataArray): array
+    {
+//  @todo: evtl. separate Export-Klassen je nach Output bzw. Surveyart (siehe Laravel?)
+        $dataArray[] = $questionResult->getSurveyResult()->getTags();
+        $surveyResultTags = explode(',', $questionResult->getSurveyResult()->getTags());
+
+        /** @var \TYPO3\CMS\Extbase\Domain\Model\Category $category */
+        $category = $this->categoryRepository->findByUid($surveyResultTags[0]);
+        $dataArray[] = $category->getTitle();
+
+        $dataArray[] = $surveyResultTags[1];
+
+        if ($surveyResultTags[1] === 'Product') {
+            /** @var \RKW\RkwShop\Domain\Model\Product $product */
+            $product = $this->productRepository->findByUid($surveyResultTags[2]);
+            $dataArray[] = $product->getTitle();
+        } else {
+            /** @var \RKW\RkwEvents\Domain\Model\Event $event */
+            $event = $this->eventRepository->findByUid($surveyResultTags[2]);
+            $dataArray[] = $event->getTitle();
+        }
+
+        return $dataArray;
+    }
+
+    /**
+     * @param \RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult
+     * @param array                                      $questionContainerUids
+     * @param array                                      $dataArray
+     * @return array
+     */
+    protected function getQuestionPosition(\RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult, array $questionContainerUids, array $dataArray): array
+    {
+        $indexQuestionContainer = array_search($questionResult->getQuestion()->getQuestionContainer()->getUid(), $questionContainerUids, true);
+        $indexQuestionContainerPos = ($indexQuestionContainer !== false) ? $indexQuestionContainer + 1 : '';
+
+        $questionUids = array_map(function ($question) {
+            return $question->getUid();
+        }, $questionResult->getQuestion()->getQuestionContainer()->getQuestion()->toArray());
+        $indexQuestion = array_search($questionResult->getQuestion()->getUid(), $questionUids, true);
+        $indexQuestionPos = ($indexQuestion !== false) ? $indexQuestion + 1 : '';
+
+        $dataArray[] = $indexQuestionPos . '.' . $indexQuestionContainerPos;
+
+        return $dataArray;
+    }
+
+    /**
+     * @param $questionResultList
+     * @return void
+     */
+    protected function determineSurveyPurpose($questionResultList): void
+    {
+        if ($questionResultList->getSurveyResult()->getTags() !== '') {
+            $this->surveyPurpose = 'outcome';
+        }
     }
 }
