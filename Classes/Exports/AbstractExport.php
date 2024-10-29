@@ -15,9 +15,13 @@ namespace RKW\RkwSurvey\Exports;
  * The TYPO3 project - inspiring people to share!
  */
 
+use League\Csv\Writer;
+use Madj2k\DrSeo\Utility\SlugUtility;
 use RKW\RkwEvents\Domain\Repository\EventRepository;
 use RKW\RkwShop\Domain\Repository\ProductRepository;
+use RKW\RkwSurvey\Domain\Model\Survey;
 use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
+use SplTempFileObject;
 use TYPO3\CMS\Extbase\Domain\Repository\CategoryRepository;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
@@ -30,7 +34,7 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
 
-abstract class Export
+abstract class AbstractExport
 {
 
     /**
@@ -73,6 +77,53 @@ abstract class Export
         $this->categoryRepository = $categoryRepository;
         $this->productRepository = $productRepository;
         $this->eventRepository = $eventRepository;
+    }
+
+
+    /**
+     * @return array
+     */
+    abstract protected function headings(): array;
+
+
+    /**
+     * @param Survey                                              $survey
+     * @param \League\Csv\Writer                                  $csv
+     * @param \TYPO3\CMS\Extbase\Persistence\QueryResultInterface $questionResultList
+     * @return \League\Csv\Writer
+     * @throws \League\Csv\CannotInsertRecord
+     */
+    abstract protected function buildCsvArray(
+        Survey $survey,
+        Writer $csv,
+        \TYPO3\CMS\Extbase\Persistence\QueryResultInterface $questionResultList
+    ): Writer;
+
+
+    /**
+     * @param Survey $survey
+     * @param string $starttime
+     * @return void
+     * @throws \League\Csv\InvalidArgument
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
+     */
+    public function download(\RKW\RkwSurvey\Domain\Model\Survey $survey, string $starttime = ''): void
+    {
+        $questionResultList = $this->questionResultRepository->findBySurveyOrderByQuestionAndType($survey, $starttime);
+
+        $csv = Writer::createFromFileObject(new SplTempFileObject());
+        $csv->setDelimiter(';');
+
+        $csv = $this->buildCsvArray($survey, $csv, $questionResultList);
+
+        $surveyName = SlugUtility::slugify($survey->getName()) . '.csv';
+
+        header('Content-Type: text/csv; charset=UTF-8');
+        header('Content-Description: File Transfer');
+        header('Content-Disposition: attachment; filename="' . $surveyName . '"');
+
+        $csv->output($surveyName);
+
     }
 
 
@@ -129,16 +180,16 @@ abstract class Export
 
 
     /**
-     * @param array $columnHeaders
      * @return array
      */
-    protected function buildColumnArray(array $columnHeaders): array
+    protected function buildColumnArray(): array
     {
         $columnArray = [];
-        foreach ($columnHeaders as $columnHeader) {
+        foreach ($this->headings() as $columnHeader) {
             $columnArray[] = LocalizationUtility::translate($columnHeader, 'rkw_survey');
         }
 
         return $columnArray;
     }
+
 }

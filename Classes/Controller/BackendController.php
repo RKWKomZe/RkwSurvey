@@ -24,7 +24,7 @@ use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
 use RKW\RkwSurvey\Domain\Repository\SurveyRepository;
 use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
 use RKW\RkwSurvey\Domain\Repository\TokenRepository;
-use RKW\RkwSurvey\Exports\Export;
+use RKW\RkwSurvey\Exports\AbstractExport;
 use RKW\RkwSurvey\Exports\ExportDefault;
 use RKW\RkwSurvey\Exports\ExportOutcome;
 use SplTempFileObject;
@@ -188,12 +188,12 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
 
         if ($this->surveyPurpose === 'outcome') {
 
-            /** @var \Rkw\RkwSurvey\Exports\Export $export */
+            /** @var \Rkw\RkwSurvey\Exports\AbstractExport $export */
             $export = $this->objectManager->get(ExportOutcome::class);
 
         } else {
 
-            /** @var \Rkw\RkwSurvey\Exports\Export $export */
+            /** @var \Rkw\RkwSurvey\Exports\AbstractExport $export */
             $export = $this->objectManager->get(ExportDefault::class);
 
         }

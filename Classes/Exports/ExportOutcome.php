@@ -16,9 +16,7 @@ namespace RKW\RkwSurvey\Exports;
  */
 
 use League\Csv\Writer;
-use Madj2k\DrSeo\Utility\SlugUtility;
 use RKW\RkwSurvey\Domain\Model\Survey;
-use SplTempFileObject;
 
 /**
  * ExportOutcome
@@ -29,32 +27,28 @@ use SplTempFileObject;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
 
-class ExportOutcome extends \RKW\RkwSurvey\Exports\Export
+class ExportOutcome extends \RKW\RkwSurvey\Exports\AbstractExport
 {
 
     /**
-     * @param Survey $survey
-     * @param string $starttime
-     * @return void
-     * @throws \League\Csv\InvalidArgument
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
+     * @return array
      */
-    public function download(\RKW\RkwSurvey\Domain\Model\Survey $survey, string $starttime = ''): void
+    protected function headings(): array
     {
-        $questionResultList = $this->questionResultRepository->findBySurveyOrderByQuestionAndType($survey, $starttime);
 
-        $csv = Writer::createFromFileObject(new SplTempFileObject());
-        $csv->setDelimiter(';');
-
-        $csv = $this->buildCsvArray($survey, $csv, $questionResultList);
-
-        $surveyName = SlugUtility::slugify($survey->getName()) . '.csv';
-
-        header('Content-Type: text/csv; charset=UTF-8');
-        header('Content-Description: File Transfer');
-        header('Content-Disposition: attachment; filename="' . $surveyName . '"');
-
-        $csv->output($surveyName);
+        return [
+            'tx_rkwsurvey_controller_backend_csv.surveyUid',
+            'tx_rkwsurvey_controller_backend_csv.surveyResultUid',
+            'tx_rkwsurvey_controller_backend_csv.surveyResultTags',
+            'tx_rkwsurvey_controller_backend_csv.output.targetGroup',
+            'tx_rkwsurvey_controller_backend_csv.output.type',
+            'tx_rkwsurvey_controller_backend_csv.output.title',
+            'tx_rkwsurvey_controller_backend_csv.questionPositionInContainerUid',
+            'tx_rkwsurvey_controller_backend_csv.questionUid',
+            'tx_rkwsurvey_controller_backend_csv.question',
+            'tx_rkwsurvey_controller_backend_csv.answerOption',
+            'tx_rkwsurvey_controller_backend_csv.answer'
+        ];
 
     }
 
@@ -73,21 +67,7 @@ class ExportOutcome extends \RKW\RkwSurvey\Exports\Export
     ): Writer
     {
 
-        $columnHeaders = [
-            'tx_rkwsurvey_controller_backend_csv.surveyUid',
-            'tx_rkwsurvey_controller_backend_csv.surveyResultUid',
-            'tx_rkwsurvey_controller_backend_csv.surveyResultTags',
-            'tx_rkwsurvey_controller_backend_csv.output.targetGroup',
-            'tx_rkwsurvey_controller_backend_csv.output.type',
-            'tx_rkwsurvey_controller_backend_csv.output.title',
-            'tx_rkwsurvey_controller_backend_csv.questionPositionInContainerUid',
-            'tx_rkwsurvey_controller_backend_csv.questionUid',
-            'tx_rkwsurvey_controller_backend_csv.question',
-            'tx_rkwsurvey_controller_backend_csv.answerOption',
-            'tx_rkwsurvey_controller_backend_csv.answer'
-        ];
-
-        $columnArray = $this->buildColumnArray($columnHeaders);
+        $columnArray = $this->buildColumnArray();
 
         $csv->insertOne($columnArray);
 
