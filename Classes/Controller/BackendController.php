@@ -25,6 +25,8 @@ use RKW\RkwSurvey\Domain\Repository\SurveyRepository;
 use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
 use RKW\RkwSurvey\Domain\Repository\TokenRepository;
 use RKW\RkwSurvey\Exports\Export;
+use RKW\RkwSurvey\Exports\ExportDefault;
+use RKW\RkwSurvey\Exports\ExportOutcome;
 use SplTempFileObject;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Repository\CategoryRepository;
@@ -66,6 +68,12 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * @var \RKW\RkwSurvey\Domain\Repository\TokenRepository
      */
     protected ?TokenRepository $tokenRepository = null;
+
+
+    /**
+     * @var string
+     */
+    protected string $surveyPurpose = 'default';
 
 
     /**
@@ -176,8 +184,19 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         /** @var \RKW\RkwSurvey\Domain\Model\Survey $survey */
         $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields($surveyUid);
 
-        /** @var \Rkw\RkwSurvey\Exports\Export $export */
-        $export = $this->objectManager->get(Export::class);
+        $this->determineSurveyPurpose($survey, $starttime);
+
+        if ($this->surveyPurpose === 'outcome') {
+
+            /** @var \Rkw\RkwSurvey\Exports\Export $export */
+            $export = $this->objectManager->get(ExportOutcome::class);
+
+        } else {
+
+            /** @var \Rkw\RkwSurvey\Exports\Export $export */
+            $export = $this->objectManager->get(ExportDefault::class);
+
+        }
         $export->download($survey, $starttime);
         die;
 
@@ -330,5 +349,19 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         exit;
     }
 
+
+    /**
+     * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
+     * @param string $starttime
+     * @return void
+     */
+    protected function determineSurveyPurpose(\RKW\RkwSurvey\Domain\Model\Survey $survey, string $starttime): void
+    {
+        $questionResultList = $this->questionResultRepository->findBySurveyOrderByQuestionAndType($survey, $starttime);
+
+        if ($questionResultList[0]->getSurveyResult()->getTags() !== '') {
+            $this->surveyPurpose = 'outcome';
+        }
+    }
 
 }
