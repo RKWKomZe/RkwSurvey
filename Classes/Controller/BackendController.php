@@ -16,14 +16,21 @@ namespace RKW\RkwSurvey\Controller;
 
 use League\Csv\Writer;
 use Madj2k\DrSeo\Utility\SlugUtility;
+use RKW\RkwEvents\Domain\Repository\EventRepository;
+use RKW\RkwShop\Domain\Repository\ProductRepository;
 use RKW\RkwSurvey\Domain\Model\Survey;
 use RKW\RkwSurvey\Domain\Model\Token;
 use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
 use RKW\RkwSurvey\Domain\Repository\SurveyRepository;
 use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
 use RKW\RkwSurvey\Domain\Repository\TokenRepository;
+use RKW\RkwSurvey\Exports\AbstractExport;
+use RKW\RkwSurvey\Exports\ExportDefault;
+use RKW\RkwSurvey\Exports\ExportOutcome;
 use SplTempFileObject;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Domain\Repository\CategoryRepository;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
@@ -41,67 +48,51 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
 
     /**
      * @var \RKW\RkwSurvey\Domain\Repository\SurveyRepository
-     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected ?SurveyRepository $surveyRepository = null;
 
 
     /**
      * @var \RKW\RkwSurvey\Domain\Repository\SurveyResultRepository
-     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected ?SurveyResultRepository $surveyResultRepository = null;
 
 
     /**
      * @var \RKW\RkwSurvey\Domain\Repository\QuestionResultRepository
-     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected ?QuestionResultRepository $questionResultRepository = null;
 
 
     /**
      * @var \RKW\RkwSurvey\Domain\Repository\TokenRepository
-     * @TYPO3\CMS\Extbase\Annotation\Inject
      */
     protected ?TokenRepository $tokenRepository = null;
 
 
     /**
-     * @param \RKW\RkwSurvey\Domain\Repository\SurveyRepository $surveyRepository
+     * @var string
      */
-    public function injectSurveyRepository(SurveyRepository $surveyRepository)
-    {
+    protected string $surveyPurpose = 'default';
+
+
+    /**
+     * @param SurveyRepository $surveyRepository
+     * @param SurveyResultRepository $surveyResultRepository
+     * @param QuestionResultRepository $questionResultRepository
+     * @param TokenRepository $tokenRepository
+     */
+    public function __construct(
+        SurveyRepository $surveyRepository,
+        SurveyResultRepository $surveyResultRepository,
+        QuestionResultRepository $questionResultRepository,
+        TokenRepository $tokenRepository
+    ) {
         $this->surveyRepository = $surveyRepository;
-    }
-
-
-    /**
-     * @param \RKW\RkwSurvey\Domain\Repository\SurveyResultRepository $surveyResultRepository
-     */
-    public function injectSurveyResultRepository(SurveyResultRepository $surveyResultRepository)
-    {
         $this->surveyResultRepository = $surveyResultRepository;
-    }
-
-
-    /**
-     * @param \RKW\RkwSurvey\Domain\Repository\QuestionResultRepository $questionResultRepository
-     */
-    public function injectQuestionResultRepository(QuestionResultRepository $questionResultRepository)
-    {
         $this->questionResultRepository = $questionResultRepository;
-    }
-
-
-    /**
-     * @param \RKW\RkwSurvey\Domain\Repository\TokenRepository $tokenRepository
-     */
-    public function injectTokenRepository(TokenRepository $tokenRepository)
-    {
         $this->tokenRepository = $tokenRepository;
     }
-
 
     /**
      * initialize
@@ -192,81 +183,21 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
     {
         /** @var \RKW\RkwSurvey\Domain\Model\Survey $survey */
         $survey = $this->surveyRepository->findByIdentifierIgnoreEnableFields($surveyUid);
-        $questionResultList = $this->questionResultRepository->findBySurveyOrderByQuestionAndType($survey, $starttime);
 
-        $csv = Writer::createFromFileObject(new SplTempFileObject());
-        $csv->setDelimiter(';');
+        $this->determineSurveyPurpose($survey, $starttime);
 
-        $columArray = [];
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyUid', 'rkw_survey');
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultUid', 'rkw_survey');
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.surveyResultTags', 'rkw_survey');
-        if ($survey->getType() == 2) {
-            $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionContainerUid', 'rkw_survey');
+        if ($this->surveyPurpose === 'outcome') {
+
+            /** @var \Rkw\RkwSurvey\Exports\AbstractExport $export */
+            $export = $this->objectManager->get(ExportOutcome::class);
+
+        } else {
+
+            /** @var \Rkw\RkwSurvey\Exports\AbstractExport $export */
+            $export = $this->objectManager->get(ExportDefault::class);
+
         }
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.questionUid', 'rkw_survey');
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.question', 'rkw_survey');
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answerOption', 'rkw_survey');
-        $columArray[] = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.answer', 'rkw_survey');
-
-        $csv->insertOne($columArray);
-
-        /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult */
-        foreach ($questionResultList as $questionResult) {
-
-            try {
-
-                if (!$questionResult->getSurveyResult()) {
-                    continue;
-                }
-
-                /** @var \RKW\RkwSurvey\Domain\Model\Question $question */
-                $question = $questionResult->getQuestion();
-
-                $answerOption = '';
-                if (!$question->getAnswerOption()) {
-                    if ($question->getType() == 0 || $question->getType() == 4) {
-                        $answerOption = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.freetext', 'rkw_survey');
-                    }
-                    if ($question->getType() == 3) {
-                        $answerOption = LocalizationUtility::translate('tx_rkwsurvey_controller_backend_csv.scale', 'rkw_survey',
-                            [
-                                $question->getScaleFromPoints(),
-                                $question->getScaleToPoints(),
-                                $question->getScaleStep()
-                            ]
-                        );
-                    }
-                } else {
-                    $answerOption = $question->getAnswerOption();
-                }
-
-                $dataArray = [];
-                $dataArray[] = $survey->getUid();
-                $dataArray[] = $questionResult->getSurveyResult()->getUid();
-                $dataArray[] = $questionResult->getSurveyResult()->getTags();
-                if ($survey->getType() === 2) {
-                    $dataArray[] = $questionResult->getQuestion()->getQuestionContainer()->getUid();
-                }
-                $dataArray[] = $question->getUid();
-                $dataArray[] = $question->getQuestion();
-                $dataArray[] = $answerOption;
-                $dataArray[] = $questionResult->getAnswer();
-
-                $csv->insertOne($dataArray);
-
-            } catch (\Exception $e) {
-                continue;
-            }
-        }
-
-        $surveyName = SlugUtility::slugify($survey->getName()) . '.csv';
-
-        header('Content-Type: text/csv; charset=UTF-8');
-        header('Content-Description: File Transfer');
-        header('Content-Disposition: attachment; filename="' . $surveyName . '"');
-
-        $csv->output($surveyName);
+        $export->download($survey, $starttime);
         die;
 
     }
@@ -417,4 +348,20 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         fclose($csv);
         exit;
     }
+
+
+    /**
+     * @param \RKW\RkwSurvey\Domain\Model\Survey $survey
+     * @param string $starttime
+     * @return void
+     */
+    protected function determineSurveyPurpose(\RKW\RkwSurvey\Domain\Model\Survey $survey, string $starttime): void
+    {
+        $questionResultList = $this->questionResultRepository->findBySurveyOrderByQuestionAndType($survey, $starttime);
+
+        if ($questionResultList[0]->getSurveyResult()->getTags() !== '') {
+            $this->surveyPurpose = 'outcome';
+        }
+    }
+
 }
