@@ -39,7 +39,6 @@ class ExportOutcome extends \RKW\RkwSurvey\Exports\AbstractExport
         return [
             'tx_rkwsurvey_controller_backend_csv.surveyUid',
             'tx_rkwsurvey_controller_backend_csv.surveyResultUid',
-            'tx_rkwsurvey_controller_backend_csv.surveyResultTags',
             'tx_rkwsurvey_controller_backend_csv.output.targetGroup',
             'tx_rkwsurvey_controller_backend_csv.output.type',
             'tx_rkwsurvey_controller_backend_csv.output.title',
@@ -49,7 +48,6 @@ class ExportOutcome extends \RKW\RkwSurvey\Exports\AbstractExport
             'tx_rkwsurvey_controller_backend_csv.answerOption',
             'tx_rkwsurvey_controller_backend_csv.answer'
         ];
-
     }
 
 
@@ -118,7 +116,6 @@ class ExportOutcome extends \RKW\RkwSurvey\Exports\AbstractExport
         array $dataArray
     ): array
     {
-        $dataArray[] = $questionResult->getSurveyResult()->getTags();
         $surveyResultTags = explode(',', $questionResult->getSurveyResult()->getTags());
 
         /** @var \TYPO3\CMS\Extbase\Domain\Model\Category $category */
