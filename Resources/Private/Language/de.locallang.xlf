@@ -198,13 +198,25 @@
 				<source>Survey Result Uid</source>
 				<target>Umfrage Ergebnis Uid</target>
 			</trans-unit>
-			<trans-unit id="tx_rkwsurvey_controller_backend_csv.surveyResultTags">
-				<source>Survey Result tags</source>
-				<source>Umfrage Ergebnis Tags</source>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.output.type">
+				<source>Output type</source>
+				<target>Art des Output</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.output.targetGroup">
+				<source>Output target group</source>
+				<target>Zielgruppe</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.output.title">
+				<source>Output title</source>
+				<target>Titel des Output</target>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.questionContainerUid">
 				<source>Container Uid</source>
 				<target>Container Uid</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.questionPositionInContainerUid">
+				<source>Question position in container (Question.Container)</source>
+				<target>Position der Frage im Block (Frage.Block)</target>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.questionUid">
 				<source>Question Uid</source>
