@@ -196,7 +196,15 @@
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.surveyResultUid">
 				<source>Survey Result Uid</source>
-				<target>Umfrage Ergebnis Uid</target>
+				<target>Umfrageergebnis Uid</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.surveyResultDate">
+				<source>Survey Result Date</source>
+				<target>Datum des Umfrageergebnis</target>
+			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.surveyResultTags">
+				<source>Tags</source>
+				<target>Tags</target>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.output.type">
 				<source>Output type</source>
@@ -212,7 +220,7 @@
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.questionContainerUid">
 				<source>Container Uid</source>
-				<target>Container Uid</target>
+				<target>Fragenblock Uid</target>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.questionPositionInContainerUid">
 				<source>Question position in container (Question.Container)</source>

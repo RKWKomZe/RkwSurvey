@@ -28,11 +28,6 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class SurveyResult extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 {
-    /**
-     * @var int
-     */
-    protected int $crdate = 0;
-
 
     /**
      * @var bool
@@ -85,18 +80,6 @@ class SurveyResult extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected function initStorageObjects()
     {
         $this->questionResult = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-    }
-
-
-    /**
-     * Returns the crdate value
-     *
-     * @return int
-     * @api
-     */
-    public function getCrdate(): int
-    {
-        return $this->crdate;
     }
 
 

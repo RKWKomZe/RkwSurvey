@@ -151,6 +151,12 @@
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.surveyResultUid">
 				<source>Survey Result Uid</source>
 			</trans-unit>
+			<trans-unit id="tx_rkwsurvey_controller_backend_csv.surveyResultDate">
+				<source>Survey Result Date</source>
+			</trans-unit>
+            <trans-unit id="tx_rkwsurvey_controller_backend_csv.surveyResultTags">
+                <source>Tags</source>
+            </trans-unit>
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.output.type">
 				<source>Output type</source>
 			</trans-unit>
