@@ -501,6 +501,15 @@
 			<trans-unit id="partials_backend_actions.reset">
 				<source>Reset</source>
 			</trans-unit>
+			<trans-unit id="partials_backend_actions.labelHintUsage">
+				<source>Hint</source>
+			</trans-unit>
+			<trans-unit id="partials_backend_actions.textUsage">
+				<source>How to use it</source>
+			</trans-unit>
+			<trans-unit id="partials_backend_actions.textHandleIncomplete">
+				<source>How incomplete surveys are handled</source>
+			</trans-unit>
 			<trans-unit id="partials_backend_actions.labelStarttime">
 				<source>Starttime</source>
 			</trans-unit>

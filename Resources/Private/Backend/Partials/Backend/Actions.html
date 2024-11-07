@@ -3,16 +3,26 @@
       data-namespace-typo3-fluid="true">
 
     <f:form action="show">
-    
+
         <!-- show list of surveys -->
         <f:if condition="{surveyList}">
+
+            <f:if condition="{survey}">
+                <f:then>
+                    <p><span><strong><f:translate key='partials_backend_actions.labelHintUsage' extensionName='RkwSurvey' />:</strong></span></p>
+                    <p><f:translate key='partials_backend_actions.textUsage' extensionName='RkwSurvey' /></p>
+                    <p><f:translate key='partials_backend_actions.textHandleIncomplete' extensionName='RkwSurvey' /></p>
+                    <hr />
+                </f:then>
+            </f:if>
+
             <label style="position:relative;">
                 <span><f:translate key="partials_backend_actions.labelSurvey" extensionName="RkwSurvey" />:</span>
                 <f:form.select value="{survey.uid}" id="survey" name="surveyUid" options="{surveyList}" optionLabelField="name" optionValueField="uid"/>
             </label>
         </f:if>
         <f:if condition="{survey}">
-    
+
             <f:then>
                 <!-- token management -->
                 <f:if condition="{survey.accessRestricted}">
@@ -27,36 +37,36 @@
                         <f:form.submit value="<f:translate key='partials_backend_actions.print' extensionName='RkwSurvey' />" />
                     </f:form>
                 </f:comment>
-    
+
                 <!-- csv button -->
                 <f:form.button type="submit" name="action" value="csv">
                     <f:translate key="partials_backend_actions.csv" extensionName="RkwSurvey" />
                 </f:form.button>
-    
+
                 <hr />
-    
+
                 <!-- Filter by starttime -->
                 <label style="position:relative;">
                     <span><f:translate key='partials_backend_actions.labelStarttime' extensionName='RkwSurvey' />:</span>
                     <f:form.textfield value="<f:format.date format='Y-m-d H:i'>{starttime}</f:format.date>" id="datepicker-starttime" name="starttime" />
                 </label>
                 <f:form.hidden id="datepicker-min-date" value="<f:format.date format='Y-m-d H:i'>{survey.starttime}</f:format.date>" />
-    
+
                 <f:form.button type="submit" name="action" value="show">
                     <f:translate key="partials_backend_actions.filter" extensionName="RkwSurvey" />
                 </f:form.button>
-    
+
             </f:then>
-    
+
             <f:else>
                 <f:form.button type="submit" name="action" value="show">
                     <f:translate key="partials_backend_actions.submit" extensionName="RkwSurvey" />
                 </f:form.button>
             </f:else>
-    
+
         </f:if>
-    
-    
+
+
         <f:comment>
             <f:link.action class="button" action="list"><f:translate key='partials_backend_actionsreset' extensionName='RkwSurvey' /></f:link.action>
         </f:comment>

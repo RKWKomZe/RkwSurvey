@@ -633,6 +633,18 @@
 				<source>Reset</source>
 				<target>Zurücksetzen</target>
 			</trans-unit>
+			<trans-unit id="partials_backend_actions.labelHintUsage">
+				<source>Hint</source>
+				<target>Hinweis zur Nutzung</target>
+			</trans-unit>
+			<trans-unit id="partials_backend_actions.textUsage">
+				<source>How to use it</source>
+				<target>Setzen Sie bitte bewusst den Startzeitpunkt, ab dem Sie die Umfrageergebnisse ausgeben bzw. exportieren wollen, und drücken Sie anschließend den Button "Filtern", um ggfs. vorhandene Testergebnisse auszuschließen. Der durch die Filterung festgelegte Startzeitpunkt findet sich auch in der unten folgenden Übersicht.</target>
+			</trans-unit>
+			<trans-unit id="partials_backend_actions.textHandleIncomplete">
+				<source>How incomplete surveys are handled</source>
+				<target>Bitte beachten Sie auch, dass die Eingaben abgebrochener Fragebögen nur dann in der Ausgabe berücksichtigt werden, wenn die jeweilige Frage bzw. der zugehörige Frageblock auch tatsächlich durch die/den Nutzenden gespeichert worden war. Hat also die/der Nutzende die Startseite der Umfrage besucht, aber keine Frage bzw. Fragenblock gespeichert, so gilt ihre/seine Teilnahme als ohne Antwort abgebrochen; hat die/der Nutzende aber eine Frage bzw. einen Fragenblock gespeichert, so fließt diese Antwort in die Auswertung ein.</target>
+			</trans-unit>
 			<trans-unit id="partials_backend_actions.labelStarttime">
 				<source>Starttime</source>
 				<target>Startzeitpunkt</target>
