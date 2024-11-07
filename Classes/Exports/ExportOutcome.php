@@ -36,18 +36,29 @@ class ExportOutcome extends \RKW\RkwSurvey\Exports\AbstractExport
     protected function headings(): array
     {
 
-        return [
+        $headings = [
             'tx_rkwsurvey_controller_backend_csv.surveyUid',
             'tx_rkwsurvey_controller_backend_csv.surveyResultUid',
+            'tx_rkwsurvey_controller_backend_csv.surveyResultTags',
             'tx_rkwsurvey_controller_backend_csv.output.targetGroup',
             'tx_rkwsurvey_controller_backend_csv.output.type',
             'tx_rkwsurvey_controller_backend_csv.output.title',
-            'tx_rkwsurvey_controller_backend_csv.questionPositionInContainerUid',
             'tx_rkwsurvey_controller_backend_csv.questionUid',
             'tx_rkwsurvey_controller_backend_csv.question',
             'tx_rkwsurvey_controller_backend_csv.answerOption',
             'tx_rkwsurvey_controller_backend_csv.answer'
         ];
+
+        if ($this->hasQuestionContainers) {
+            $headings = $this->insertAfter(
+                $headings,
+                'tx_rkwsurvey_controller_backend_csv.questionPositionInContainerUid',
+                'tx_rkwsurvey_controller_backend_csv.questionUid',
+            );
+        }
+
+        return $headings;
+
     }
 
 
@@ -69,9 +80,9 @@ class ExportOutcome extends \RKW\RkwSurvey\Exports\AbstractExport
 
         $csv->insertOne($columnArray);
 
-        $questionContainerUids = array_map(static function ($question) {
-            return $question->getUid();
-        }, $survey->getQuestionContainer()->toArray());
+        if ($this->hasQuestionContainers) {
+            $questionContainerUids = $this->getQuestionContainerUids($survey);
+        }
 
         /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult */
         foreach ($questionResultList as $questionResult) {
@@ -88,9 +99,12 @@ class ExportOutcome extends \RKW\RkwSurvey\Exports\AbstractExport
                 $dataArray = [];
                 $dataArray[] = $survey->getUid();
                 $dataArray[] = $questionResult->getSurveyResult()->getUid();
+                $dataArray[] = $questionResult->getSurveyResult()->getTags();
                 $dataArray = $this->resolveSurveyResultTags($questionResult, $dataArray);
-                $dataArray = $this->getQuestionPosition($questionResult, $questionContainerUids, $dataArray);
                 $dataArray[] = $question->getUid();
+                if ($this->hasQuestionContainers) {
+                    $dataArray[] = $this->getQuestionPosition($questionResult, $questionContainerUids);
+                }
                 $dataArray[] = $question->getQuestion();
                 $dataArray[] = $this->getAnswerOption($question);
                 $dataArray[] = $questionResult->getAnswer();
@@ -116,25 +130,37 @@ class ExportOutcome extends \RKW\RkwSurvey\Exports\AbstractExport
         array $dataArray
     ): array
     {
-        $surveyResultTags = explode(',', $questionResult->getSurveyResult()->getTags());
 
-        /** @var \TYPO3\CMS\Extbase\Domain\Model\Category $category */
-        $category = $this->categoryRepository->findByUid($surveyResultTags[0]);
-        $dataArray[] = $category->getTitle();
+        if (! empty($questionResult->getSurveyResult()->getTags())) {
 
-        $dataArray[] = $surveyResultTags[1];
+            $surveyResultTags = explode(',', $questionResult->getSurveyResult()->getTags());
 
-        if ($surveyResultTags[1] === 'Product') {
-            /** @var \RKW\RkwShop\Domain\Model\Product $product */
-            $product = $this->productRepository->findByUid($surveyResultTags[2]);
-            $dataArray[] = $product->getTitle();
+            /** @var \TYPO3\CMS\Extbase\Domain\Model\Category $category */
+            $category = $this->categoryRepository->findByUid($surveyResultTags[0]);
+            $dataArray[] = $category->getTitle();
+
+            $dataArray[] = $surveyResultTags[1];
+
+            if ($surveyResultTags[1] === 'Product') {
+                /** @var \RKW\RkwShop\Domain\Model\Product $product */
+                $product = $this->productRepository->findByUid($surveyResultTags[2]);
+                $dataArray[] = $product->getTitle();
+            } else {
+                /** @var \RKW\RkwEvents\Domain\Model\Event $event */
+                $event = $this->eventRepository->findByUid($surveyResultTags[2]);
+                $dataArray[] = $event->getTitle();
+            }
+
         } else {
-            /** @var \RKW\RkwEvents\Domain\Model\Event $event */
-            $event = $this->eventRepository->findByUid($surveyResultTags[2]);
-            $dataArray[] = $event->getTitle();
+
+            $dataArray[] = 'n/a';
+            $dataArray[] = 'n/a';
+            $dataArray[] = 'n/a';
+
         }
 
         return $dataArray;
+
     }
 
 

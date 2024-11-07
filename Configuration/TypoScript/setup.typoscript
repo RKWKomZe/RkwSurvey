@@ -43,6 +43,7 @@ config.tx_extbase.persistence {
                 recordType =
             }
         }
+
 	}
 }
 
