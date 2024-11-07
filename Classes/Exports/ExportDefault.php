@@ -36,7 +36,7 @@ class ExportDefault extends \RKW\RkwSurvey\Exports\AbstractExport
     protected function headings(): array
     {
 
-        return [
+        $headings = [
             'tx_rkwsurvey_controller_backend_csv.surveyUid',
             'tx_rkwsurvey_controller_backend_csv.surveyResultUid',
             'tx_rkwsurvey_controller_backend_csv.questionUid',
@@ -44,6 +44,16 @@ class ExportDefault extends \RKW\RkwSurvey\Exports\AbstractExport
             'tx_rkwsurvey_controller_backend_csv.answerOption',
             'tx_rkwsurvey_controller_backend_csv.answer'
         ];
+
+        if ($this->hasQuestionContainers) {
+            $headings = $this->insertAfter(
+                $headings,
+                'tx_rkwsurvey_controller_backend_csv.questionPositionInContainerUid',
+                'tx_rkwsurvey_controller_backend_csv.questionUid',
+            );
+        }
+
+        return $headings;
 
     }
 
@@ -66,11 +76,16 @@ class ExportDefault extends \RKW\RkwSurvey\Exports\AbstractExport
 
         $csv->insertOne($columnArray);
 
+        if ($this->hasQuestionContainers) {
+            $questionContainerUids = $this->getQuestionContainerUids($survey);
+        }
+
         /** @var \RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult */
         foreach ($questionResultList as $questionResult) {
 
             try {
 
+                //  @todo: There is a constraint to export only finished surveys, but where?
                 if (!$questionResult->getSurveyResult()) {
                     continue;
                 }
@@ -82,6 +97,9 @@ class ExportDefault extends \RKW\RkwSurvey\Exports\AbstractExport
                 $dataArray[] = $survey->getUid();
                 $dataArray[] = $questionResult->getSurveyResult()->getUid();
                 $dataArray[] = $question->getUid();
+                if ($this->hasQuestionContainers) {
+                    $dataArray[] = $this->getQuestionPosition($questionResult, $questionContainerUids);
+                }
                 $dataArray[] = $question->getQuestion();
                 $dataArray[] = $this->getAnswerOption($question);
                 $dataArray[] = $questionResult->getAnswer();
@@ -91,6 +109,7 @@ class ExportDefault extends \RKW\RkwSurvey\Exports\AbstractExport
             } catch (\Exception $e) {
                 continue;
             }
+
         }
 
         return $csv;

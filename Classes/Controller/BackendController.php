@@ -14,24 +14,15 @@ namespace RKW\RkwSurvey\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
-use League\Csv\Writer;
-use Madj2k\DrSeo\Utility\SlugUtility;
-use RKW\RkwEvents\Domain\Repository\EventRepository;
-use RKW\RkwShop\Domain\Repository\ProductRepository;
 use RKW\RkwSurvey\Domain\Model\Survey;
 use RKW\RkwSurvey\Domain\Model\Token;
 use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
 use RKW\RkwSurvey\Domain\Repository\SurveyRepository;
 use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
 use RKW\RkwSurvey\Domain\Repository\TokenRepository;
-use RKW\RkwSurvey\Exports\AbstractExport;
 use RKW\RkwSurvey\Exports\ExportDefault;
 use RKW\RkwSurvey\Exports\ExportOutcome;
-use SplTempFileObject;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Domain\Repository\CategoryRepository;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
-use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * BackendController
@@ -359,8 +350,11 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
     {
         $questionResultList = $this->questionResultRepository->findBySurveyOrderByQuestionAndType($survey, $starttime);
 
-        if ($questionResultList[0]->getSurveyResult()->getTags() !== '') {
-            $this->surveyPurpose = 'outcome';
+        foreach ($questionResultList as $questionResult) {
+            if ($questionResult->getSurveyResult()->getTags() !== '') {
+                $this->surveyPurpose = 'outcome';
+                break;
+            }
         }
     }
 

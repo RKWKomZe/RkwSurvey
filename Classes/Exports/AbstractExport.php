@@ -21,6 +21,7 @@ use RKW\RkwEvents\Domain\Repository\EventRepository;
 use RKW\RkwShop\Domain\Repository\ProductRepository;
 use RKW\RkwSurvey\Domain\Model\Survey;
 use RKW\RkwSurvey\Domain\Repository\QuestionResultRepository;
+use RKW\RkwSurvey\Domain\Repository\SurveyResultRepository;
 use SplTempFileObject;
 use TYPO3\CMS\Extbase\Domain\Repository\CategoryRepository;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
@@ -62,21 +63,36 @@ abstract class AbstractExport
 
 
     /**
+     * @var \RKW\RkwSurvey\Domain\Repository\SurveyResultRepository
+     */
+    protected ?SurveyResultRepository $surveyResultRepository = null;
+
+
+    /**
+     * @var bool
+     */
+    protected bool $hasQuestionContainers = false;
+
+
+    /**
      * @param QuestionResultRepository $questionResultRepository
      * @param CategoryRepository $categoryRepository
      * @param ProductRepository $productRepository
-     * @param EventRepository   $eventRepository
+     * @param EventRepository $eventRepository
+     * @param SurveyResultRepository $surveyResultRepository
      */
     public function __construct(
         QuestionResultRepository $questionResultRepository,
         CategoryRepository $categoryRepository,
         ProductRepository $productRepository,
-        EventRepository $eventRepository
+        EventRepository $eventRepository,
+        SurveyResultRepository $surveyResultRepository
     ) {
         $this->questionResultRepository = $questionResultRepository;
         $this->categoryRepository = $categoryRepository;
         $this->productRepository = $productRepository;
         $this->eventRepository = $eventRepository;
+        $this->surveyResultRepository = $surveyResultRepository;
     }
 
 
@@ -85,6 +101,24 @@ abstract class AbstractExport
      */
     abstract protected function headings(): array;
 
+
+    /**
+     * @param array $array
+     * @param       $newElement
+     * @param       $afterElement
+     * @return array
+     */
+    protected function insertAfter(array $array, $newElement, $afterElement): array
+    {
+        $position = array_search($afterElement, $array, true);
+
+        if ($position !== false) {
+            array_splice($array, $position + 1, 0, $newElement);
+        }
+
+        return $array;
+
+    }
 
     /**
      * @param Survey                                              $survey
@@ -109,6 +143,9 @@ abstract class AbstractExport
      */
     public function download(\RKW\RkwSurvey\Domain\Model\Survey $survey, string $starttime = ''): void
     {
+
+        $this->hasQuestionContainers($survey);
+
         $questionResultList = $this->questionResultRepository->findBySurveyOrderByQuestionAndType($survey, $starttime);
 
         $csv = Writer::createFromFileObject(new SplTempFileObject());
@@ -126,6 +163,26 @@ abstract class AbstractExport
 
     }
 
+    /**
+     * @param Survey $survey
+     * @return void
+     */
+    protected function hasQuestionContainers(\RKW\RkwSurvey\Domain\Model\Survey $survey): void
+    {
+        $this->hasQuestionContainers = $survey->getQuestionContainer()->count() > 0;
+
+    }
+
+    /**
+     * @param Survey $survey
+     * @return array
+     */
+    protected function getQuestionContainerUids(\RKW\RkwSurvey\Domain\Model\Survey $survey): array
+    {
+        return array_map(static function ($question) {
+            return $question->getUid();
+        }, $survey->getQuestionContainer()->toArray());
+    }
 
     /**
      * @param \RKW\RkwSurvey\Domain\Model\Question $question
@@ -144,7 +201,7 @@ abstract class AbstractExport
                     [
                         $question->getScaleFromPoints(),
                         $question->getScaleToPoints(),
-                        $question->getScaleStep()
+                        $question->getScaleStep(),
                     ]
                 );
             }
@@ -159,10 +216,12 @@ abstract class AbstractExport
     /**
      * @param \RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult
      * @param array                                      $questionContainerUids
-     * @param array                                      $dataArray
-     * @return array
+     * @return string
      */
-    protected function getQuestionPosition(\RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult, array $questionContainerUids, array $dataArray): array
+    protected function getQuestionPosition(
+        \RKW\RkwSurvey\Domain\Model\QuestionResult $questionResult,
+        array $questionContainerUids
+    ): string
     {
         $indexQuestionContainer = array_search($questionResult->getQuestion()->getQuestionContainer()->getUid(), $questionContainerUids, true);
         $indexQuestionContainerPos = ($indexQuestionContainer !== false) ? $indexQuestionContainer + 1 : '';
@@ -173,9 +232,7 @@ abstract class AbstractExport
         $indexQuestion = array_search($questionResult->getQuestion()->getUid(), $questionUids, true);
         $indexQuestionPos = ($indexQuestion !== false) ? $indexQuestion + 1 : '';
 
-        $dataArray[] = $indexQuestionPos . '.' . $indexQuestionContainerPos;
-
-        return $dataArray;
+        return $indexQuestionPos . '.' . $indexQuestionContainerPos;
     }
 
 
