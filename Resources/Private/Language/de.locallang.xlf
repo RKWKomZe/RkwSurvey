@@ -223,8 +223,8 @@
 				<target>Fragenblock Uid</target>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.questionPositionInContainerUid">
-				<source>Question position in container (Question.Container)</source>
-				<target>Position der Frage im Block (Frage.Block)</target>
+				<source>Question position in container (Container--Question)</source>
+				<target>Position der Frage im Block (Block--Frage)</target>
 			</trans-unit>
 			<trans-unit id="tx_rkwsurvey_controller_backend_csv.questionUid">
 				<source>Question Uid</source>

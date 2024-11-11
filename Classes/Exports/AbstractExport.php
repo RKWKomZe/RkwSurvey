@@ -39,31 +39,31 @@ abstract class AbstractExport
 {
 
     /**
-     * @var \RKW\RkwSurvey\Domain\Repository\QuestionResultRepository
+     * @var \RKW\RkwSurvey\Domain\Repository\QuestionResultRepository|null
      */
     protected ?QuestionResultRepository $questionResultRepository = null;
 
 
     /**
-     * @var \TYPO3\CMS\Extbase\Domain\Repository\CategoryRepository
+     * @var \TYPO3\CMS\Extbase\Domain\Repository\CategoryRepository|null
      */
     protected ?CategoryRepository $categoryRepository = null;
 
 
     /**
-     * @var \RKW\RkwShop\Domain\Repository\ProductRepository
+     * @var \RKW\RkwShop\Domain\Repository\ProductRepository|null
      */
     protected ?ProductRepository $productRepository = null;
 
 
     /**
-     * @var \RKW\RkwEvents\Domain\Repository\EventRepository
+     * @var \RKW\RkwEvents\Domain\Repository\EventRepository|null
      */
     protected ?EventRepository $eventRepository = null;
 
 
     /**
-     * @var \RKW\RkwSurvey\Domain\Repository\SurveyResultRepository
+     * @var \RKW\RkwSurvey\Domain\Repository\SurveyResultRepository|null
      */
     protected ?SurveyResultRepository $surveyResultRepository = null;
 
@@ -226,13 +226,14 @@ abstract class AbstractExport
         $indexQuestionContainer = array_search($questionResult->getQuestion()->getQuestionContainer()->getUid(), $questionContainerUids, true);
         $indexQuestionContainerPos = ($indexQuestionContainer !== false) ? $indexQuestionContainer + 1 : '';
 
-        $questionUids = array_map(function ($question) {
+        $delimiter = '--';
+        $questionUids = array_map(static function ($question) {
             return $question->getUid();
         }, $questionResult->getQuestion()->getQuestionContainer()->getQuestion()->toArray());
         $indexQuestion = array_search($questionResult->getQuestion()->getUid(), $questionUids, true);
         $indexQuestionPos = ($indexQuestion !== false) ? $indexQuestion + 1 : '';
 
-        return $indexQuestionPos . '.' . $indexQuestionContainerPos;
+        return $indexQuestionContainerPos . $delimiter . $indexQuestionPos;
     }
 
 

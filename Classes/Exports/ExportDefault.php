@@ -85,7 +85,6 @@ class ExportDefault extends \RKW\RkwSurvey\Exports\AbstractExport
 
             try {
 
-                //  @todo: There is a constraint to export only finished surveys, but where?
                 if (!$questionResult->getSurveyResult()) {
                     continue;
                 }
