@@ -15,7 +15,7 @@ namespace RKW\RkwSurvey\ViewHelpers;
  */
 
 use Madj2k\CoreExtended\Utility\GeneralUtility;
-use Madj2k\DrSeo\Utility\SlugUtility;
+use Madj2k\DrSerp\Utility\SlugUtility;
 use RKW\RkwSurvey\Domain\Model\Question;
 use RKW\RkwSurvey\Domain\Model\SurveyResult;
 use RKW\RkwSurvey\Domain\Repository\QuestionRepository;
