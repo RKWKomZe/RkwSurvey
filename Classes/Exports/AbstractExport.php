@@ -16,7 +16,7 @@ namespace RKW\RkwSurvey\Exports;
  */
 
 use League\Csv\Writer;
-use Madj2k\DrSeo\Utility\SlugUtility;
+use Madj2k\DrSerp\Utility\SlugUtility;
 use RKW\RkwEvents\Domain\Repository\EventRepository;
 use RKW\RkwShop\Domain\Repository\ProductRepository;
 use RKW\RkwSurvey\Domain\Model\Survey;
