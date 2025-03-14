@@ -40,13 +40,19 @@
 
                         <!-- Use 'arguments="{survey: survey, surveyResult: surveyResult, extensionSuffix: extensionSuffix}"' for separate SignalSlot -->
                         <f:form action="start" arguments="{survey: survey, surveyResult: surveyResult}" noCacheHash="true" section="check-head" class="flex flex-basis-8 full-width-medium space-between">
+                            <f:if condition="{tagsInput}">
+                                <f:then>
+                                    <f:form.hidden name="tagsInput" value="{tagsInput}" />
+                                </f:then>
+                            </f:if>
+
                             <f:if condition="{survey.accessRestricted}">
                                 <f:if condition="{tokenInput}">
                                     <f:then>
                                         <f:form.hidden name="tokenInput" value="{tokenInput}" />
                                     </f:then>
                                     <f:else>
-                                        <div class="form__field width50 break-after">
+                                        <div class="form__field">
                                             <label for="tx-rkwsurvey-token"><f:translate key="templates_survey_welcome.token" extensionName="RkwSurvey" /><span class="is-required"><f:translate key="templates_survey_welcome.required" extensionName="RkwSurvey" /></span></label>
                                             <f:form.textfield name="tokenInput" id="tx-rkwsurvey-token" type="text" />
                                         </div>
@@ -54,13 +60,7 @@
                                 </f:if>
                             </f:if>
 
-                            <f:if condition="{tagsInput}">
-                                <f:then>
-                                    <f:form.hidden name="tagsInput" value="{tagsInput}" />
-                                </f:then>
-                            </f:if>
-
-                            <div class="form__field flex space-start full-width-narrow">
+                            <div class="btn-list btn-list--footer">
                                 <f:form.button class="btn btn--primary full-width-narrow"><f:translate key="templates_survey_welcome.start" extensionName="RkwSurvey" /></f:form.button>
                             </div>
                         </f:form>
